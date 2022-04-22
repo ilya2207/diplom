@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { ExpressJwtRequest } from 'express-jwt'
 import { validationResult } from 'express-validator'
 import ApiError from '../../exceptions/api-error'
 import UserService from './user.service'
@@ -20,5 +21,28 @@ export default class UserController {
       next(error)
     }
   }
-  static async login(req: Request, res: Response) {}
+  static async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { phone, password } = req.body
+      const userData = await UserService.login(phone, password)
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 3600 * 1000,
+        httpOnly: true,
+      })
+      return res.json(userData)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async logout(req: ExpressJwtRequest, res: Response, next: NextFunction) {
+    try {
+      const { refreshToken } = req.cookies
+      await UserService.logout(req.auth.payload)
+      res.clearCookie('refreshToken')
+      return res.status(200).json({ message: 'Успешно' })
+    } catch (error) {
+      next(error)
+    }
+  }
 }

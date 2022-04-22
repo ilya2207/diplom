@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import UserDTO from './user.dto'
 import prisma from '../../prisma'
 import ApiError from '../../exceptions/api-error'
+import { JWT_ACCESS_REFRESH, JWT_ACCESS_SECRET } from '../../constants'
 
 export default class UserService {
   static async signup(data: IUser) {
@@ -28,34 +29,58 @@ export default class UserService {
         password: hashPassword,
       },
     })
-    const tokens = this.generateTokens(user.id)
-    await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      },
-    })
+    const tokens = await this.generateTokens(user.id)
+
     const userDto = new UserDTO(user)
     return { ...userDto, ...tokens }
   }
-  static generateTokens(payload): { accessToken: string; refreshToken: string } {
-    const accessToken = jwt.sign(
-      { payload },
-      process.env.JWT_ACCESS_SECRET || 'diplom-ilya2207-secret',
-      {
-        expiresIn: '30m',
-      }
-    )
-    const refreshToken = jwt.sign(
-      { payload },
-      process.env.JWT_ACCESS_SECRET || 'diplom-ilya2207-refresh',
-      { expiresIn: '30d' }
-    )
+  static async generateTokens(
+    payload: number
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const accessToken = jwt.sign({ payload }, JWT_ACCESS_SECRET, {
+      expiresIn: '30m',
+    })
+    const refreshToken = jwt.sign({ payload }, JWT_ACCESS_REFRESH, { expiresIn: '30d' })
+    await prisma.user.update({
+      where: {
+        id: payload,
+      },
+      data: {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      },
+    })
     return { accessToken, refreshToken }
   }
 
-  static async saveToken(userId, payload: string) {}
+  static async login(phone: string, password: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        phone,
+      },
+    })
+    if (!user) throw ApiError.badRequest('Пользователь не найден')
+    const isPasswordEquals = await bcrypt.compare(password, user.password)
+    if (!isPasswordEquals) {
+      throw ApiError.badRequest('Пароль неверный')
+    }
+    const tokens = await this.generateTokens(user.id)
+    console.log(tokens)
+
+    const userDto = new UserDTO(user)
+    return { ...userDto, ...tokens }
+  }
+
+  static async logout(userId: number) {
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        accessToken: null,
+        refreshToken: null,
+      },
+    })
+    return true
+  }
 }
