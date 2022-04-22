@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import UserDTO from './user.dto'
 import prisma from '../../prisma'
+import ApiError from '../../exceptions/api-error'
 
 export default class UserService {
   static async signup(data: IUser) {
@@ -10,12 +11,11 @@ export default class UserService {
 
     const isUserExists = await prisma.user.findFirst({
       where: {
-        phone,
-        email,
+        OR: [{ phone }, { email }],
       },
     })
 
-    if (isUserExists) throw new Error(`Пользователь с такими данными уже существует`)
+    if (isUserExists) throw ApiError.badRequest(`Пользователь с такими данными уже существует`)
 
     const hashPassword = await bcrypt.hash(password, 3)
     const user = await prisma.user.create({
