@@ -10,84 +10,90 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id         Int       @id @default(autoincrement())
-  firstname  String
-  secondname String
-  lastname   String
-  password   String
-  email      String    @unique
-  phone      String    @unique
-  imgId      Int?
-  img        Images?   @relation(fields: [imgId], references: [id])
-  type       String
-  token      String
-  Orders     Orders[]
-  Reviews    Reviews[]
+model User {
+  id           Int      @id @default(autoincrement())
+  firstname    String
+  secondname   String
+  lastname     String
+  password     String
+  email        String   @unique
+  phone        String   @unique
+  imgId        Int?
+  img          Image?   @relation(fields: [imgId], references: [id])
+  type         Role     @default(User)
+  accessToken  String?
+  refreshToken String?
+  Orders       Order[]
+  Reviews      Review[]
 }
 
-model Images {
-  id        Int         @id @default(autoincrement())
+enum Role {
+  User
+  Admin
+}
+
+model Image {
+  id        Int        @id @default(autoincrement())
   path      String
-  CarModels CarModels[]
-  User      Users[]
-  Details   Details[]
+  CarModels CarModel[]
+  User      User[]
+  Details   Detail[]
 }
 
-model Categories {
-  id               Int          @id @default(autoincrement())
+model Category {
+  id               Int        @id @default(autoincrement())
   title            String?
   parentCategoryId Int?
-  parentCategory   Categories?  @relation("CategorieType", fields: [parentCategoryId], references: [id])
-  childCategorys   Categories[] @relation("CategorieType")
-  Details          Details[]
+  parentCategory   Category?  @relation("CategorieType", fields: [parentCategoryId], references: [id])
+  childCategorys   Category[] @relation("CategorieType")
+  Details          Detail[]
 }
 
-model Details {
-  id               Int        @id @default(autoincrement())
+model Detail {
+  id               Int       @id @default(autoincrement())
   categoryId       Int
-  category         Categories @relation(fields: [categoryId], references: [id])
+  category         Category  @relation(fields: [categoryId], references: [id])
   title            String
   shortDescription String
   modelId          Int?
-  model            CarModels? @relation(fields: [modelId], references: [id])
+  model            CarModel? @relation(fields: [modelId], references: [id])
   options          String
   price            Int
   star             Int
   imgId            Int?
-  img              Images?    @relation(fields: [imgId], references: [id])
+  img              Image?    @relation(fields: [imgId], references: [id])
   vendorCode       String?
-  Orders           Orders[]
-  Reviews          Reviews[]
+  Orders           Order[]
+  Reviews          Review[]
 }
 
-model Orders {
+model Order {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      Users    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   detailId  Int
-  detail    Details  @relation(fields: [detailId], references: [id])
+  detail    Detail   @relation(fields: [detailId], references: [id])
   createdAt DateTime @default(now())
 }
 
-model CarModels {
-  id          Int         @id @default(autoincrement())
+model CarModel {
+  id          Int        @id @default(autoincrement())
   title       String
   model       String?
   brandId     Int?
-  brand       CarModels?  @relation("Brand", fields: [brandId], references: [id])
-  brandModels CarModels[] @relation("Brand")
+  brand       CarModel?  @relation("Brand", fields: [brandId], references: [id])
+  brandModels CarModel[] @relation("Brand")
   imgId       Int?
-  img         Images?     @relation(fields: [imgId], references: [id])
-  Detail      Details[]
+  img         Image?     @relation(fields: [imgId], references: [id])
+  Detail      Detail[]
 }
 
-model Reviews {
-  id       Int     @id @default(autoincrement())
+model Review {
+  id       Int    @id @default(autoincrement())
   userId   Int
-  user     Users   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
   detailId Int
-  detail   Details @relation(fields: [detailId], references: [id])
+  detail   Detail @relation(fields: [detailId], references: [id])
   star     Int
   content  String
 }

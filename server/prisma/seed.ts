@@ -3,11 +3,9 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.carModels.create({
+  await prisma.carModel.create({
     data: {
-      title: 'M5',
-      model: 'F90',
-      brandId: 1,
+      title: 'ВАЗ',
     },
   })
 }
