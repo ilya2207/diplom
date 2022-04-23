@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ExpressJwtRequest } from 'express-jwt'
 import { validationResult } from 'express-validator'
 import ApiError from '../../exceptions/api-error'
+import UserDTO from './user.dto'
 import UserService from './user.service'
 
 export default class UserController {
@@ -41,6 +42,31 @@ export default class UserController {
       await UserService.logout(req.auth.payload)
       res.clearCookie('refreshToken')
       return res.status(200).json({ message: 'Успешно' })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async refresh(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { refreshToken } = req.cookies
+      const userData = await UserService.refreshTokens(refreshToken)
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      })
+      return res.json({ token: userData.accessToken })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async edit(req: ExpressJwtRequest, res: Response, next: NextFunction) {
+    try {
+      const body = req.body
+      const userData = await UserService.editUser(req.auth.payload, body)
+      const userDto = new UserDTO(userData)
+      return res.json({ message: 'Успешно обновлено', ...userDto })
     } catch (error) {
       next(error)
     }

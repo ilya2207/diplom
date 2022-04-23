@@ -1,10 +1,11 @@
 import { IUser } from './user.types'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import UserDTO from './user.dto'
 import prisma from '../../prisma'
 import ApiError from '../../exceptions/api-error'
 import { JWT_ACCESS_REFRESH, JWT_ACCESS_SECRET } from '../../constants'
+import { TokenData } from '../../types/types'
 
 export default class UserService {
   static async signup(data: IUser) {
@@ -38,7 +39,7 @@ export default class UserService {
     payload: number
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken = jwt.sign({ payload }, JWT_ACCESS_SECRET, {
-      expiresIn: '30m',
+      expiresIn: '30s',
     })
     const refreshToken = jwt.sign({ payload }, JWT_ACCESS_REFRESH, { expiresIn: '30d' })
     await prisma.user.update({
@@ -51,6 +52,29 @@ export default class UserService {
       },
     })
     return { accessToken, refreshToken }
+  }
+
+  static async refreshTokens(refreshToken: string) {
+    try {
+      if (!refreshToken) throw ApiError.unauthError()
+      const userData = jwt.verify(refreshToken, JWT_ACCESS_REFRESH) as JwtPayload
+
+      if (!userData) throw ApiError.unauthError()
+      const refreshTokenFromDB = await prisma.user.findUnique({
+        where: {
+          id: userData.payload,
+        },
+        select: {
+          refreshToken: true,
+        },
+      })
+      if (refreshToken !== refreshTokenFromDB.refreshToken) throw ApiError.unauthError()
+
+      const newTokens = await this.generateTokens(userData.payload)
+      return newTokens
+    } catch (error) {
+      throw ApiError.unauthError()
+    }
   }
 
   static async login(phone: string, password: string) {
@@ -82,5 +106,18 @@ export default class UserService {
       },
     })
     return true
+  }
+
+  static async editUser(userId: number, body) {
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...body,
+      },
+    })
+
+    return user
   }
 }
