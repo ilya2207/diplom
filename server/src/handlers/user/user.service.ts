@@ -1,11 +1,12 @@
-import { IUser } from './user.types'
+// import 'dotenv/config'
+import { IUser, IUserEdit } from './user.types'
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import UserDTO from './user.dto'
 import prisma from '../../prisma'
 import ApiError from '../../exceptions/api-error'
-import { JWT_ACCESS_REFRESH, JWT_ACCESS_SECRET } from '../../constants'
 import { TokenData } from '../../types/types'
+import { Prisma } from '@prisma/client'
 
 export default class UserService {
   static async signup(data: IUser) {
@@ -30,21 +31,21 @@ export default class UserService {
         password: hashPassword,
       },
     })
-    const tokens = await this.generateTokens(user.id)
+    const tokens = await this.generateTokens({ id: user.id, type: user.type })
 
     const userDto = new UserDTO(user)
     return { ...userDto, ...tokens }
   }
   static async generateTokens(
-    payload: number
+    payload: TokenData
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = jwt.sign({ payload }, JWT_ACCESS_SECRET, {
-      expiresIn: '30s',
+    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, {
+      expiresIn: '30m',
     })
-    const refreshToken = jwt.sign({ payload }, JWT_ACCESS_REFRESH, { expiresIn: '30d' })
+    const refreshToken = jwt.sign({ payload }, process.env.JWT_ACCESS_REFRESH, { expiresIn: '30d' })
     await prisma.user.update({
       where: {
-        id: payload,
+        id: payload.id,
       },
       data: {
         accessToken: accessToken,
@@ -57,12 +58,12 @@ export default class UserService {
   static async refreshTokens(refreshToken: string) {
     try {
       if (!refreshToken) throw ApiError.unauthError()
-      const userData = jwt.verify(refreshToken, JWT_ACCESS_REFRESH) as JwtPayload
+      const userData = jwt.verify(refreshToken, process.env.JWT_ACCESS_REFRESH) as JwtPayload
 
       if (!userData) throw ApiError.unauthError()
       const refreshTokenFromDB = await prisma.user.findUnique({
         where: {
-          id: userData.payload,
+          id: userData.payload.id,
         },
         select: {
           refreshToken: true,
@@ -88,8 +89,7 @@ export default class UserService {
     if (!isPasswordEquals) {
       throw ApiError.badRequest('Пароль неверный')
     }
-    const tokens = await this.generateTokens(user.id)
-    console.log(tokens)
+    const tokens = await this.generateTokens({ id: user.id, type: user.type })
 
     const userDto = new UserDTO(user)
     return { ...userDto, ...tokens }
@@ -108,14 +108,29 @@ export default class UserService {
     return true
   }
 
-  static async editUser(userId: number, body) {
+  static async editUser(userId: number, body: IUserEdit) {
+    const { email, firstname, lastname, phone, secondname, oldPassword, password } = body
+    let newUser: Prisma.UserUpdateInput = { email, firstname, lastname, phone, secondname }
+    if (oldPassword || password) {
+      const passFromDb = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          password: true,
+        },
+      })
+      const isPassEquals = await bcrypt.compare(oldPassword, passFromDb.password)
+      if (!isPassEquals) throw ApiError.badRequest('Предыдущий пароль неверный')
+      const newPassword = await bcrypt.hash(password, 3)
+      newUser.password = newPassword
+    }
+
     const user = await prisma.user.update({
       where: {
         id: userId,
       },
-      data: {
-        ...body,
-      },
+      data: newUser,
     })
 
     return user

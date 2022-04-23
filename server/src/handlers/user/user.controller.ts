@@ -4,6 +4,7 @@ import { validationResult } from 'express-validator'
 import ApiError from '../../exceptions/api-error'
 import UserDTO from './user.dto'
 import UserService from './user.service'
+import { IUserEdit } from './user.types'
 
 export default class UserController {
   static async registration(req: Request, res: Response, next: NextFunction) {
@@ -17,7 +18,7 @@ export default class UserController {
         maxAge: 30 * 24 * 3600 * 1000,
         httpOnly: true,
       })
-      res.json({ success: true, message: 'Пользователь успешно создан', data: userData })
+      res.json(userData)
     } catch (error) {
       next(error)
     }
@@ -63,10 +64,10 @@ export default class UserController {
 
   static async edit(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
-      const body = req.body
+      const body: IUserEdit = req.body
       const userData = await UserService.editUser(req.auth.payload, body)
       const userDto = new UserDTO(userData)
-      return res.json({ message: 'Успешно обновлено', ...userDto })
+      return res.json(userDto)
     } catch (error) {
       next(error)
     }

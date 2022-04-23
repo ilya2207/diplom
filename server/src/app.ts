@@ -7,6 +7,8 @@ import router from './routes'
 
 const app = express()
 const port = process.env.PORT || 5000
+
+app.use('/images', express.static(`${process.cwd()}/images`))
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())

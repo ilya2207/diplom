@@ -1,5 +1,6 @@
 export default class ApiError extends Error {
   status: number
+  message: string
   errors: any[]
   constructor(status, message, errors = []) {
     super(message)
@@ -13,5 +14,9 @@ export default class ApiError extends Error {
 
   static badRequest(message: string, errors = []) {
     return new ApiError(400, message, errors)
+  }
+
+  static forbiddenError() {
+    return new ApiError(403, 'Ошибка доступа')
   }
 }

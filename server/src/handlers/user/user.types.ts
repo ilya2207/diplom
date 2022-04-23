@@ -3,13 +3,18 @@ export interface IUser {
   firstname: string
   secondname: string
   lastname: string
-  password: string
+  password?: string
   email: string
   phone: string
-  type: UserRole
+  type?: UserRole
   accessToken?: string | null
   refreshToken?: string | null
-  imgId: number | null
+}
+
+
+export interface IUserEdit extends IUser {
+  oldPassword?: string
+  
 }
 
 export type UserRole = 'Admin' | 'User'
