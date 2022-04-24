@@ -3,11 +3,17 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function main() {
-  await createAdmin()
+  await prisma.carModel.create({
+    data: {
+      title: 'HEllo world',
+      brandId: 2,
+    },
+  })
 }
 
 async function createAdmin() {
   const password = await bcrypt.hash('admin', 3)
+
   await prisma.user.create({
     data: {
       firstname: 'admin',

@@ -1,6 +1,10 @@
 export interface IModel {
   title: string
+  brandId?: string | null
   model?: string | null
-  type?: number | null
   imgId?: number | null
+}
+
+export interface IModelWithImage extends IModel {
+  img?: Blob
 }

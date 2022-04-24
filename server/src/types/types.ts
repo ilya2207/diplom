@@ -5,3 +5,5 @@ export interface TokenData extends JwtPayload {
   id: number
   type: UserRole
 }
+
+export type ImageRelativeType = 'model' | 'detail'
