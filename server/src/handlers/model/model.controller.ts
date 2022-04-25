@@ -1,6 +1,6 @@
-import { Image } from '@prisma/client'
 import { NextFunction, Request, Response } from 'express'
 import { UploadedFile } from 'express-fileupload'
+import prisma from '../../prisma'
 import ImageService from '../image/image.service'
 import ModelService from './model.service'
 import { IModel } from './model.types'
@@ -9,7 +9,7 @@ export default class ModelController {
   static async show(req: Request, res: Response, next: NextFunction) {
     try {
       const modelId: string | undefined = req.params.modelId
-      const models = await ModelService.show(modelId)
+      const models = await ModelService.show(+modelId)
 
       return res.json(models)
     } catch (error) {
@@ -22,8 +22,8 @@ export default class ModelController {
       const file: UploadedFile | undefined = req.files?.img as UploadedFile
 
       if (file) {
-        const newImg = await ImageService.upload('model', file)
-        body.imgId = newImg.id
+        const newImgPath = await ImageService.upload('model', file)
+        body.img = newImgPath
       }
 
       const newModel = await ModelService.add(body)
@@ -35,22 +35,28 @@ export default class ModelController {
   static async edit(req: Request, res: Response, next: NextFunction) {
     try {
       const modelId: string = req.params.modelId
-      const body = req.body
-      const file = req.files.img as UploadedFile
-      let newImg: Image | undefined
+      const body: IModel = req.body
+      const file = req.files?.img as UploadedFile
+
       if (file) {
-        const img = await ImageService.findImgId(+modelId, 'model')
-        if (img?.id) {
-          await ImageService.update(img.id, file)
+        const modelFromDb = await prisma.carModel.findUnique({
+          where: {
+            id: +modelId,
+          },
+          select: {
+            img: true,
+          },
+        })
+
+        if (modelFromDb.img === process.env.MODEL_DEFAULT_IMAGE || !modelFromDb.img) {
+          const imgPath = await ImageService.upload('model', file)
+          body.img = imgPath
         } else {
-          const newImageFromDb = await ImageService.upload('model', file)
-          newImg = newImageFromDb
+          await ImageService.update(modelFromDb.img, file)
         }
       }
-      if (newImg) {
-        body.imgId = newImg.id
-      }
-      const newModel = await ModelService.edit(modelId, body)
+
+      const newModel = await ModelService.edit(+modelId, body)
       return res.json(newModel)
     } catch (error) {
       next(error)
@@ -61,7 +67,7 @@ export default class ModelController {
       const modelId: string = req.params.modelId
 
       const deletedModel = await ModelService.delete(+modelId)
-      await ImageService.delete(deletedModel.imgId)
+      await ImageService.delete(deletedModel.img)
 
       return res.json({ message: 'Успешно удалено' })
     } catch (error) {

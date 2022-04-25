@@ -6,8 +6,7 @@ export interface IDetail {
   options?: string
   price: number
   star: number
-  img?: Blob | undefined
-  imgId?: number
+  img?: string
   vendorCode: string
 }
 

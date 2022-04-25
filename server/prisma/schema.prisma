@@ -21,20 +21,13 @@ model User {
   type         Role     @default(user)
   accessToken  String?
   refreshToken String?
-  Orders       Order[]
-  Reviews      Review[]
+  orders       Order[]
+  reviews      Review[]
 }
 
 enum Role {
   user
   admin
-}
-
-model Image {
-  id       Int       @id @default(autoincrement())
-  path     String
-  CarModel CarModel?
-  Detail   Detail?
 }
 
 model Category {
@@ -43,7 +36,7 @@ model Category {
   parentCategoryId Int?
   parentCategory   Category?  @relation("CategorieType", fields: [parentCategoryId], references: [id])
   childCategories  Category[] @relation("CategorieType")
-  Details          Detail[]
+  details          Detail[]
 }
 
 model Detail {
@@ -57,23 +50,19 @@ model Detail {
   options          String?
   price            Int
   star             Int       @default(0)
-  imgId            Int?      @unique
-  img              Image?    @relation(fields: [imgId], references: [id])
+  img              String?
   vendorCode       String?
-  Orders           Order[]
-  Reviews          Review[]
+  orders           Order[]
+  reviews          Review[]
 }
 
 model Order {
   id        Int      @id @default(autoincrement())
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
-  // detailId  Int
-  Details   Detail[]
+  details   Detail[]
   createdAt DateTime @default(now())
 }
-
-// @relation(fields: [detailId], references: [id])
 
 model CarModel {
   id          Int        @id @default(autoincrement())
@@ -82,9 +71,8 @@ model CarModel {
   brandId     Int?
   brand       CarModel?  @relation("Brand", fields: [brandId], references: [id])
   brandModels CarModel[] @relation("Brand")
-  imgId       Int?       @unique
-  img         Image?     @relation(fields: [imgId], references: [id])
-  Detail      Detail[]
+  img         String?
+  detail      Detail[]
 }
 
 model Review {

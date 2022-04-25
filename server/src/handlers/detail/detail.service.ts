@@ -1,37 +1,31 @@
 import { Detail } from '@prisma/client'
 import ApiError from '../../exceptions/api-error'
 import prisma from '../../prisma'
-import { IDetail, showByKey } from './detail.types'
+import { showByKey } from './detail.types'
 
 export default class DetailService {
   static async show(
     type: showByKey | 'both',
-    query: number | { modelId: number; categoryId: number }
+    query: number | { modelId: number; categoryId: number },
+    pagination: { page: number; items: number }
   ): Promise<Detail[]> {
-    let details: Detail[] = []
-    if (type === 'categoryId' || type === 'modelId') {
-      details = await prisma.detail.findMany({
-        where: {
-          [type]: query,
-        },
-        include: {
-          img: true,
-        },
-      })
-    }
+    const skip = pagination.page === 1 ? 0 : (pagination.page - 1) * pagination.items
 
-    if (type === 'both' && typeof query === 'object') {
-      details = await prisma.detail.findMany({
-        where: {
-          ...query,
-        },
-        include: {
-          img: true,
-        },
-      })
-    } else {
-      throw ApiError.badRequest('Неправильные поля запроса')
-    }
+    const isTypeKey = type === 'categoryId' || type === 'modelId' ? { [type]: query } : false
+    const whereCondition = isTypeKey
+      ? isTypeKey
+      : type === 'both' && typeof query === 'object'
+      ? query
+      : null
+
+    if (!whereCondition) throw ApiError.badRequest('Запрос некорректный')
+
+    const details = await prisma.detail.findMany({
+      skip,
+      take: pagination.items,
+      where: whereCondition,
+    })
+
     return details
   }
   static async add(data) {
@@ -42,18 +36,43 @@ export default class DetailService {
     return newDetail
   }
   static async edit(id: string, data) {
-    const newModel = await prisma.detail.update({
+    const newDetail = await prisma.detail.update({
       where: {
         id: +id,
       },
       data,
     })
-    return newModel
+    return newDetail
   }
   static async delete(id: number) {
     await prisma.detail.delete({
       where: {
         id,
+      },
+    })
+  }
+
+  static async updateStar(id: number, star: number) {
+    const detail = await prisma.detail.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        _count: {
+          select: {
+            reviews: true,
+          },
+        },
+      },
+    })
+    const starCount = detail._count.reviews
+    const newStar = ((starCount - 1) * detail.star + star) / starCount
+    await prisma.detail.update({
+      where: {
+        id,
+      },
+      data: {
+        star: newStar,
       },
     })
   }

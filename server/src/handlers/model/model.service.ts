@@ -2,7 +2,7 @@ import prisma from '../../prisma'
 import { IModel } from './model.types'
 
 export default class ModelService {
-  static async show(modelId: string | undefined) {
+  static async show(modelId: number | undefined) {
     let models
     if (modelId) {
       models = await prisma.carModel.findMany({
@@ -22,9 +22,6 @@ export default class ModelService {
             },
           },
         },
-        // include: {
-        //   brandModels: true,
-        // },
       })
     } else {
       models = await prisma.carModel.findMany({
@@ -34,6 +31,12 @@ export default class ModelService {
         select: {
           id: true,
           title: true,
+          brandModels: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
         },
       })
     }
@@ -43,13 +46,16 @@ export default class ModelService {
   static async add(data: IModel) {
     const newData = { ...data, brandId: typeof data.brandId === 'string' ? +data.brandId : null }
     const newModel = await prisma.carModel.create({
-      data: newData,
+      data: { img: process.env.MODEL_DEFAULT_IMAGE, ...newData },
     })
     return newModel
   }
 
-  static async edit(id: string, data: IModel) {
-    const newData = { ...data, brandId: typeof data.brandId === 'string' ? +data.brandId : null }
+  static async edit(id: number, data: IModel) {
+    const newData = {
+      ...data,
+      brandId: typeof data.brandId === 'string' ? +data.brandId : undefined,
+    }
 
     const newModel = await prisma.carModel.update({
       where: {
@@ -64,6 +70,9 @@ export default class ModelService {
     const deletedModel = await prisma.carModel.delete({
       where: {
         id,
+      },
+      select: {
+        img: true,
       },
     })
     return deletedModel

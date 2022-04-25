@@ -1,7 +1,5 @@
-import { Image } from '@prisma/client'
 import { UploadedFile } from 'express-fileupload'
 import { unlink } from 'fs'
-import prisma from '../../prisma'
 import { ImageRelativeType } from '../../types/types'
 
 export default class ImageService {
@@ -9,68 +7,46 @@ export default class ImageService {
     const imgPathtoDb = `/images/${folder}/${Date.now()}${file.name}`
     const path = `${process.cwd()}${imgPathtoDb}`
     file.mv(path)
-    const newImage = await prisma.image.create({
-      data: {
-        path: imgPathtoDb,
-      },
-    })
-    return newImage
+    return imgPathtoDb
   }
 
-  static async findImgId(id: number, type: ImageRelativeType): Promise<Image> {
-    let img: Image
+  // static async findImgId(id: number, type: ImageRelativeType): Promise<Image> {
+  //   let img: Image
 
-    if (type === 'detail') {
-      const imageFromDb = await prisma.detail.findUnique({
-        where: {
-          id,
-        },
-        select: {
-          img: true,
-        },
-      })
-      img = imageFromDb.img
-    } else if (type === 'model') {
-      const imageFromDb = await prisma.carModel.findUnique({
-        where: {
-          id,
-        },
-        select: {
-          img: true,
-        },
-      })
-      img = imageFromDb.img
-    }
-    return img
-  }
+  //   if (type === 'detail') {
+  //     const imageFromDb = await prisma.detail.findUnique({
+  //       where: {
+  //         id,
+  //       },
+  //       select: {
+  //         img: true,
+  //       },
+  //     })
+  //     img = imageFromDb.img
+  //   } else if (type === 'model') {
+  //     const imageFromDb = await prisma.carModel.findUnique({
+  //       where: {
+  //         id,
+  //       },
+  //       select: {
+  //         img: true,
+  //       },
+  //     })
+  //     img = imageFromDb.img
+  //   }
+  //   return img
+  // }
 
-  static async update(imgId: number, file: UploadedFile) {
-    const imgFromDb = await prisma.image.findUnique({
-      where: {
-        id: imgId,
-      },
-    })
-    const path = `${process.cwd()}${imgFromDb.path}`
+  static async update(pathfromDb: string, file: UploadedFile) {
+    const path = `${process.cwd()}${pathfromDb}`
     file.mv(path)
-    return imgFromDb
+    return path
   }
 
-  static async delete(imgId: number) {
-    const imgFromDb = await prisma.image.findUnique({
-      where: {
-        id: imgId,
-      },
-    })
-
-    const path = `${process.cwd()}${imgFromDb.path}`
+  static async delete(pathfromDb) {
+    const path = `${process.cwd()}${pathfromDb}`
     unlink(path, (error) => {
       console.error(error)
-    })
-
-    await prisma.image.delete({
-      where: {
-        id: imgId,
-      },
     })
   }
 }
