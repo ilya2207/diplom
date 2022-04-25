@@ -3,10 +3,10 @@ import { ExpressJwtRequest } from 'express-jwt'
 import ApiError from '../exceptions/api-error'
 import { TokenData } from '../types/types'
 
-function adminMiddleware(req: ExpressJwtRequest, res: Response, next: NextFunction) {
+function adminMiddleware(req: ExpressJwtRequest, _res: Response, next: NextFunction) {
   try {
-    const { type } = req.auth.payload
-    if (type === 'User') return next(ApiError.forbiddenError())
+    const { type }: TokenData = req.auth.payload
+    if (type === 'user') return next(ApiError.forbiddenError())
     next()
   } catch (error) {
     next(error)

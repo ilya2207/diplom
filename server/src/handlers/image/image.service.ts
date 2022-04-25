@@ -1,5 +1,6 @@
 import { Image } from '@prisma/client'
 import { UploadedFile } from 'express-fileupload'
+import { unlink } from 'fs'
 import prisma from '../../prisma'
 import { ImageRelativeType } from '../../types/types'
 
@@ -52,5 +53,24 @@ export default class ImageService {
     const path = `${process.cwd()}${imgFromDb.path}`
     file.mv(path)
     return imgFromDb
+  }
+
+  static async delete(imgId: number) {
+    const imgFromDb = await prisma.image.findUnique({
+      where: {
+        id: imgId,
+      },
+    })
+
+    const path = `${process.cwd()}${imgFromDb.path}`
+    unlink(path, (error) => {
+      console.error(error)
+    })
+
+    await prisma.image.delete({
+      where: {
+        id: imgId,
+      },
+    })
   }
 }

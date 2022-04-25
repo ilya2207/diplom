@@ -11,10 +11,8 @@ export interface IUser {
   refreshToken?: string | null
 }
 
-
 export interface IUserEdit extends IUser {
   oldPassword?: string
-  
 }
 
-export type UserRole = 'Admin' | 'User'
+export type UserRole = 'admin' | 'user'

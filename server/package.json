@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node dist/src/app.js",
     "dev": "nodemon src/app.ts",
@@ -32,6 +32,9 @@
     "express-validator": "^6.14.0",
     "jsonwebtoken": "^8.5.1",
     "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": "16.12.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

@@ -12,7 +12,7 @@ function errorMiddleware(err: Error, _req: Request, res: Response, _next: NextFu
 
   if (err instanceof PrismaClientKnownRequestError) {
     if (err.code === 'P2002') {
-      // @ts-ignore
+      // @ts-expect-error
       const field = err.meta?.target
       return res.status(400).json({ message: 'Такие данные уже существуют', field: field })
     }

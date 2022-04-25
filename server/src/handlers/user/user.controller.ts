@@ -39,7 +39,6 @@ export default class UserController {
 
   static async logout(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
-      const { refreshToken } = req.cookies
       await UserService.logout(req.auth.payload)
       res.clearCookie('refreshToken')
       return res.status(200).json({ message: 'Успешно' })

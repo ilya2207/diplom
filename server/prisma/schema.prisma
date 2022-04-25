@@ -18,9 +18,7 @@ model User {
   password     String
   email        String   @unique
   phone        String   @unique
-  imgId        Int?
-  img          Image?   @relation(fields: [imgId], references: [id])
-  type         Role     @default(User)
+  type         Role     @default(user)
   accessToken  String?
   refreshToken String?
   Orders       Order[]
@@ -28,16 +26,15 @@ model User {
 }
 
 enum Role {
-  User
-  Admin
+  user
+  admin
 }
 
 model Image {
-  id        Int        @id @default(autoincrement())
-  path      String
-  CarModels CarModel[]
-  User      User[]
-  Details   Detail[]
+  id       Int       @id @default(autoincrement())
+  path     String
+  CarModel CarModel?
+  Detail   Detail?
 }
 
 model Category {
@@ -45,22 +42,22 @@ model Category {
   title            String?
   parentCategoryId Int?
   parentCategory   Category?  @relation("CategorieType", fields: [parentCategoryId], references: [id])
-  childCategorys   Category[] @relation("CategorieType")
+  childCategories  Category[] @relation("CategorieType")
   Details          Detail[]
 }
 
 model Detail {
   id               Int       @id @default(autoincrement())
-  categoryId       Int
-  category         Category  @relation(fields: [categoryId], references: [id])
+  categoryId       Int?
+  category         Category? @relation(fields: [categoryId], references: [id])
   title            String
   shortDescription String
   modelId          Int?
   model            CarModel? @relation(fields: [modelId], references: [id])
-  options          String
+  options          String?
   price            Int
-  star             Int
-  imgId            Int?
+  star             Int       @default(0)
+  imgId            Int?      @unique
   img              Image?    @relation(fields: [imgId], references: [id])
   vendorCode       String?
   Orders           Order[]
@@ -71,10 +68,12 @@ model Order {
   id        Int      @id @default(autoincrement())
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
-  detailId  Int
-  detail    Detail   @relation(fields: [detailId], references: [id])
+  // detailId  Int
+  Details   Detail[]
   createdAt DateTime @default(now())
 }
+
+// @relation(fields: [detailId], references: [id])
 
 model CarModel {
   id          Int        @id @default(autoincrement())
@@ -83,7 +82,7 @@ model CarModel {
   brandId     Int?
   brand       CarModel?  @relation("Brand", fields: [brandId], references: [id])
   brandModels CarModel[] @relation("Brand")
-  imgId       Int?
+  imgId       Int?       @unique
   img         Image?     @relation(fields: [imgId], references: [id])
   Detail      Detail[]
 }

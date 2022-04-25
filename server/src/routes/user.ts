@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import { Router } from 'express'
 import { expressjwt } from 'express-jwt'
 import { body } from 'express-validator'

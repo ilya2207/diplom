@@ -1,4 +1,3 @@
-import { CarModel } from '@prisma/client'
 import prisma from '../../prisma'
 import { IModel } from './model.types'
 
@@ -38,6 +37,7 @@ export default class ModelService {
         },
       })
     }
+
     return models
   }
   static async add(data: IModel) {
@@ -66,5 +66,6 @@ export default class ModelService {
         id,
       },
     })
+    return deletedModel
   }
 }

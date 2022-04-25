@@ -14,9 +14,9 @@ export default class CategoryController {
   }
   static async edit(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, parentCategoryId }: ICategory = req.body
+      const body: ICategory = req.body
       const id = req.params.categoryId
-      const category = await CategoryService.edit(+id, { title, parentCategoryId })
+      const category = await CategoryService.edit(+id, body)
       return res.json(category)
     } catch (error) {
       next(error)

@@ -3,12 +3,7 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.carModel.create({
-    data: {
-      title: 'HEllo world',
-      brandId: 2,
-    },
-  })
+  await createAdmin()
 }
 
 async function createAdmin() {
@@ -21,7 +16,7 @@ async function createAdmin() {
       lastname: 'admin',
       email: 'admin@mail.ru',
       phone: 'admin',
-      type: 'Admin',
+      type: 'admin',
       password,
     },
   })

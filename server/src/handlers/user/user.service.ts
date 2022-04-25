@@ -1,4 +1,3 @@
-// import 'dotenv/config'
 import { IUser, IUserEdit } from './user.types'
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'

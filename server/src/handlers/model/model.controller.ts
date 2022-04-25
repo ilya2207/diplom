@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { UploadedFile } from 'express-fileupload'
 import ImageService from '../image/image.service'
 import ModelService from './model.service'
-import { IModel, IModelWithImage } from './model.types'
+import { IModel } from './model.types'
 
 export default class ModelController {
   static async show(req: Request, res: Response, next: NextFunction) {
@@ -20,15 +20,13 @@ export default class ModelController {
     try {
       const body: IModel = req.body
       const file: UploadedFile | undefined = req.files?.img as UploadedFile
-      let imgId: number | null = 1
-      console.log(file)
 
       if (file) {
         const newImg = await ImageService.upload('model', file)
-        imgId = newImg.id
+        body.imgId = newImg.id
       }
 
-      const newModel = await ModelService.add({ ...body, imgId })
+      const newModel = await ModelService.add(body)
       return res.json(newModel)
     } catch (error) {
       next(error)
@@ -60,6 +58,12 @@ export default class ModelController {
   }
   static async delete(req: Request, res: Response, next: NextFunction) {
     try {
+      const modelId: string = req.params.modelId
+
+      const deletedModel = await ModelService.delete(+modelId)
+      await ImageService.delete(deletedModel.imgId)
+
+      return res.json({ message: 'Успешно удалено' })
     } catch (error) {
       next(error)
     }
