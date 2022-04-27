@@ -8,6 +8,22 @@ import { TokenData } from '../../types/types'
 import { Prisma } from '@prisma/client'
 
 export default class UserService {
+  static async show(id: number) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        firstname: true,
+        secondname: true,
+        lastname: true,
+        email: true,
+        phone: true,
+        type: true,
+      },
+    })
+    return user
+  }
   static async signup(data: IUser) {
     const { phone, email, password, firstname, lastname, secondname } = data
 

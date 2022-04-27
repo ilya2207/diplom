@@ -1,0 +1,11 @@
+.first_letter {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carmodel__item {
+  transition: color 0.1s linear;
+  &:hover {
+    color: var(--chakra-colors-red-500);
+  }
+}

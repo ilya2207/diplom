@@ -19,6 +19,7 @@ userRouter.use(
     algorithms: ['HS256'],
   })
 )
+userRouter.get('/', UserController.show)
 userRouter.post('/logout', UserController.logout)
 userRouter.post('/edit', UserController.edit)
 

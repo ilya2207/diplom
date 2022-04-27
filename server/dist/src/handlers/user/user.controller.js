@@ -17,6 +17,18 @@ const api_error_1 = __importDefault(require("../../exceptions/api-error"));
 const user_dto_1 = __importDefault(require("./user.dto"));
 const user_service_1 = __importDefault(require("./user.service"));
 class UserController {
+    static show(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.auth.payload;
+                const user = yield user_service_1.default.show(+id);
+                return res.json(user);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     static registration(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -55,7 +67,6 @@ class UserController {
     static logout(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { refreshToken } = req.cookies;
                 yield user_service_1.default.logout(req.auth.payload);
                 res.clearCookie('refreshToken');
                 return res.status(200).json({ message: 'Успешно' });

@@ -18,6 +18,24 @@ const user_dto_1 = __importDefault(require("./user.dto"));
 const prisma_1 = __importDefault(require("../../prisma"));
 const api_error_1 = __importDefault(require("../../exceptions/api-error"));
 class UserService {
+    static show(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield prisma_1.default.user.findUnique({
+                where: {
+                    id,
+                },
+                select: {
+                    firstname: true,
+                    secondname: true,
+                    lastname: true,
+                    email: true,
+                    phone: true,
+                    type: true,
+                },
+            });
+            return user;
+        });
+    }
     static signup(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const { phone, email, password, firstname, lastname, secondname } = data;

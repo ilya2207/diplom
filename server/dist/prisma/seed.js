@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield createAdmin();
+        yield createCarModels();
     });
 }
 function createAdmin() {
@@ -30,8 +30,23 @@ function createAdmin() {
                 lastname: 'admin',
                 email: 'admin@mail.ru',
                 phone: 'admin',
-                type: 'Admin',
+                type: 'admin',
                 password,
+            },
+        });
+    });
+}
+function createCarModels() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield prisma.carModel.create({
+            data: {
+                title: 'Mercedes',
+                brandModels: {
+                    create: [
+                        { title: 'Кабан', model: 'W13' },
+                        { title: 'GLE', model: 'S14' },
+                    ],
+                },
             },
         });
     });

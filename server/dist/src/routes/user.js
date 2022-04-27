@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("dotenv/config");
 const express_1 = require("express");
 const express_jwt_1 = require("express-jwt");
 const express_validator_1 = require("express-validator");
@@ -16,6 +15,7 @@ userRouter.use((0, express_jwt_1.expressjwt)({
     secret: process.env.JWT_ACCESS_SECRET,
     algorithms: ['HS256'],
 }));
+userRouter.get('/', user_controller_1.default.show);
 userRouter.post('/logout', user_controller_1.default.logout);
 userRouter.post('/edit', user_controller_1.default.edit);
 exports.default = userRouter;

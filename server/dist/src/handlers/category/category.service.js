@@ -23,7 +23,7 @@ class CategoryService {
                 select: {
                     id: true,
                     title: true,
-                    childCategorys: {
+                    childCategories: {
                         select: {
                             id: true,
                             title: true,

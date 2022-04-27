@@ -13,7 +13,7 @@ function errorMiddleware(err, _req, res, _next) {
     }
     if (err instanceof runtime_1.PrismaClientKnownRequestError) {
         if (err.code === 'P2002') {
-            // @ts-ignore
+            // @ts-expect-error
             const field = (_a = err.meta) === null || _a === void 0 ? void 0 : _a.target;
             return res.status(400).json({ message: 'Такие данные уже существуют', field: field });
         }

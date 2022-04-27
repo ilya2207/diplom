@@ -38,6 +38,9 @@ export default class ModelService {
             },
           },
         },
+        orderBy: {
+          title: 'asc',
+        },
       })
     }
 

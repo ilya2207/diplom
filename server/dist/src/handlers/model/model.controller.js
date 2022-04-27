@@ -12,12 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const prisma_1 = __importDefault(require("../../prisma"));
+const image_service_1 = __importDefault(require("../image/image.service"));
 const model_service_1 = __importDefault(require("./model.service"));
 class ModelController {
     static show(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const models = yield model_service_1.default.show();
+                const modelId = req.params.modelId;
+                const models = yield model_service_1.default.show(+modelId);
                 return res.json(models);
             }
             catch (error) {
@@ -26,9 +29,17 @@ class ModelController {
         });
     }
     static add(req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const body = req.body;
             try {
+                const body = req.body;
+                const file = (_a = req.files) === null || _a === void 0 ? void 0 : _a.img;
+                if (file) {
+                    const newImgPath = yield image_service_1.default.upload('model', file);
+                    body.img = newImgPath;
+                }
+                const newModel = yield model_service_1.default.add(body);
+                return res.json(newModel);
             }
             catch (error) {
                 next(error);
@@ -36,8 +47,31 @@ class ModelController {
         });
     }
     static edit(req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const modelId = req.params.modelId;
+                const body = req.body;
+                const file = (_a = req.files) === null || _a === void 0 ? void 0 : _a.img;
+                if (file) {
+                    const modelFromDb = yield prisma_1.default.carModel.findUnique({
+                        where: {
+                            id: +modelId,
+                        },
+                        select: {
+                            img: true,
+                        },
+                    });
+                    if (modelFromDb.img === process.env.MODEL_DEFAULT_IMAGE || !modelFromDb.img) {
+                        const imgPath = yield image_service_1.default.upload('model', file);
+                        body.img = imgPath;
+                    }
+                    else {
+                        yield image_service_1.default.update(modelFromDb.img, file);
+                    }
+                }
+                const newModel = yield model_service_1.default.edit(+modelId, body);
+                return res.json(newModel);
             }
             catch (error) {
                 next(error);
@@ -47,6 +81,10 @@ class ModelController {
     static delete(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const modelId = req.params.modelId;
+                const deletedModel = yield model_service_1.default.delete(+modelId);
+                yield image_service_1.default.delete(deletedModel.img);
+                return res.json({ message: 'Успешно удалено' });
             }
             catch (error) {
                 next(error);

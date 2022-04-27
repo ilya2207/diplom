@@ -29,9 +29,9 @@ class CategoryController {
     static edit(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { title, parentCategoryId } = req.body;
+                const body = req.body;
                 const id = req.params.categoryId;
-                const category = yield category_service_1.default.edit(+id, { title, parentCategoryId });
+                const category = yield category_service_1.default.edit(+id, body);
                 return res.json(category);
             }
             catch (error) {

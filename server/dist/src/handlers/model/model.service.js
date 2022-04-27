@@ -14,34 +14,69 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../prisma"));
 class ModelService {
-    static show() {
+    static show(modelId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = yield prisma_1.default.carModel.findMany({
-                where: {
-                    brandId: null,
-                },
-                include: {
-                    brandModels: true,
-                },
-            });
+            let models;
+            if (modelId) {
+                models = yield prisma_1.default.carModel.findMany({
+                    where: {
+                        id: +modelId,
+                    },
+                    select: {
+                        id: true,
+                        title: true,
+                        brandModels: {
+                            select: {
+                                id: true,
+                                title: true,
+                                model: true,
+                                brandId: true,
+                                img: true,
+                            },
+                        },
+                    },
+                });
+            }
+            else {
+                models = yield prisma_1.default.carModel.findMany({
+                    where: {
+                        brandId: null,
+                    },
+                    select: {
+                        id: true,
+                        title: true,
+                        brandModels: {
+                            select: {
+                                id: true,
+                                title: true,
+                            },
+                        },
+                    },
+                    orderBy: {
+                        title: 'asc',
+                    },
+                });
+            }
             return models;
         });
     }
     static add(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            const newData = Object.assign(Object.assign({}, data), { brandId: typeof data.brandId === 'string' ? +data.brandId : null });
             const newModel = yield prisma_1.default.carModel.create({
-                data: data,
+                data: Object.assign({ img: process.env.MODEL_DEFAULT_IMAGE }, newData),
             });
             return newModel;
         });
     }
     static edit(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
+            const newData = Object.assign(Object.assign({}, data), { brandId: typeof data.brandId === 'string' ? +data.brandId : undefined });
             const newModel = yield prisma_1.default.carModel.update({
                 where: {
-                    id,
+                    id: +id,
                 },
-                data: data,
+                data: newData,
             });
             return newModel;
         });
@@ -52,7 +87,11 @@ class ModelService {
                 where: {
                     id,
                 },
+                select: {
+                    img: true,
+                },
             });
+            return deletedModel;
         });
     }
 }

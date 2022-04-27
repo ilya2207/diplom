@@ -1,12 +1,24 @@
 import { NextFunction, Request, Response } from 'express'
 import { ExpressJwtRequest } from 'express-jwt'
-import { validationResult } from 'express-validator'
+import { header, validationResult } from 'express-validator'
 import ApiError from '../../exceptions/api-error'
 import UserDTO from './user.dto'
 import UserService from './user.service'
 import { IUserEdit } from './user.types'
 
 export default class UserController {
+  static async show(req: ExpressJwtRequest, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.auth.payload
+
+      const user = await UserService.show(+id)
+
+      return res.json(user)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async registration(req: Request, res: Response, next: NextFunction) {
     try {
       const errors = validationResult(req)

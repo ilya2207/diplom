@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   Button,
   Container,
@@ -8,15 +8,30 @@ import {
   MenuButton,
   Text,
   MenuList,
-  MenuItem,
   InputRightElement,
   InputGroup,
-  MenuOptionGroup,
+  useDisclosure,
 } from '@chakra-ui/react'
 import './Header.scss'
 import { ChevronDownIcon, HamburgerIcon, SearchIcon } from '@chakra-ui/icons'
+import { ModalType } from './HeaderTypes'
+import AuthModal from './components/AuthModal/AuthModal'
+import { useAppSelector } from 'store/hooks'
 
 const Header = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const modalType = useRef<ModalType>('')
+  const accessToken = useAppSelector((state) => state.user.accessToken)
+
+  const modalOpenHandler = (type: 'signup' | 'login') => () => {
+    console.log(accessToken)
+
+    if (accessToken === '') {
+      modalType.current = type
+      return onOpen()
+    }
+    console.log('Я авторизован')
+  }
   return (
     <div className="header w-full flex  items-center shadow-md py-4">
       <Container maxW={'container.xl'}>
@@ -24,8 +39,8 @@ const Header = () => {
           <Text fontSize="2xl">АвтоЗапчасти</Text>
 
           <div className="flex gap-2">
-            <Button>Регистрация</Button>
-            <Button size={'md'} colorScheme={'blue'}>
+            <Button onClick={modalOpenHandler('signup')}>Регистрация</Button>
+            <Button size={'md'} colorScheme={'blue'} onClick={modalOpenHandler('login')}>
               <i className="fa-solid fa-user mr-2"></i>
               Вход
             </Button>
@@ -47,11 +62,12 @@ const Header = () => {
             <Input type="tel" placeholder="Введите артикул или наименование запчасти" />
           </InputGroup>
           <Button size={'md'} className="shrink-0">
-            <i className="fa-solid fa-cart-shopping mr-2 text-chakra-blue-500"></i>
-            Корзина
+            <i className="fa-solid fa-cart-shopping  text-chakra-blue-500"></i>
           </Button>
         </Flex>
       </Container>
+
+      <AuthModal isOpen={isOpen} onClose={onClose} type={modalType.current} />
     </div>
   )
 }

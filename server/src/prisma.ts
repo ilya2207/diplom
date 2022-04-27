@@ -1,11 +1,10 @@
 import { PrismaClient } from '@prisma/client'
-
+//     {
+// emit: 'stdout',
+// level: 'query',
+// },
 const prisma = new PrismaClient({
   log: [
-    {
-      emit: 'stdout',
-      level: 'query',
-    },
     {
       emit: 'stdout',
       level: 'error',
