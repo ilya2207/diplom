@@ -6,6 +6,16 @@ import UserDTO from './user.dto'
 import UserService from './user.service'
 import { IUserEdit } from './user.types'
 
+const userSelectedFieldsFromPrisma = {
+  firstname: true,
+  secondname: true,
+  lastname: true,
+  phone: true,
+  email: true,
+  type: true,
+  accessToken: true,
+}
+
 export default class UserController {
   static async show(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
@@ -30,7 +40,9 @@ export default class UserController {
         maxAge: 30 * 24 * 3600 * 1000,
         httpOnly: true,
       })
-      res.json(userData)
+      const { refreshToken, ...data } = userData
+
+      res.json(data)
     } catch (error) {
       next(error)
     }
@@ -43,7 +55,10 @@ export default class UserController {
         maxAge: 30 * 24 * 3600 * 1000,
         httpOnly: true,
       })
-      return res.json(userData)
+
+      const { refreshToken, ...data } = userData
+
+      return res.json(data)
     } catch (error) {
       next(error)
     }
@@ -51,7 +66,7 @@ export default class UserController {
 
   static async logout(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
-      await UserService.logout(req.auth.payload)
+      await UserService.logout(req.auth.payload.id)
       res.clearCookie('refreshToken')
       return res.status(200).json({ message: 'Успешно' })
     } catch (error) {
@@ -62,12 +77,13 @@ export default class UserController {
   static async refresh(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.cookies
+
       const userData = await UserService.refreshTokens(refreshToken)
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       })
-      return res.json({ token: userData.accessToken })
+      return res.json({ accessToken: userData.accessToken })
     } catch (error) {
       next(error)
     }

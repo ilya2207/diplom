@@ -21,3 +21,8 @@ export interface ISignupUser {
   phone: string
   password: string
 }
+
+export interface ISignupError {
+  errors: any[]
+  message: string
+}

@@ -29,11 +29,11 @@ export default class UserService {
 
     const isUserExists = await prisma.user.findFirst({
       where: {
-        OR: [{ phone }, { email }],
+        phone,
       },
     })
 
-    if (isUserExists) throw ApiError.badRequest(`Пользователь с такими данными уже существует`)
+    if (isUserExists) throw ApiError.badRequest(`Пользователь с таким телефоном уже существует`)
 
     const hashPassword = await bcrypt.hash(password, 3)
     const user = await prisma.user.create({
@@ -55,7 +55,7 @@ export default class UserService {
     payload: TokenData
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: '30m',
+      expiresIn: '10m',
     })
     const refreshToken = jwt.sign({ payload }, process.env.JWT_ACCESS_REFRESH, { expiresIn: '30d' })
     await prisma.user.update({
@@ -69,7 +69,6 @@ export default class UserService {
     })
     return { accessToken, refreshToken }
   }
-
   static async refreshTokens(refreshToken: string) {
     try {
       if (!refreshToken) throw ApiError.unauthError()
@@ -107,6 +106,7 @@ export default class UserService {
     const tokens = await this.generateTokens({ id: user.id, type: user.type })
 
     const userDto = new UserDTO(user)
+
     return { ...userDto, ...tokens }
   }
 

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   Button,
   Container,
@@ -11,39 +11,64 @@ import {
   InputRightElement,
   InputGroup,
   useDisclosure,
+  useToast,
+  Modal,
 } from '@chakra-ui/react'
 import './Header.scss'
 import { ChevronDownIcon, HamburgerIcon, SearchIcon } from '@chakra-ui/icons'
 import { ModalType } from './HeaderTypes'
 import AuthModal from './components/AuthModal/AuthModal'
-import { useAppSelector } from 'store/hooks'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
+import ProfileMenu from './components/ProfileMenu/ProfileMenu'
+import { Link } from 'react-router-dom'
+import { fetchUserData } from 'store/user/user.action'
+import { useCustomToast } from 'hooks/useCustomToast'
+import { userSlice } from 'store/user/user.slice'
+import { selectUserState } from 'store/user/user.selector'
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const modalType = useRef<ModalType>('')
-  const accessToken = useAppSelector((state) => state.user.accessToken)
+  const { user, loading, isAuth, error } = useAppSelector(selectUserState)
+  const profileName = isAuth ? `${user.secondname} ${user.firstname}` : ''
+
+  const toast = useCustomToast(userSlice.actions.setError(''))
 
   const modalOpenHandler = (type: 'signup' | 'login') => () => {
-    console.log(accessToken)
-
-    if (accessToken === '') {
-      modalType.current = type
-      return onOpen()
-    }
-    console.log('Я авторизован')
+    modalType.current = type
+    return onOpen()
   }
+
+  useEffect(() => {
+    if (error && !loading) {
+      toast({
+        title: error,
+        duration: 3000,
+        status: 'error',
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, loading])
+
   return (
     <div className="header w-full flex  items-center shadow-md py-4">
       <Container maxW={'container.xl'}>
         <Flex justify={'space-between'} align="center" className="gap-10">
-          <Text fontSize="2xl">АвтоЗапчасти</Text>
+          <Link to={'/'}>
+            <Text fontSize="3xl">АвтоЗапчасти</Text>
+          </Link>
 
           <div className="flex gap-2">
-            <Button onClick={modalOpenHandler('signup')}>Регистрация</Button>
-            <Button size={'md'} colorScheme={'blue'} onClick={modalOpenHandler('login')}>
-              <i className="fa-solid fa-user mr-2"></i>
-              Вход
-            </Button>
+            {!isAuth && (
+              <>
+                <Button onClick={modalOpenHandler('signup')}>Регистрация</Button>
+                <Button size={'md'} colorScheme={'blue'} onClick={modalOpenHandler('login')}>
+                  <i className="fa-solid fa-user mr-2"></i>
+                  Вход
+                </Button>
+              </>
+            )}
+            {isAuth && <ProfileMenu profileName={profileName} />}
           </div>
         </Flex>
         <Flex align={'center'} justify="space-between" className="mt-3 gap-10">
@@ -58,7 +83,7 @@ const Header = () => {
             <MenuList className="flex"></MenuList>
           </Menu>
           <InputGroup>
-            <InputRightElement pointerEvents="none" children={<SearchIcon />} />
+            <InputRightElement className="z-0" pointerEvents="none" children={<SearchIcon />} />
             <Input type="tel" placeholder="Введите артикул или наименование запчасти" />
           </InputGroup>
           <Button size={'md'} className="shrink-0">
@@ -66,8 +91,9 @@ const Header = () => {
           </Button>
         </Flex>
       </Container>
-
-      <AuthModal isOpen={isOpen} onClose={onClose} type={modalType.current} />
+      <Modal isOpen={isOpen && !isAuth} onClose={onClose} isCentered>
+        <AuthModal onClose={onClose} type={modalType.current} />
+      </Modal>
     </div>
   )
 }

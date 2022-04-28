@@ -10,15 +10,13 @@ import { store } from 'store/store'
 
 const root = createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <ChakraProvider resetCSS={true}>
-          <App />
-        </ChakraProvider>
-      </Router>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <Router>
+      <ChakraProvider resetCSS={true}>
+        <App />
+      </ChakraProvider>
+    </Router>
+  </Provider>
 )
 
 // If you want to start measuring performance in your app, pass a function

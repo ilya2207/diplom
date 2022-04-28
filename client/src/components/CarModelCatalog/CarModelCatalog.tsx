@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { useState, useEffect, useMemo } from 'react'
 import CarModelItem from './components/CarModelItem'
 import styles from './CarModelCatalog.module.scss'
+import axiosApi from 'utils/api'
 
 interface IOnlyModelBrand {
   id: number
@@ -29,7 +30,7 @@ const CarModelCatalog = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get<IOnlyModelBrand[]>('api/model/')
+      const response = await axiosApi.get<IOnlyModelBrand[]>('model')
 
       setModels(response.data)
     }
@@ -43,13 +44,16 @@ const CarModelCatalog = () => {
 
   return (
     <Container className="mt-5" maxW={'container.xl'}>
-      <InputGroup className="max-w-sm">
+      {/* <InputGroup className="max-w-sm">
         <Input placeholder="Введите марку авто" />
         <InputRightElement
           pointerEvents="none"
           children={<i className="fa-solid fa-car text-chakra-blue-500"></i>}
         />
-      </InputGroup>
+      </InputGroup> */}
+      <Text fontSize="1xl" fontWeight="bold">
+        Выберите марку авто
+      </Text>
       <Grid
         className="shadow-lg pl-8 mt-2 py-3"
         templateColumns={'repeat(5, 1fr)'}

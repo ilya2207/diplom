@@ -5,14 +5,16 @@ import { ILoginInput, ISignupUser, IUser } from 'types/user.types'
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: authBaseQuery,
+  tagTypes: ['user'],
   endpoints: (builder) => ({
-    getUser: builder.query<IUser, any>({
-      query: () => `user`,
+    getUser: builder.query<IUser, void>({
+      query: () => ({ url: 'user' }),
+      providesTags: [{ type: 'user', id: 'user' }],
     }),
     signup: builder.mutation<IUser, ISignupUser>({
       query: (body) => ({
         body,
-        url: '/user/signup',
+        url: 'user/signup',
         method: 'POST',
       }),
     }),
@@ -22,8 +24,15 @@ export const authApi = createApi({
         url: 'user/login',
         method: 'post',
       }),
+      // invalidatesTags: [{ type: 'user', id: 'user' }],
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: 'user/logout',
+        method: 'post',
+      }),
+      // invalidatesTags: [{ type: 'user', id: 'user' }],
     }),
   }),
 })
-
-export const { useGetUserQuery, useSignupMutation, useLoginMutation } = authApi
+export const { useGetUserQuery, useSignupMutation, useLoginMutation, useLogoutMutation } = authApi

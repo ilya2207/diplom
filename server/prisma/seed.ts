@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function main() {
-  await createCarModels()
+  await createAdmin()
 }
 
 async function createAdmin() {
@@ -11,9 +11,9 @@ async function createAdmin() {
 
   await prisma.user.create({
     data: {
-      firstname: 'admin',
-      secondname: 'admin',
-      lastname: 'admin',
+      firstname: 'Admin',
+      secondname: '',
+      lastname: '',
       email: 'admin@mail.ru',
       phone: 'admin',
       type: 'admin',

@@ -67,7 +67,7 @@ class UserController {
     static logout(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield user_service_1.default.logout(req.auth.payload);
+                yield user_service_1.default.logout(req.auth.payload.id);
                 res.clearCookie('refreshToken');
                 return res.status(200).json({ message: 'Успешно' });
             }
@@ -79,7 +79,9 @@ class UserController {
     static refresh(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(1);
                 const { refreshToken } = req.cookies;
+                console.log(refreshToken);
                 const userData = yield user_service_1.default.refreshTokens(refreshToken);
                 res.cookie('refreshToken', userData.refreshToken, {
                     maxAge: 30 * 24 * 60 * 60 * 1000,
