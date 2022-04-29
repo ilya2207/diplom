@@ -14,7 +14,7 @@ import CategoryListItem from './components/CategoryListItem/CategoryListItem'
 const ManageCategory = () => {
   const categories = useAppSelector((state) => state.category)
 
-  const { items } = categories // items
+  const { items } = categories
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -26,6 +26,10 @@ const ManageCategory = () => {
 
   const addCategoryHandler = () => {
     dispatch(addNewCategory())
+  }
+
+  const addChildCategoryHandler = (id: number) => {
+    dispatch(addNewCategory(id))
   }
 
   const saveCategoryHandler = (id: number | null, body: ICategoryItem | ICategoryItemAdd) => {
@@ -56,6 +60,7 @@ const ManageCategory = () => {
               item={item}
               saveHandler={saveCategoryHandler}
               deleteHandler={deleteCategoryHandler}
+              addChildCategoryHandler={addChildCategoryHandler}
             />
           ))}
       </Accordion>

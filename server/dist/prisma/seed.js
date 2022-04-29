@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield createCarModels();
+        yield createAdmin();
     });
 }
 function createAdmin() {
@@ -25,9 +25,9 @@ function createAdmin() {
         const password = yield bcrypt_1.default.hash('admin', 3);
         yield prisma.user.create({
             data: {
-                firstname: 'admin',
-                secondname: 'admin',
-                lastname: 'admin',
+                firstname: 'Admin',
+                secondname: '',
+                lastname: '',
                 email: 'admin@mail.ru',
                 phone: 'admin',
                 type: 'admin',

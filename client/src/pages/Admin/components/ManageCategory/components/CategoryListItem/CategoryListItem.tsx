@@ -1,7 +1,5 @@
 import { AccordionItem, AccordionPanel, Box, Button } from '@chakra-ui/react'
 import React from 'react'
-import { addNewCategory } from 'store/catalog/category.slice'
-import { useAppDispatch } from 'store/hooks'
 import { ICategoryItem, ICategoryItemAdd } from 'types/category.types'
 import CategoryListItemRow from './components/CategoryListItemRow'
 
@@ -9,19 +7,16 @@ interface CategoryListItemProps {
   item: ICategoryItem
   saveHandler: (id: number | null, body: ICategoryItem | ICategoryItemAdd) => void
   deleteHandler: (id: number) => void
+  addChildCategoryHandler: (id: number) => void
 }
 
 const CategoryListItem: React.FC<CategoryListItemProps> = ({
   item,
   saveHandler,
   deleteHandler,
+  addChildCategoryHandler,
 }) => {
-  const dispatch = useAppDispatch()
-
-  const childCategoryHandler = () => {
-    dispatch(addNewCategory(item.id))
-  }
-
+  const addChild = () => addChildCategoryHandler(item.id)
   return (
     <AccordionItem>
       <CategoryListItemRow
@@ -49,7 +44,7 @@ const CategoryListItem: React.FC<CategoryListItemProps> = ({
             color="gray.600"
             className="mr-4"
             variant={'ghost'}
-            onClick={childCategoryHandler}
+            onClick={addChild}
             disabled={!item.title}
           >
             <i className="fa-solid fa-plus"></i>

@@ -5,11 +5,11 @@ import React, { useEffect } from 'react'
 import { fetchCategoryItems } from 'store/catalog/category.action'
 import { setError } from 'store/catalog/category.slice'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
+import CatalogMenuItem from './components/CatalogMenuItem/CatalogMenuItem'
 
 const CatalogMenu = () => {
   const dispatch = useAppDispatch()
   const { items } = useAppSelector((state) => state.category)
-  const toast = useCustomToast(setError(''))
 
   useEffect(() => {
     dispatch(fetchCategoryItems)
@@ -24,8 +24,8 @@ const CatalogMenu = () => {
           <ChevronDownIcon />
         </div>
       </MenuButton>
-      <MenuList>
-        {!!items.length && items.map((item) => <MenuItem>{item.title}</MenuItem>)}
+      <MenuList className="relative">
+        {!!items.length && items.map((item) => <CatalogMenuItem item={item} />)}
       </MenuList>
     </Menu>
   )

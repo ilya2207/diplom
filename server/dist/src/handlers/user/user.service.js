@@ -41,11 +41,11 @@ class UserService {
             const { phone, email, password, firstname, lastname, secondname } = data;
             const isUserExists = yield prisma_1.default.user.findFirst({
                 where: {
-                    OR: [{ phone }, { email }],
+                    phone,
                 },
             });
             if (isUserExists)
-                throw api_error_1.default.badRequest(`Пользователь с такими данными уже существует`);
+                throw api_error_1.default.badRequest(`Пользователь с таким телефоном уже существует`);
             const hashPassword = yield bcrypt_1.default.hash(password, 3);
             const user = yield prisma_1.default.user.create({
                 data: {
@@ -65,7 +65,7 @@ class UserService {
     static generateTokens(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             const accessToken = jsonwebtoken_1.default.sign({ payload }, process.env.JWT_ACCESS_SECRET, {
-                expiresIn: '10s',
+                expiresIn: '10m',
             });
             const refreshToken = jsonwebtoken_1.default.sign({ payload }, process.env.JWT_ACCESS_REFRESH, { expiresIn: '30d' });
             yield prisma_1.default.user.update({

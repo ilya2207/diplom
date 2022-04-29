@@ -34,7 +34,7 @@ model Category {
   id               Int        @id @default(autoincrement())
   title            String?
   parentCategoryId Int?
-  parentCategory   Category?  @relation("CategorieType", fields: [parentCategoryId], references: [id])
+  parentCategory   Category?  @relation("CategorieType", fields: [parentCategoryId], references: [id], onDelete: Cascade)
   childCategories  Category[] @relation("CategorieType")
   details          Detail[]
 }
@@ -55,11 +55,11 @@ model Detail {
   orders           Order[]
   reviews          Review[]
 }
- 
+
 model Order {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   details   Detail[]
   createdAt DateTime @default(now())
 }
@@ -69,7 +69,7 @@ model CarModel {
   title       String
   model       String?
   brandId     Int?
-  brand       CarModel?  @relation("Brand", fields: [brandId], references: [id])
+  brand       CarModel?  @relation("Brand", fields: [brandId], references: [id], onDelete: Cascade)
   brandModels CarModel[] @relation("Brand")
   img         String?
   detail      Detail[]
@@ -78,9 +78,9 @@ model CarModel {
 model Review {
   id       Int    @id @default(autoincrement())
   userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   detailId Int
-  detail   Detail @relation(fields: [detailId], references: [id])
+  detail   Detail @relation(fields: [detailId], references: [id], onDelete: Cascade)
   star     Int
   content  String
 }

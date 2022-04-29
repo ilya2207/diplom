@@ -17,6 +17,9 @@ export default class CategoryService {
           },
         },
       },
+      orderBy: {
+        id: 'asc',
+      },
     })
     return categories
   }
