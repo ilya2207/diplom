@@ -13,7 +13,6 @@ const ManageOrder = () => {
       //   console.log(res)
     }
     searchReq()
-    console.log(debouncedSearchState)
   }, [debouncedSearchState])
 
   return (

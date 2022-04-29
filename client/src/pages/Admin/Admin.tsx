@@ -25,18 +25,24 @@ const Admin = () => {
 
       <Tabs>
         <Flex className="mt-4 w-full" justifyContent="space-between">
-          <Box className="w-full max-w-xs" borderWidth="1px" borderRadius="lg">
-            <TabList flexDirection="column">
-              <Tab>
+          <Box
+            className="w-full max-w-xs"
+            borderWidth="1px"
+            borderRadius="lg"
+            flexGrow={0}
+            height="max-content"
+          >
+            <TabList flexDirection="column" borderBottom="none">
+              <Tab className="py-3">
                 <i className="fa-solid fa-clipboard-list mr-2"></i>Заказы
               </Tab>
-              <Tab>
+              <Tab className="py-3">
                 <i className="fa-solid fa-list mr-2"></i>Категории
               </Tab>
-              <Tab>
+              <Tab className="py-3">
                 <i className="fa-solid fa-car mr-2"></i>Модели
               </Tab>
-              <Tab>
+              <Tab className="py-3">
                 <img className="w-4 h-4 mr-2" src={detailImg} alt="" />
                 Детали
               </Tab>

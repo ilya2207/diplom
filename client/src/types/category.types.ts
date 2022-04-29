@@ -1,6 +1,13 @@
-export interface ICategoryItem {
-  id?: number
+interface ICategory {
   title: string
-  parentCategoryId?: number
+  parentCategoryId?: number | null
   childCategories?: ICategoryItem[]
+}
+
+export interface ICategoryItem extends ICategory {
+  id: number
+}
+
+export interface ICategoryItemAdd extends ICategory {
+  id?: number
 }

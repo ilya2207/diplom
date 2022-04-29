@@ -38,7 +38,7 @@ export const userSlice = createSlice({
       state.loading = true
     })
     builder.addCase(fetchUserData.fulfilled, (state, action: PayloadAction<IUser>) => {
-      const accessToken = state.user.accessToken
+      const accessToken = state.user.accessToken ?? ''
       state.loading = false
       state.error = ''
       state.isAuth = true
@@ -46,7 +46,7 @@ export const userSlice = createSlice({
       state.user.accessToken = accessToken
     })
     builder.addCase(fetchUserData.rejected, (state, action) => {
-      if (action?.payload) state.error = action.payload
+      if (action?.payload) state.error = action.error
       state.loading = false
       state.isAuth = false
     })

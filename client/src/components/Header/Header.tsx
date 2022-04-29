@@ -1,30 +1,26 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   Button,
   Container,
   Flex,
   Input,
-  Menu,
-  MenuButton,
   Text,
-  MenuList,
   InputRightElement,
   InputGroup,
   useDisclosure,
-  useToast,
   Modal,
 } from '@chakra-ui/react'
 import './Header.scss'
-import { ChevronDownIcon, HamburgerIcon, SearchIcon } from '@chakra-ui/icons'
+import { SearchIcon } from '@chakra-ui/icons'
 import { ModalType } from './HeaderTypes'
 import AuthModal from './components/AuthModal/AuthModal'
-import { useAppDispatch, useAppSelector } from 'store/hooks'
+import { useAppSelector } from 'store/hooks'
 import ProfileMenu from './components/ProfileMenu/ProfileMenu'
 import { Link } from 'react-router-dom'
-import { fetchUserData } from 'store/user/user.action'
 import { useCustomToast } from 'hooks/useCustomToast'
 import { userSlice } from 'store/user/user.slice'
 import { selectUserState } from 'store/user/user.selector'
+import CatalogMenu from './components/CatalogMenu/CatalogMenu'
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -72,16 +68,7 @@ const Header = () => {
           </div>
         </Flex>
         <Flex align={'center'} justify="space-between" className="mt-3 gap-10">
-          <Menu>
-            <MenuButton as={Button} colorScheme="red" className="shrink-0">
-              <div className="flex items-center gap-1">
-                <HamburgerIcon />
-                <Text fontSize={'lg'}>Каталог</Text>
-                <ChevronDownIcon />
-              </div>
-            </MenuButton>
-            <MenuList className="flex"></MenuList>
-          </Menu>
+          <CatalogMenu />
           <InputGroup>
             <InputRightElement className="z-0" pointerEvents="none" children={<SearchIcon />} />
             <Input type="tel" placeholder="Введите артикул или наименование запчасти" />

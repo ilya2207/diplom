@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { categorySlice } from './catalog/category.slice'
 import { authApi } from './services/auth'
 import { userSlice } from './user/user.slice'
 // import { userSlice } from './slices/userSlice'
 
 const rootReducer = combineReducers({
   user: userSlice.reducer,
+  category: categorySlice.reducer,
   // [authApi.reducerPath]: authApi.reducer,
 })
 const stateFromLocalStorage = localStorage.getItem('store')

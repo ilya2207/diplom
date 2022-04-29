@@ -30,7 +30,7 @@ const CarModelCatalog = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axiosApi.get<IOnlyModelBrand[]>('model')
+      const response = await axiosApi.get<IOnlyModelBrand[]>('/model')
 
       setModels(response.data)
     }

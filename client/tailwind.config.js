@@ -14,6 +14,12 @@ module.exports = {
         800: '#2a4365',
         900: '#1A365D',
       },
+      'chakra-red': {
+        500: '#E53E3E',
+      },
+      'chakra-green': {
+        400: '#48BB78',
+      },
     },
     extend: {},
   },
