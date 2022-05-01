@@ -11,3 +11,7 @@ export interface ICategoryItem extends ICategory {
 export interface ICategoryItemAdd extends ICategory {
   id?: number
 }
+export interface IUpdateCategoryItem {
+  body: ICategoryItem
+  id: number | string
+}

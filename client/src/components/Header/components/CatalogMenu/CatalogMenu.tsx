@@ -16,7 +16,7 @@ const CatalogMenu = () => {
   }, [])
 
   return (
-    <Menu>
+    <Menu autoSelect={false}>
       <MenuButton as={Button} colorScheme="red" className="shrink-0">
         <div className="flex items-center gap-1">
           <HamburgerIcon />
@@ -24,7 +24,7 @@ const CatalogMenu = () => {
           <ChevronDownIcon />
         </div>
       </MenuButton>
-      <MenuList className="relative">
+      <MenuList className="relative" flexDirection={'column'}>
         {!!items.length && items.map((item) => <CatalogMenuItem item={item} />)}
       </MenuList>
     </Menu>

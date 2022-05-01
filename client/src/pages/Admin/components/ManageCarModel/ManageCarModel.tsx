@@ -1,5 +1,14 @@
 import React, { useEffect } from 'react'
-import { Box, Button, Text } from '@chakra-ui/react'
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Button,
+  Text,
+} from '@chakra-ui/react'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { fetchModel } from 'store/model/model.action'
 
@@ -19,7 +28,18 @@ const ManageCarModel = () => {
         <Text fontSize="xl">Марки машин</Text>
         <Button>Добавить</Button>
       </Box>
-      <Box>{items && items.map((item) => <Box>{item.title}</Box>)}</Box>
+      <Accordion className="mt-5" allowMultiple={true}>
+        {items &&
+          items.map((item) => (
+            <AccordionItem>
+              <AccordionButton className="flex justify-between items-center py-4">
+                {item.title}
+                <AccordionIcon className="ml-2" />
+              </AccordionButton>
+              <AccordionPanel></AccordionPanel>
+            </AccordionItem>
+          ))}
+      </Accordion>
     </Box>
   )
 }

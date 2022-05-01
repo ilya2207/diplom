@@ -1,7 +1,7 @@
 import { AccordionItem, AccordionPanel, Box, Button } from '@chakra-ui/react'
+import ListItemRow from 'components/ListItemRow/ListItemRow'
 import React from 'react'
 import { ICategoryItem, ICategoryItemAdd } from 'types/category.types'
-import CategoryListItemRow from './components/CategoryListItemRow'
 
 interface CategoryListItemProps {
   item: ICategoryItem
@@ -19,7 +19,7 @@ const CategoryListItem: React.FC<CategoryListItemProps> = ({
   const addChild = () => addChildCategoryHandler(item.id)
   return (
     <AccordionItem>
-      <CategoryListItemRow
+      <ListItemRow
         id={item.id ?? -1}
         saveHandler={saveHandler}
         isParent={true}
@@ -30,7 +30,7 @@ const CategoryListItem: React.FC<CategoryListItemProps> = ({
       <AccordionPanel>
         {!!item?.childCategories?.length &&
           item.childCategories.map((element, index) => (
-            <CategoryListItemRow
+            <ListItemRow
               key={`${element.id}_${index}`}
               deleteHandler={deleteHandler}
               saveHandler={saveHandler}

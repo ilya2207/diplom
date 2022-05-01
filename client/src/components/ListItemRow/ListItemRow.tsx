@@ -11,7 +11,7 @@ interface Props {
   deleteHandler: (id: number) => void
 }
 
-const CategoryListItemRow: React.FC<Props> = ({
+const ListItemRow: React.FC<Props> = ({
   title,
   isParent = false,
   id,
@@ -133,4 +133,4 @@ const CategoryListItemRow: React.FC<Props> = ({
   )
 }
 
-export default CategoryListItemRow
+export default ListItemRow

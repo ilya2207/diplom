@@ -47,7 +47,7 @@ const Header = () => {
   }, [error, loading])
 
   return (
-    <div className="header w-full flex  items-center shadow-md py-4">
+    <div className="header w-full flex  items-center shadow-md py-4 sticky top-0 left-0 bg-white z-30">
       <Container maxW={'container.xl'}>
         <Flex justify={'space-between'} align="center" className="gap-10">
           <Link to={'/'}>

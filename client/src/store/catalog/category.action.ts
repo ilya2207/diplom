@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosResponse } from 'axios'
-import { ICategoryItem } from 'types/category.types'
+import { ICategoryItem, ICategoryItemAdd, IUpdateCategoryItem } from 'types/category.types'
 import axiosApi from 'utils/api'
 
 export const fetchCategoryItems = createAsyncThunk<
@@ -22,7 +22,7 @@ export const fetchCategoryItems = createAsyncThunk<
 
 export const addCategoryItem = createAsyncThunk(
   'category/add',
-  async (body: ICategoryItem, { rejectWithValue, dispatch }) => {
+  async (body: ICategoryItemAdd, { rejectWithValue, dispatch }) => {
     try {
       await axiosApi.post('category', body)
       return dispatch(fetchCategoryItems())
@@ -31,11 +31,6 @@ export const addCategoryItem = createAsyncThunk(
     }
   }
 )
-
-interface IUpdateCategoryItem {
-  body: ICategoryItem
-  id: number | string
-}
 
 export const updateCategoryItem = createAsyncThunk(
   'category/update',

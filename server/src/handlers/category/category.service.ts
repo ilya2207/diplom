@@ -15,6 +15,9 @@ export default class CategoryService {
             id: true,
             title: true,
           },
+          orderBy: {
+            id: 'asc',
+          },
         },
       },
       orderBy: {

@@ -8,7 +8,7 @@ import {
 } from 'store/catalog/category.action'
 import { addNewCategory, deleteNewCategory } from 'store/catalog/category.slice'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
-import { ICategoryItem, ICategoryItemAdd } from 'types/category.types'
+import { ICategoryItem, ICategoryItemAdd, IUpdateCategoryItem } from 'types/category.types'
 import CategoryListItem from './components/CategoryListItem/CategoryListItem'
 
 const ManageCategory = () => {
@@ -34,10 +34,8 @@ const ManageCategory = () => {
 
   const saveCategoryHandler = (id: number | null, body: ICategoryItem | ICategoryItemAdd) => {
     if (id) {
-      // @ts-expect-error
-      return dispatch(updateCategoryItem({ body, id }))
+      return dispatch(updateCategoryItem({ body, id } as IUpdateCategoryItem))
     }
-    // @ts-expect-error
     return dispatch(addCategoryItem(body))
   }
 
