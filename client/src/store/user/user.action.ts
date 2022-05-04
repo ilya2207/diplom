@@ -6,7 +6,7 @@ import axiosApi from 'utils/api'
 
 export const fetchUserData = createAsyncThunk<
   IUser,
-  any,
+  void,
   {
     rejectValue: string
   }

@@ -1,5 +1,5 @@
 import { HamburgerIcon, ChevronDownIcon } from '@chakra-ui/icons'
-import { Menu, MenuButton, Button, MenuList, Text, MenuItem } from '@chakra-ui/react'
+import { Menu, MenuButton, Button, MenuList, Text, MenuItem, Box } from '@chakra-ui/react'
 import { useCustomToast } from 'hooks/useCustomToast'
 import React, { useEffect } from 'react'
 import { fetchCategoryItems } from 'store/catalog/category.action'
@@ -24,8 +24,9 @@ const CatalogMenu = () => {
           <ChevronDownIcon />
         </div>
       </MenuButton>
-      <MenuList className="relative" flexDirection={'column'}>
-        {!!items.length && items.map((item) => <CatalogMenuItem item={item} />)}
+      <MenuList className="relative shadow-lg" flexDirection={'column'}>
+        {!!items.length &&
+          items.map((item, index) => <CatalogMenuItem key={`${item.id}_${index}`} item={item} />)}
       </MenuList>
     </Menu>
   )

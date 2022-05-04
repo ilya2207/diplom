@@ -48,7 +48,6 @@ const ManageCategory = () => {
     <Box>
       <Box className="flex justify-between items-center">
         <Text fontSize="xl">Категории запчастей</Text>
-        <Button onClick={addCategoryHandler}>Добавить</Button>
       </Box>
       <Accordion className="mt-5" allowMultiple>
         {!!items.length &&
@@ -62,6 +61,9 @@ const ManageCategory = () => {
             />
           ))}
       </Accordion>
+      <Box className="text-right p-4">
+        <Button onClick={addCategoryHandler}>Добавить</Button>
+      </Box>
     </Box>
   )
 }

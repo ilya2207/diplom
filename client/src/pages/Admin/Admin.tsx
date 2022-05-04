@@ -19,14 +19,14 @@ import ManageDetail from './components/ManageDetail/ManageDetail'
 const Admin = () => {
   return (
     <Container maxW={'container.xl'}>
-      <Text fontSize="1xl" fontWeight="bold">
+      <Text className="sticky top-36 left-4" fontSize="1xl" fontWeight="bold">
         Админ-панель
       </Text>
 
       <Tabs>
         <Flex className="mt-4 w-full" justifyContent="space-between">
           <Box
-            className="w-full max-w-xs"
+            className="w-full max-w-xs sticky top-44 left-4"
             borderWidth="1px"
             borderRadius="lg"
             flexGrow={0}

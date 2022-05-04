@@ -1,9 +1,10 @@
 import { Container, Grid, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react'
 import axios from 'axios'
 import React, { useState, useEffect, useMemo } from 'react'
-import CarModelItem from './components/CarModelItem'
+import CarModelCatalogItem from './components/CarModelCatalogItem'
 import styles from './CarModelCatalog.module.scss'
 import axiosApi from 'utils/api'
+import { Link } from 'react-router-dom'
 
 interface IOnlyModelBrand {
   id: number
@@ -77,7 +78,9 @@ const CarModelCatalog = () => {
                       >
                         {isFirstLetter}
                       </Text>
-                      <CarModelItem title={item.title} />
+                      <Link to={`/car/${item.id}`}>
+                        <CarModelCatalogItem title={item.title} />
+                      </Link>
                     </div>
                   )
                 })}

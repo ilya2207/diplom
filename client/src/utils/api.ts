@@ -52,9 +52,11 @@ import axios from 'axios'
 
 const nameToken = 'token'
 
+const SERVER_HOST = 'http://localhost:5000/api'
+
 const axiosApi = axios.create({
   withCredentials: true,
-  baseURL: 'api',
+  baseURL: `${SERVER_HOST}`,
 })
 
 axiosApi.interceptors.request.use((config) => {
@@ -77,7 +79,9 @@ axiosApi.interceptors.response.use(
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const response = await axios.post('api/user/refresh')
+        const response = await axios.post(`${SERVER_HOST}/user/refresh`, undefined, {
+          withCredentials: true,
+        })
         localStorage.setItem('token', response.data.accessToken)
         return axiosApi.request(originalRequest)
       } catch (e) {

@@ -12,14 +12,17 @@ export const fetchModel = createAsyncThunk('model/fetch', async (_, { rejectWith
   }
 })
 
-export const addModel = createAsyncThunk('model/add', async (body: IModel, { rejectWithValue }) => {
-  try {
-    const res: AxiosResponse<IModel[]> = await axiosApi.post('model', body)
-    return res.data
-  } catch (error) {
-    rejectWithValue('Что-то пошло не так')
+export const addModel = createAsyncThunk(
+  'model/add',
+  async (body: IModel, { rejectWithValue, dispatch }) => {
+    try {
+      await axiosApi.post('model', body)
+      return dispatch(fetchModel())
+    } catch (error) {
+      rejectWithValue('Что-то пошло не так')
+    }
   }
-})
+)
 
 interface IEditModelArgument {
   body: IModel
@@ -28,12 +31,11 @@ interface IEditModelArgument {
 
 export const editModel = createAsyncThunk(
   'model/edit',
-  async (arg: IEditModelArgument, { rejectWithValue }) => {
+  async (arg: IEditModelArgument, { rejectWithValue, dispatch }) => {
     try {
       const { id, body } = arg
-      const res: AxiosResponse<IModel[]> = await axiosApi.put(`model/${id}`, body)
-
-      return res.data
+      await axiosApi.put(`model/${id}`, body).then(() => dispatch(fetchModel()))
+      return
     } catch (error) {
       rejectWithValue('Что-то пошло не так')
     }
@@ -42,11 +44,10 @@ export const editModel = createAsyncThunk(
 
 export const deleteModel = createAsyncThunk(
   'model/delete',
-  async (id: number, { rejectWithValue }) => {
+  async (id: number, { rejectWithValue, dispatch }) => {
     try {
-      const res: AxiosResponse<IModel[]> = await axiosApi.delete(`model/${id}`)
-
-      return res.data
+      await axiosApi.delete(`model/${id}`)
+      return dispatch(fetchModel())
     } catch (error) {
       rejectWithValue('Что-то пошло не так')
     }

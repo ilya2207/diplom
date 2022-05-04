@@ -1,23 +1,30 @@
 import { AccordionButton, AccordionIcon, Box, Input, Text } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { ICategoryItem, ICategoryItemAdd } from 'types/category.types'
+import { IModel } from 'types/model.types'
 
 interface Props {
   title: string
   id: number
+  item?: IModel
   parentCategoryId?: number
   isParent?: boolean
   saveHandler: (id: number | null, body: ICategoryItem | ICategoryItemAdd) => void
   deleteHandler: (id: number) => void
+  isEditModal?: boolean
+  editHandlerModal?: (editableElement: IModel) => void
 }
 
 const ListItemRow: React.FC<Props> = ({
   title,
   isParent = false,
+  isEditModal = false,
   id,
   parentCategoryId,
+  item,
   saveHandler,
   deleteHandler,
+  editHandlerModal,
 }) => {
   const [isEdit, setIsEdit] = useState(false)
   const isNew = useRef(false)
@@ -36,6 +43,8 @@ const ListItemRow: React.FC<Props> = ({
   }
 
   const editHandler = (event) => {
+    if (isEditModal && !isParent) {
+    }
     if (isParent) event.stopPropagation()
     if (textValue === '') return
     setIsEdit(!isEdit)
@@ -63,10 +72,7 @@ const ListItemRow: React.FC<Props> = ({
       <AccordionButton justifyContent="space-between" cursor="pointer" as={'div'}>
         {isEdit && (
           <Input
-            onKeyDown={(e) => {
-              e.stopPropagation()
-              console.log(e)
-            }}
+            onKeyDown={(e) => e.stopPropagation()}
             required
             className="max-w-sm"
             value={textValue}
@@ -109,12 +115,13 @@ const ListItemRow: React.FC<Props> = ({
           onChange={(e) => setTextValue(e.target.value)}
         />
       )}
-      {!isEdit && <Text>{textValue}</Text>}
+      {!isEdit && <Text>{isEditModal ? title : textValue}</Text>}
       <Box className="flex gap-4">
         {!isEdit && (
           <i
             className="cursor-pointer text-chakra-blue-500 fa-solid fa-pen p-1 "
-            onClick={editHandler}
+            // @ts-expect-error
+            onClick={isEditModal ? editHandlerModal(item as IModel) : editHandler}
           ></i>
         )}
         {isEdit && (

@@ -64,7 +64,6 @@ export const categorySlice = createSlice({
       state.loading = false
     })
 
-    builder.addCase(addCategoryItem.fulfilled, (state, action) => {})
   },
 })
 
