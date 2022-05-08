@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function main() {
-  await createAdmin()
+  await createDetail()
 }
 
 async function createAdmin() {
@@ -18,6 +18,19 @@ async function createAdmin() {
       phone: 'admin',
       type: 'admin',
       password,
+    },
+  })
+}
+
+async function createDetail() {
+  await prisma.detail.create({
+    data: {
+      price: 1300,
+      shortDescription: '123',
+      title: 'Форсунка',
+      models: {
+        connect: [{ id: 15 }, { id: 16 }, { id: 2 }],
+      },
     },
   })
 }

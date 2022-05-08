@@ -9,15 +9,27 @@ interface IFetchDetailsArgument {
 }
 
 export const fetchDetails = createAsyncThunk(
-  'detail/show',
+  'detail/fetch',
   async (params: IFetchDetailsArgument, { rejectWithValue }) => {
     try {
       const { categoryId, modelId } = params
       const categoryIdStr = categoryId && `categoryId=${categoryId}`
       const modelIdStr = modelId && `modelId=${modelId}`
-      const response: AxiosResponse<IDetail[]> = await axiosApi.get(
-        `http://localhost:5000/api/detail?${categoryIdStr}&${modelIdStr}`
-      )
+      const response: AxiosResponse<IDetail[]> = await new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            const res = await axiosApi.get(
+              `http://localhost:5000/api/detail?${categoryIdStr}&${modelIdStr}`
+            )
+
+            resolve(res)
+          } catch (error) {
+            reject(error)
+          }
+        }, 3000)
+      })
+      console.log(response)
+
       return response.data
     } catch (error) {
       console.log(error)
@@ -26,17 +38,17 @@ export const fetchDetails = createAsyncThunk(
   }
 )
 
-export const addDetail = createAsyncThunk('detail/show', (_, { rejectWithValue }) => {
+export const addDetail = createAsyncThunk('detail/add', (_, { rejectWithValue }) => {
   try {
   } catch (error) {}
 })
 
-export const editDetail = createAsyncThunk('detail/show', (_, { rejectWithValue }) => {
+export const editDetail = createAsyncThunk('detail/edit', (_, { rejectWithValue }) => {
   try {
   } catch (error) {}
 })
 
-export const deleteDetail = createAsyncThunk('detail/show', (_, { rejectWithValue }) => {
+export const deleteDetail = createAsyncThunk('detail/delete', (_, { rejectWithValue }) => {
   try {
   } catch (error) {}
 })

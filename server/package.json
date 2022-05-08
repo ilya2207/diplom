@@ -34,7 +34,7 @@
     "uuid": "^8.3.2"
   },
   "engines": {
-    "node": "16.12.0"
+    "node": "14.17.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

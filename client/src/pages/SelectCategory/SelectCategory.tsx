@@ -64,6 +64,15 @@ const SelectCategory = () => {
                       </Text>
                     </Link>
                   ))}
+
+                <Link
+                  key={`${item.id}_${index}_${item.title}`}
+                  to={`${pathname}/category/${item.id}`}
+                >
+                  <Text className="p-2 cursor-pointer text-chakra-blue-500 hover:text-chakra-red-500 ">
+                    Все
+                  </Text>
+                </Link>
               </TabPanel>
             ))}
         </TabPanels>

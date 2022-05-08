@@ -73,9 +73,11 @@ const Header = () => {
             <InputRightElement className="z-0" pointerEvents="none" children={<SearchIcon />} />
             <Input type="tel" placeholder="Введите артикул или наименование запчасти" />
           </InputGroup>
-          <Button size={'md'} className="shrink-0">
-            <i className="fa-solid fa-cart-shopping  text-chakra-blue-500"></i>
-          </Button>
+          <Link to={'/basket'}>
+            <Button size={'md'} className="shrink-0">
+              <i className="fa-solid fa-cart-shopping  text-chakra-blue-500"></i>
+            </Button>
+          </Link>
         </Flex>
       </Container>
       <Modal isOpen={isOpen && !isAuth} onClose={onClose} isCentered>

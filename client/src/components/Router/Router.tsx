@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react'
 import CarModelCatalog from 'components/CarModelCatalog/CarModelCatalog'
 import Loader from 'components/Loader/Loader'
+import Basket from 'pages/Basket/Basket'
 import CarModel from 'pages/CarModel/CarModel'
 import SelectCategory from 'pages/SelectCategory/SelectCategory'
 import ShowCatalog from 'pages/ShowCatalog/ShowCatalog'
@@ -36,6 +37,10 @@ const routes: IRoutes[] = [
   {
     routes: ['/car/:carId'],
     element: <CarModel />,
+  },
+  {
+    routes: ['/basket'],
+    element: <Basket />,
   },
   {
     routes: ['/car/:carId/model/:modelId/category/:categoryId'],

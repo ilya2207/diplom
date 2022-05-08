@@ -40,18 +40,16 @@ model Category {
 }
 
 model Detail {
-  id               Int       @id @default(autoincrement())
-  categoryId       Int?
-  category         Category? @relation(fields: [categoryId], references: [id])
+  id               Int        @id @default(autoincrement())
   title            String
   shortDescription String
-  modelId          Int?
-  model            CarModel? @relation(fields: [modelId], references: [id])
   options          String?
   price            Int
-  star             Int       @default(0)
+  star             Int        @default(0)
   img              String?
   vendorCode       String?
+  models           CarModel[]
+  categories       Category[]
   orders           Order[]
   reviews          Review[]
 }
@@ -72,7 +70,7 @@ model CarModel {
   brand       CarModel?  @relation("Brand", fields: [brandId], references: [id], onDelete: Cascade)
   brandModels CarModel[] @relation("Brand")
   img         String?
-  detail      Detail[]
+  details      Detail[]
 }
 
 model Review {

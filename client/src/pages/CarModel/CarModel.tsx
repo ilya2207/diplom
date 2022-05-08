@@ -14,6 +14,7 @@ const CarModel = () => {
     if (carId) {
       return state.model.items.find((item) => item.id === +carId)
     }
+
     return null
   })
 

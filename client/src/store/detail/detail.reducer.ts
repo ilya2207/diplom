@@ -28,7 +28,6 @@ export const detailSlice = createSlice({
     })
     builder.addCase(fetchDetails.rejected, (state, action) => {
       state.loading = false
-      console.log(action)
       state.error = 'Ошибка'
     })
   },

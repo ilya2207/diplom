@@ -1317,8 +1317,3 @@ export const carModels = [
   { title: 'ЗАЗ', models: [] },
   { title: 'ТагАЗ', models: [] },
 ]
-
-
-
-
-
