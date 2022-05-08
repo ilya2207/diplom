@@ -41,37 +41,61 @@ model Category {
 }
 
 model Detail {
-  id               Int        @id @default(autoincrement())
+  id               Int          @id @default(autoincrement())
   title            String
   shortDescription String
   options          String?
   price            Int
-  star             Int        @default(0)
+  star             Int          @default(0)
   img              String?
   vendorCode       String?
   models           CarModel[]
   categories       Category[]
-  orders           Order[]
   reviews          Review[]
-  Basket           Basket[]
+  basketItems      BasketItem[]
+  orderItems       OrderItem[]
 }
 
+// model Order {
+//   id        Int      @id @default(autoincrement())
+//   amount    Json?
+//   userId    Int
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   createdAt DateTime @default(now())
+//   details   Detail[]
+// }
+
 model Order {
-  id        Int      @id @default(autoincrement())
-  amount    Json?
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  details   Detail[]
+  id          Int         @id @default(autoincrement())
+  totalPrice  String
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  basketItems OrderItem[]
+}
+
+model OrderItem {
+  id       Int    @id @default(autoincrement())
+  amount   Int    @default(1)
+  orderId  Int
+  detailId Int
+  basket   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  detail   Detail @relation(fields: [detailId], references: [id], onDelete: Cascade)
 }
 
 model Basket {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  basketItems BasketItem[]
+}
+
+model BasketItem {
   id       Int    @id @default(autoincrement())
+  basketId Int
+  basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
   amount   Int    @default(1)
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   detailId Int
-  detail   Detail @relation(fields: [detailId], references: [id])
+  detail   Detail @relation(fields: [detailId], references: [id], onDelete: Cascade)
 }
 
 model CarModel {
