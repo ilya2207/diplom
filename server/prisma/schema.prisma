@@ -53,8 +53,7 @@ model Detail {
   categories       Category[]
   orders           Order[]
   reviews          Review[]
-  Basket           Basket?    @relation(fields: [basketId], references: [id])
-  basketId         Int?
+  Basket           Basket[]
 }
 
 model Order {
@@ -67,11 +66,12 @@ model Order {
 }
 
 model Basket {
-  id      Int      @id @default(autoincrement())
-  amount  Json?
-  userId  Int
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  details Detail[]
+  id       Int    @id @default(autoincrement())
+  amount   Int    @default(1)
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  detailId Int
+  detail   Detail @relation(fields: [detailId], references: [id])
 }
 
 model CarModel {
