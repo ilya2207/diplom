@@ -23,6 +23,7 @@ model User {
   refreshToken String?
   orders       Order[]
   reviews      Review[]
+  Basket       Basket[]
 }
 
 enum Role {
@@ -52,25 +53,37 @@ model Detail {
   categories       Category[]
   orders           Order[]
   reviews          Review[]
+  Basket           Basket?    @relation(fields: [basketId], references: [id])
+  basketId         Int?
 }
 
 model Order {
   id        Int      @id @default(autoincrement())
+  amount    Json?
   userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  details   Detail[]
   createdAt DateTime @default(now())
+  details   Detail[]
+}
+
+model Basket {
+  id      Int      @id @default(autoincrement())
+  amount  Json?
+  userId  Int
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  details Detail[]
 }
 
 model CarModel {
   id          Int        @id @default(autoincrement())
   title       String
   model       String?
+  releaseDate String?
   brandId     Int?
+  img         String?
   brand       CarModel?  @relation("Brand", fields: [brandId], references: [id], onDelete: Cascade)
   brandModels CarModel[] @relation("Brand")
-  img         String?
-  details      Detail[]
+  details     Detail[]
 }
 
 model Review {

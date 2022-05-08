@@ -2,11 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
-async function main() {
-  await createDetail()
-}
-
-async function createAdmin() {
+const createAdmin = async () => {
   const password = await bcrypt.hash('admin', 3)
 
   await prisma.user.create({
@@ -22,20 +18,30 @@ async function createAdmin() {
   })
 }
 
-async function createDetail() {
-  await prisma.detail.create({
+const createDetail = async () => {
+  // await prisma.detail.create({
+  //   data: {
+  //     price: 1300,
+  //     shortDescription: '123',
+  //     title: 'Форсунка',
+  //     models: {
+  //       connect: [{ id: 15 }, { id: 16 }, { id: 2 }],
+  //     },
+  //   },
+  // })
+  await prisma.detail.update({
+    where: {
+      id: 2,
+    },
     data: {
-      price: 1300,
-      shortDescription: '123',
-      title: 'Форсунка',
-      models: {
-        connect: [{ id: 15 }, { id: 16 }, { id: 2 }],
+      categories: {
+        connect: [{ id: 96 }, { id: 97 }],
       },
     },
   })
 }
 
-async function createCarModels() {
+const createCarModels = async () => {
   await prisma.carModel.create({
     data: {
       title: 'Mercedes',
@@ -47,6 +53,18 @@ async function createCarModels() {
       },
     },
   })
+}
+
+const main = async () => {
+  const res = await prisma.carModel.findMany({
+    where: {
+      title: 'BMW',
+    },
+  })
+
+  console.log(res)
+
+  // await createDetail()
 }
 
 main()
