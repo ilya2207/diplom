@@ -1,12 +1,12 @@
 export interface IDetail {
-  categoryId: number
+  categoryId?: number
   id: number
   img: string
-  modelId: number
-  options: string
+  modelId?: number
+  options?: string
   price: number
   shortDescription: string
-  star: number
+  star?: number
   title: string
   vendorCode: string
 }

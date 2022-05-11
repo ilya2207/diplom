@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from 'express'
 export default class OrderController {
   static async show(req: Request, res: Response, next: NextFunction) {
     try {
+      
+
     } catch (error) {
       next(error)
     }

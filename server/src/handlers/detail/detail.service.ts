@@ -1,32 +1,23 @@
 import { Detail } from '@prisma/client'
 import ApiError from '../../exceptions/api-error'
 import prisma from '../../prisma'
-import { showByKey } from './detail.types'
+import { IFilterCondition, IShowDetails } from './detail.types'
 
 export default class DetailService {
   static async show(
-    type: showByKey | 'both',
-    query: number | { modelId: number; categoryId: number },
+    filterCondition: IFilterCondition,
     pagination: { page: number; items: number }
-  ): Promise<Detail[]> {
+  ) {
     const skip = pagination.page === 1 ? 0 : (pagination.page - 1) * pagination.items
-
-    const isTypeKey = type === 'categoryId' || type === 'modelId' ? { [type]: query } : false
-    const whereCondition = isTypeKey
-      ? isTypeKey
-      : type === 'both' && typeof query === 'object'
-      ? query
-      : null
-
-    if (!whereCondition) throw ApiError.badRequest('Запрос некорректный')
-
     const details = await prisma.detail.findMany({
       skip,
       take: pagination.items,
-      where: whereCondition,
+      where: filterCondition,
     })
-
-    return details
+    const totalCount = await prisma.detail.count({
+      where: filterCondition,
+    })
+    return { details, totalCount }
   }
   static async add(data) {
     const newDetail = await prisma.detail.create({

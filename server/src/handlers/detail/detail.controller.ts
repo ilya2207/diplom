@@ -1,34 +1,50 @@
 import { Detail } from '@prisma/client'
-import e, { NextFunction, Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { UploadedFile } from 'express-fileupload'
 import ApiError from '../../exceptions/api-error'
 import prisma from '../../prisma'
 import ImageService from '../image/image.service'
 import DetailService from './detail.service'
-import { IDetail } from './detail.types'
+import { IDetail, IFilterCondition } from './detail.types'
 
 export default class DetailController {
   static async show(req: Request, res: Response, next: NextFunction) {
     try {
-      let responseItems: Detail[] = []
+      let filterCondition: IFilterCondition
       const { modelId, categoryId, page = 1, items = 20 } = req.query
-
       const pagination = { page: +page, items: +items }
+      if (!modelId && !categoryId) throw ApiError.badRequest('Укажите тип поиска')
       if (modelId && categoryId) {
-        responseItems = await DetailService.show(
-          'both',
-          {
-            modelId: +modelId,
-            categoryId: +categoryId,
+        filterCondition = {
+          categories: {
+            some: {
+              id: +categoryId,
+            },
           },
-          pagination
-        )
+          models: {
+            some: {
+              id: +modelId,
+            },
+          },
+        }
       } else if (modelId) {
-        responseItems = await DetailService.show('modelId', +modelId, pagination)
+        filterCondition = {
+          models: {
+            some: {
+              id: +modelId,
+            },
+          },
+        }
       } else if (categoryId) {
-        responseItems = await DetailService.show('categoryId', +categoryId, pagination)
-      } else throw ApiError.badRequest('Укажите тип поиска')
-
+        filterCondition = {
+          categories: {
+            some: {
+              id: +categoryId,
+            },
+          },
+        }
+      }
+      const responseItems = await DetailService.show(filterCondition, pagination)
       return res.json(responseItems)
     } catch (error) {
       next(error)
@@ -60,7 +76,7 @@ export default class DetailController {
       const body = req.body
       const file = req.files?.img as UploadedFile
       if (file) {
-        const detailFromDb = await prisma.carModel.findUnique({
+        const detailFromDb = await prisma.detail.findUnique({
           where: {
             id: +detailId,
           },
@@ -69,12 +85,8 @@ export default class DetailController {
           },
         })
 
-        if (detailFromDb.img === process.env.DETAIL_DEFAULT_IMAGE || !detailFromDb.img) {
-          const imgPath = await ImageService.upload('model', file)
-          body.img = imgPath
-        } else {
-          await ImageService.update(detailFromDb.img, file)
-        }
+        const imgPath = await ImageService.update('detail', file, detailFromDb.img)
+        body.img = imgPath
       }
       const newModel = await DetailService.edit(detailId, body)
       return res.json(newModel)

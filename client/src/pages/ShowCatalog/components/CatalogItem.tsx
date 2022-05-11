@@ -1,22 +1,25 @@
 import { Box, Button, Input, Text } from '@chakra-ui/react'
+import { DEFAULT_DETAIL_IMG } from 'constants/'
 import React, { useState } from 'react'
+import { IBasketItem } from 'types/basket.types'
 import { IDetail } from 'types/detail.types'
 
 interface Props {
   item: IDetail
+  basketHandler: (data: IBasketItem) => void
 }
-
-const CatalogItem: React.FC<Props> = ({ item }) => {
+const CatalogItem: React.FC<Props> = ({ item, basketHandler }) => {
   const [amount, setAmount] = useState('1')
+
   return (
     <Box
       className="flex flex-col items-center p-6 shadow-md rounded-lg"
-      width={'23%'}
+      // width={'18%'}
       border="1px solid #ededed"
     >
       <img
         className="w-full"
-        src={item.img ?? 'http://localhost:5000/images/detail/default.jpg'}
+        src={item.img ?? DEFAULT_DETAIL_IMG}
         alt=""
         style={{ maxWidth: '200px' }}
       />
@@ -36,7 +39,12 @@ const CatalogItem: React.FC<Props> = ({ item }) => {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
-        <Button colorScheme={'red'} flex={'1 1 auto'} className="w-full">
+        <Button
+          onClick={() => basketHandler({ amount: +amount, detailId: item.id })}
+          colorScheme={'red'}
+          flex={'1 1 auto'}
+          className="w-full"
+        >
           В корзину
         </Button>
       </Box>

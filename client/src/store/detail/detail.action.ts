@@ -6,30 +6,42 @@ import axiosApi from 'utils/api'
 interface IFetchDetailsArgument {
   categoryId?: string
   modelId?: string
+  page?: number | string
+  items?: string
+}
+
+// await new Promise((resolve, reject) => {
+//   setTimeout(async () => {
+//     try {
+//       const res = await axiosApi.get(
+//         `http://localhost:5000/api/detail?${categoryIdStr}&${modelIdStr}`
+//       )
+
+//       resolve(res)
+//     } catch (error) {
+//       reject(error)
+//     }
+//   }, 3000)
+// })
+// await axiosApi.get(
+//   `http://localhost:5000/api/detail?${categoryIdStr}&${modelIdStr}&${pageStr}`
+// )
+interface IFetchDetailsResponse {
+  details: IDetail[]
+  totalCount: number
 }
 
 export const fetchDetails = createAsyncThunk(
   'detail/fetch',
   async (params: IFetchDetailsArgument, { rejectWithValue }) => {
     try {
-      const { categoryId, modelId } = params
+      const { categoryId, modelId, page } = params
       const categoryIdStr = categoryId && `categoryId=${categoryId}`
       const modelIdStr = modelId && `modelId=${modelId}`
-      const response: AxiosResponse<IDetail[]> = await new Promise((resolve, reject) => {
-        setTimeout(async () => {
-          try {
-            const res = await axiosApi.get(
-              `http://localhost:5000/api/detail?${categoryIdStr}&${modelIdStr}`
-            )
-
-            resolve(res)
-          } catch (error) {
-            reject(error)
-          }
-        }, 3000)
-      })
-      console.log(response)
-
+      const pageStr = page && `page=${page}`
+      const response: AxiosResponse<IFetchDetailsResponse> = await axiosApi.get(
+        `http://localhost:5000/api/detail?${categoryIdStr}&${modelIdStr}&${pageStr}`
+      )
       return response.data
     } catch (error) {
       console.log(error)

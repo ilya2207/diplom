@@ -44,6 +44,7 @@ export default class UserService {
         phone,
         email,
         password: hashPassword,
+        basket: { create: {} },
       },
     })
     const tokens = await this.generateTokens({ id: user.id, type: user.type })

@@ -34,7 +34,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ profileName }) => {
       <MenuList className="min-w-0  w-40 ">
         {userType === 'user' && (
           <>
-            {' '}
             <Link to={'/profile'}>
               <MenuItem>
                 <div className="w-28 ">

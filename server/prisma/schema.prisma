@@ -23,7 +23,7 @@ model User {
   refreshToken String?
   orders       Order[]
   reviews      Review[]
-  Basket       Basket[]
+  basket       Basket?
 }
 
 enum Role {
@@ -68,6 +68,7 @@ model Detail {
 model Order {
   id          Int         @id @default(autoincrement())
   totalPrice  String
+  createdAt   DateTime    @default(now())
   userId      Int
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   basketItems OrderItem[]
@@ -78,13 +79,13 @@ model OrderItem {
   amount   Int    @default(1)
   orderId  Int
   detailId Int
-  basket   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   detail   Detail @relation(fields: [detailId], references: [id], onDelete: Cascade)
 }
 
 model Basket {
   id          Int          @id @default(autoincrement())
-  userId      Int
+  userId      Int          @unique
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   basketItems BasketItem[]
 }

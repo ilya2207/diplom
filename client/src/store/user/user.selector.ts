@@ -14,3 +14,4 @@ export const selectUserType = createDraftSafeSelector(
   userState,
   (state) => state.user.type ?? 'user'
 )
+export const selectUserAuth = createDraftSafeSelector(userState, (state) => state.isAuth ?? false)

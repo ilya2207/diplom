@@ -9,30 +9,47 @@ import {
   Skeleton,
   Spinner,
   Text,
+  useToast,
 } from '@chakra-ui/react'
-import axios from 'axios'
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs'
 import Loader from 'components/Loader/Loader'
-import { BreadCrumbsTitles } from 'constants/breadcrumbs'
+import { BreadCrumbsTitles } from 'constants/'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { addBasketItem } from 'store/basket/basket.action'
 import { fetchDetails } from 'store/detail/detail.action'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
+import { IBasketItem } from 'types/basket.types'
 import CatalogItem from './components/CatalogItem'
 import CatalogItemSkeleton from './components/CatalogItemSkeleton'
+import CatalogPagination from './components/CatalogPagination'
 import CatalogSortSelect from './components/CatalogSortSelect'
 
 const ShowCatalog = () => {
-  const [pagination, setPagination] = useState(8)
-  const { categoryId, modelId } = useParams()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
   const { items: details, error, loading } = useAppSelector((state) => state.detail)
-
-  useEffect(() => {
-    dispatch(fetchDetails({ categoryId, modelId }))
-  }, [])
-
+  const dispatch = useDispatch()
+  const toast = useToast({
+    duration: 1000,
+    isClosable: true,
+    status: 'success',
+  })
+  const addToBasketHandler = async (data: IBasketItem) => {
+    try {
+      // @ts-expect-error
+      await dispatch(addBasketItem(data)).unwrap()
+      toast({
+        title: 'Успешно добавлено',
+      })
+    } catch (error) {
+      toast({
+        title: 'Произошла ошибка. Попробуйте еще раз',
+        duration: 3000,
+        status: 'error',
+      })
+    }
+  }
   return (
     <Container maxW={'container.xl'}>
       <Breadcrumbs
@@ -54,41 +71,22 @@ const ShowCatalog = () => {
           },
         ]}
       />
+
       <Text className="mt-2" fontWeight={'medium'} fontSize={'xl'}>
         Список запчастей
       </Text>
       <CatalogSortSelect />
-      <Box className="flex justify-between mt-4 flex-wrap gap-3 gap-y-10">
+      <Box className="grid grid-cols-5 gap-10 ">
         {loading && (
           <Box className="text-center flex justify-center w-full">
-            <Spinner
-              size={'xl'}
-              width="150px"
-              height="150px"
-              color="blue.500"
-              speed="0.8s"
-              marginTop="10vh"
-            />
-            {/* <Loader /> */}
+            <Spinner width="150px" height="150px" color="blue.500" speed="0.8s" marginTop="10vh" />
           </Box>
         )}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
-        {details && !loading && details.map((item) => <CatalogItem item={item} />)}
+        {details &&
+          !loading &&
+          details.map((item) => <CatalogItem item={item} basketHandler={addToBasketHandler} />)}
       </Box>
+      <CatalogPagination />
     </Container>
   )
 }

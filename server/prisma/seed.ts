@@ -19,26 +19,21 @@ const createAdmin = async () => {
 }
 
 const createDetail = async () => {
-  // await prisma.detail.create({
-  //   data: {
-  //     price: 1300,
-  //     shortDescription: '123',
-  //     title: 'Форсунка',
-  //     models: {
-  //       connect: [{ id: 15 }, { id: 16 }, { id: 2 }],
-  //     },
-  //   },
-  // })
-  await prisma.detail.update({
-    where: {
-      id: 2,
-    },
-    data: {
-      categories: {
-        connect: [{ id: 96 }, { id: 97 }],
+  for (let i = 201; i < 210; i++) {
+    await prisma.detail.create({
+      data: {
+        price: i * 1000,
+        shortDescription: `Номер ${i * 20}`,
+        title: `Поршень ${i}`,
+        models: {
+          connect: [{ id: 2 }, { id: 16 }],
+        },
+        categories: {
+          connect: [{ id: 96 }],
+        },
       },
-    },
-  })
+    })
+  }
 }
 
 const createCarModels = async () => {
@@ -56,15 +51,7 @@ const createCarModels = async () => {
 }
 
 const main = async () => {
-  const res = await prisma.carModel.findMany({
-    where: {
-      title: 'BMW',
-    },
-  })
-
-  console.log(res)
-
-  // await createDetail()
+  await createAdmin()
 }
 
 main()

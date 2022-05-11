@@ -92,7 +92,7 @@ export default class UserController {
   static async edit(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
       const body: IUserEdit = req.body
-      const userData = await UserService.editUser(req.auth.payload, body)
+      const userData = await UserService.editUser(req.auth.payload.id, body)
       const userDto = new UserDTO(userData)
       return res.json(userDto)
     } catch (error) {
