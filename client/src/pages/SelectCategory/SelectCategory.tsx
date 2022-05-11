@@ -11,7 +11,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs'
-import { BreadCrumbsTitles } from 'constants/breadcrumbs'
+import { BreadCrumbsTitles } from 'constants/'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppSelector } from 'store/hooks'
 import { Link } from 'react-router-dom'
@@ -64,15 +64,6 @@ const SelectCategory = () => {
                       </Text>
                     </Link>
                   ))}
-
-                <Link
-                  key={`${item.id}_${index}_${item.title}`}
-                  to={`${pathname}/category/${item.id}`}
-                >
-                  <Text className="p-2 cursor-pointer text-chakra-blue-500 hover:text-chakra-red-500 ">
-                    Все
-                  </Text>
-                </Link>
               </TabPanel>
             ))}
         </TabPanels>

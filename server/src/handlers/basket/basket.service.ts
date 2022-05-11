@@ -1,30 +1,113 @@
 import prisma from '../../prisma'
-import { IBasket } from './basket.types'
+import { IBasket, IBasketItem } from './basket.types'
 
 export default class BasketService {
-  static async addToBasket(basket: IBasket) {
-    const newItem = await prisma.basket.create({
-      data: basket,
+  static async createBasket(userId: number) {
+    const newBasket = await prisma.basket.create({
+      data: {
+        userId,
+      },
+    })
+    return newBasket
+  }
+
+  static async getBasketByUserId(userId: number) {
+    console.log(userId)
+
+    const basket = await prisma.basket.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+      },
+    })
+    return basket.id
+  }
+
+  static async addBasketItem(item: IBasketItem, basketId: number) {
+    const isItemExists = await prisma.basket.findMany({
+      where: {
+        id: basketId,
+        basketItems: {
+          some: {
+            detailId: item.detailId,
+          },
+        },
+      },
+      include: {
+        basketItems: true,
+      },
+    })
+
+    if (isItemExists.length !== 0) {
+      const newItem = await prisma.basketItem.update({
+        where: {
+          id: isItemExists[0].basketItems[0].id,
+        },
+        data: {
+          amount: {
+            increment: item.amount,
+          },
+        },
+      })
+      return newItem
+    }
+
+    const newItem = await prisma.basketItem.create({
+      data: {
+        ...item,
+        basketId,
+      },
     })
     return newItem
   }
 
-  static async editInBasket(basketId: number, basket: IBasket) {
-    const newItem = await prisma.basket.update({
+  static async getBasket(userId: number) {
+    const basket = await prisma.basket.findUnique({
       where: {
-        id: basketId,
+        userId,
+      },
+      select: {
+        basketItems: {
+          orderBy: {
+            id: 'asc',
+          },
+          select: {
+            amount: true,
+            id: true,
+            detail: {
+              select: {
+                id: true,
+                img: true,
+                price: true,
+                title: true,
+                shortDescription: true,
+              },
+            },
+          },
+        },
+      },
+    })
+    return basket
+  }
+
+  static async editBasketItem(basketItemId: number, basket: IBasketItem) {
+    const newItem = await prisma.basketItem.update({
+      where: {
+        id: basketItemId,
       },
       data: basket,
     })
+
     return newItem
   }
 
-  static async deleteInBasket(basketId: number, basket: IBasket) {
-    const newItem = await prisma.basket.update({
+  static async deleteBasketItem(basketItemId: number) {
+    const newItem = await prisma.basketItem.delete({
       where: {
-        id: basketId,
+        id: basketItemId,
       },
-      data: basket,
     })
     return newItem
   }

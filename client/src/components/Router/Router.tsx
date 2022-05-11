@@ -3,12 +3,13 @@ import CarModelCatalog from 'components/CarModelCatalog/CarModelCatalog'
 import Loader from 'components/Loader/Loader'
 import Basket from 'pages/Basket/Basket'
 import CarModel from 'pages/CarModel/CarModel'
+import Profile from 'pages/Profile/Profile'
 import SelectCategory from 'pages/SelectCategory/SelectCategory'
 import ShowCatalog from 'pages/ShowCatalog/ShowCatalog'
 import React, { lazy, ReactElement, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAppSelector } from 'store/hooks'
-import { selectUserType } from 'store/user/user.selector'
+import { selectUserAuth, selectUserType } from 'store/user/user.selector'
 
 const Admin = lazy(() => import('../../pages/Admin/Admin'))
 
@@ -17,7 +18,22 @@ interface IRoutes {
   element: ReactElement
 }
 
-const routes: IRoutes[] = [
+const authRoutes: IRoutes[] = [
+  {
+    routes: ['/profile'],
+    element: <Profile />,
+  },
+  {
+    routes: ['orders'],
+    element: <div>Orders</div>,
+  },
+  {
+    routes: ['/basket'],
+    element: <Basket />,
+  },
+]
+
+const publicRoutes: IRoutes[] = [
   {
     routes: ['/car/:carId/model/:modelId', '/category'],
     element: <SelectCategory />,
@@ -26,35 +42,27 @@ const routes: IRoutes[] = [
     routes: ['/'],
     element: <CarModelCatalog />,
   },
-  {
-    routes: ['/profile'],
-    element: <div>Profile</div>,
-  },
-  {
-    routes: ['orders'],
-    element: <div>Orders</div>,
-  },
+
   {
     routes: ['/car/:carId'],
     element: <CarModel />,
   },
-  {
-    routes: ['/basket'],
-    element: <Basket />,
-  },
+
   {
     routes: ['/car/:carId/model/:modelId/category/:categoryId'],
     element: <ShowCatalog />,
   },
-  //   {
-  //     routes: ['*'],
-  //     element: <Navigate to="/" />,
-  //   },
+  {
+    routes: ['*'],
+    element: <Navigate to="/" />,
+  },
 ]
 
 const Router = () => {
-  const type = useAppSelector(selectUserType)
-
+  const { type, isAuth } = useAppSelector((state) => ({
+    type: selectUserType(state),
+    isAuth: selectUserAuth(state),
+  }))
   return (
     <Box className="mt-5">
       <Routes>
@@ -68,7 +76,11 @@ const Router = () => {
             }
           />
         )}
-        {routes.map((parentItem) =>
+        {isAuth &&
+          authRoutes.map((parentItem) =>
+            parentItem.routes.map((item) => <Route path={item} element={parentItem.element} />)
+          )}
+        {publicRoutes.map((parentItem) =>
           parentItem.routes.map((item) => <Route path={item} element={parentItem.element} />)
         )}
       </Routes>

@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import basketSlice from './basket/basket.reducer'
 import { categorySlice } from './catalog/category.slice'
 import { detailSlice } from './detail/detail.reducer'
 import { modelSlice } from './model/model.slice'
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   category: categorySlice.reducer,
   model: modelSlice.reducer,
   detail: detailSlice.reducer,
+  basket: basketSlice.reducer,
   // [authApi.reducerPath]: authApi.reducer,
 })
 const stateFromLocalStorage = localStorage.getItem('store')
@@ -30,6 +32,9 @@ export type AppDispatch = typeof store.dispatch
 store.subscribe(() => {
   const state = store.getState()
 
-  const serializedState = JSON.stringify({ user: state.user })
+  const serializedState = JSON.stringify({
+    user: state.user,
+    detail: { ...state.detail, items: [] },
+  })
   localStorage.setItem('store', serializedState)
 })

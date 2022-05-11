@@ -11,3 +11,21 @@ export interface IDetail {
 }
 
 export type showByKey = 'modelId' | 'categoryId'
+
+export interface IFilterCondition {
+  categories?: {
+    some: {
+      id: number
+    }
+  }
+  models?: {
+    some: {
+      id: number
+    }
+  }
+}
+
+export interface IShowDetails {
+  details: IDetail[]
+  totalCount: number
+}

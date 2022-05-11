@@ -1,6 +1,11 @@
 export interface IBasket {
   id?: number
-  detailId: number
   userId: number
-  amount?: number
+}
+
+export interface IBasketItem {
+  id?: number
+  basketId?: number
+  detailId: number
+  amount: number
 }

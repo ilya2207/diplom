@@ -20,7 +20,7 @@ export default class ModelController {
     try {
       const body: IModel = req.body
       const file: UploadedFile | undefined = req.files?.img as UploadedFile
-
+      
       if (file) {
         const newImgPath = await ImageService.upload('model', file)
         body.img = newImgPath
@@ -48,12 +48,8 @@ export default class ModelController {
           },
         })
 
-        if (modelFromDb.img === process.env.MODEL_DEFAULT_IMAGE || !modelFromDb.img) {
-          const imgPath = await ImageService.upload('model', file)
-          body.img = imgPath
-        } else {
-          await ImageService.update(modelFromDb.img, file)
-        }
+        const imgPath = await ImageService.update('model', file, modelFromDb.img)
+        body.img = imgPath
       }
 
       const newModel = await ModelService.edit(+modelId, body)
