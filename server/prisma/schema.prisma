@@ -66,12 +66,12 @@ model Detail {
 // }
 
 model Order {
-  id          Int         @id @default(autoincrement())
-  totalPrice  String
-  createdAt   DateTime    @default(now())
-  userId      Int
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  basketItems OrderItem[]
+  id         Int         @id @default(autoincrement())
+  totalPrice Int
+  createdAt  DateTime    @default(now())
+  userId     Int
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
 }
 
 model OrderItem {

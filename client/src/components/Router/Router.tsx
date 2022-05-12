@@ -4,6 +4,7 @@ import Loader from 'components/Loader/Loader'
 import Basket from 'pages/Basket/Basket'
 import CarModel from 'pages/CarModel/CarModel'
 import Profile from 'pages/Profile/Profile'
+import SearchResult from 'pages/SearchResult/SearchResult'
 import SelectCategory from 'pages/SelectCategory/SelectCategory'
 import ShowCatalog from 'pages/ShowCatalog/ShowCatalog'
 import React, { lazy, ReactElement, Suspense } from 'react'
@@ -47,7 +48,10 @@ const publicRoutes: IRoutes[] = [
     routes: ['/car/:carId'],
     element: <CarModel />,
   },
-
+  {
+    routes: ['/search/:searchStr'],
+    element: <SearchResult />,
+  },
   {
     routes: ['/car/:carId/model/:modelId/category/:categoryId'],
     element: <ShowCatalog />,

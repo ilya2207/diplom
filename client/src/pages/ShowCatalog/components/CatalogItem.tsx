@@ -1,4 +1,4 @@
-import { Box, Button, Input, Text } from '@chakra-ui/react'
+import { Box, Button, Input, Text, Tooltip } from '@chakra-ui/react'
 import { DEFAULT_DETAIL_IMG } from 'constants/'
 import React, { useState } from 'react'
 import { IBasketItem } from 'types/basket.types'
@@ -7,14 +7,15 @@ import { IDetail } from 'types/detail.types'
 interface Props {
   item: IDetail
   basketHandler: (data: IBasketItem) => void
+  isAuth: boolean
 }
-const CatalogItem: React.FC<Props> = ({ item, basketHandler }) => {
+
+const CatalogItem: React.FC<Props> = ({ item, basketHandler, isAuth }) => {
   const [amount, setAmount] = useState('1')
 
   return (
     <Box
       className="flex flex-col items-center p-6 shadow-md rounded-lg"
-      // width={'18%'}
       border="1px solid #ededed"
     >
       <img
@@ -32,21 +33,34 @@ const CatalogItem: React.FC<Props> = ({ item, basketHandler }) => {
       <Text fontWeight={'bold'} fontSize="xl" color={'black'}>
         {item.price}&#8381;
       </Text>
-      <Box className="flex items-center mt-2 gap-1 w-full">
+      <Box className="flex justify-between items-center mt-2 gap-1 w-full">
         <Input
           maxWidth={'50px'}
           type={'number'}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
-        <Button
-          onClick={() => basketHandler({ amount: +amount, detailId: item.id })}
-          colorScheme={'red'}
-          flex={'1 1 auto'}
-          className="w-full"
-        >
-          В корзину
-        </Button>
+        {!isAuth && (
+          <Tooltip
+            label="Корзина доступна только авторизированным пользователям"
+            shouldWrapChildren
+            flex={'1 1 auto'}
+          >
+            <Button disabled colorScheme={'red'}>
+              В корзину
+            </Button>
+          </Tooltip>
+        )}
+        {isAuth && (
+          <Button
+            onClick={() => basketHandler({ amount: +amount, detailId: item.id })}
+            colorScheme={'red'}
+            flex={'1 1 auto'}
+            maxWidth="108px"
+          >
+            В корзину
+          </Button>
+        )}
       </Box>
     </Box>
   )

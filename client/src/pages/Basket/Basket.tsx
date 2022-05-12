@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux'
 import { deleteBasketItem, editBasketItem, fetchBasket } from 'store/basket/basket.action'
 import { getBasketTotalAmount } from 'store/basket/basket.selector'
 import { useAppSelector } from 'store/hooks'
+import { addOrder } from 'store/order/order.action'
+import BasketItem from './BasketItem'
 
 const Basket = () => {
   const dispatch = useDispatch()
@@ -25,6 +27,10 @@ const Basket = () => {
     // @ts-expect-error
     return dispatch(deleteBasketItem(id))
   }
+  const createOrder = () => {
+    // @ts-expect-error
+    dispatch(addOrder())
+  }
   return (
     <Container maxW={'container.xl'}>
       <Text fontSize={'xl'} fontWeight="medium" className="mt-2">
@@ -35,54 +41,12 @@ const Basket = () => {
         <Box width={'70%'} className="shadow-lg p-4 rounded-lg">
           {items &&
             items.map((item, index) => (
-              <Box key={`${item.id}_${index}`} className="p-2 mt-2">
-                <Box className="flex items-start">
-                  <Box>
-                    <img
-                      className="w-full"
-                      style={{ maxWidth: '150px' }}
-                      src={item.detail?.img ?? DEFAULT_DETAIL_IMG}
-                      alt=""
-                    />
-                  </Box>
-                  <Box className="w-full ml-6">
-                    <Box className="flex justify-between items-center w-full">
-                      <Box>
-                        <Text fontSize={'md'}>{item.detail?.title}</Text>
-                        <Text fontSize={'md'}>{item.detail?.shortDescription}</Text>
-                      </Box>
-                      <Box>
-                        <Text fontSize={'lg'} fontWeight={'medium'}>
-                          {item.detail?.price}&#8381;
-                        </Text>
-                      </Box>
-                    </Box>
-                    <Box className="mt-3 flex justify-between items-center">
-                      <Box className="rounded-xl items-center inline-flex px-4 gap-2">
-                        <Button
-                          variant={'ghost'}
-                          disabled={item.amount === 1}
-                          onClick={() => changeAmountHandler(item.id ?? 0, item.amount - 1)}
-                        >
-                          <MinusIcon className="cursor-pointer" />
-                        </Button>
-                        <Text className="select-none" fontWeight={'medium'} fontSize={'xl'}>
-                          {item.amount}
-                        </Text>{' '}
-                        <Button
-                          variant={'ghost'}
-                          onClick={() => changeAmountHandler(item.id ?? 0, item.amount + 1)}
-                        >
-                          <AddIcon className="cursor-pointer" />
-                        </Button>
-                      </Box>
-                      <Button onClick={deleteBasketItemHandler(item.id ?? 0)} colorScheme={'red'}>
-                        Удалить
-                      </Button>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
+              <BasketItem
+                key={`${item.id}_${index}`}
+                item={item}
+                changeAmountHandler={changeAmountHandler}
+                deleteBasketItemHandler={deleteBasketItemHandler}
+              />
             ))}
           {items && items.length === 0 && (
             <Box className="mt-9 text-center">
@@ -103,7 +67,12 @@ const Basket = () => {
             </Text>
           </Box>
           <Box>
-            <Button className="w-full mt-6" colorScheme={'blue'}>
+            <Button
+              className="w-full mt-6"
+              disabled={items.length === 0}
+              colorScheme={'blue'}
+              onClick={createOrder}
+            >
               Оформить заказ
             </Button>
           </Box>

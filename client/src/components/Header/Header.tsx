@@ -1,17 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import {
-  Button,
-  Container,
-  Flex,
-  Input,
-  Text,
-  InputRightElement,
-  InputGroup,
-  useDisclosure,
-  Modal,
-} from '@chakra-ui/react'
+import { useEffect, useRef } from 'react'
+import { Button, Container, Flex, Text, useDisclosure, Modal } from '@chakra-ui/react'
 import './Header.scss'
-import { SearchIcon } from '@chakra-ui/icons'
 import { ModalType } from './HeaderTypes'
 import AuthModal from './components/AuthModal/AuthModal'
 import { useAppSelector } from 'store/hooks'
@@ -21,6 +10,7 @@ import { useCustomToast } from 'hooks/useCustomToast'
 import { userSlice } from 'store/user/user.slice'
 import { selectUserState } from 'store/user/user.selector'
 import CatalogMenu from './components/CatalogMenu/CatalogMenu'
+import HeaderSearch from './components/HeaderSearch/HeaderSearch'
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -43,7 +33,7 @@ const Header = () => {
         status: 'error',
       })
     }
-    // <eslint-disable-next-line></eslint-disable-next-line> react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, loading])
 
   return (
@@ -68,15 +58,14 @@ const Header = () => {
         </Flex>
         <Flex align={'center'} justify="space-between" className="mt-3 gap-10">
           <CatalogMenu />
-          <InputGroup>
-            <InputRightElement className="z-0" pointerEvents="none" children={<SearchIcon />} />
-            <Input type="tel" placeholder="Введите артикул или наименование запчасти" />
-          </InputGroup>
-          <Link to={'/basket'}>
-            <Button size={'md'} className="shrink-0">
-              <i className="fa-solid fa-cart-shopping  text-chakra-blue-500"></i>
-            </Button>
-          </Link>
+          <HeaderSearch />
+          {isAuth && (
+            <Link to={'/basket'}>
+              <Button size={'md'} className="shrink-0">
+                <i className="fa-solid fa-cart-shopping  text-chakra-blue-500"></i>
+              </Button>
+            </Link>
+          )}
         </Flex>
       </Container>
       <Modal isOpen={isOpen && !isAuth} onClose={onClose} isCentered>

@@ -1,17 +1,8 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  Button,
-  useToast,
-} from '@chakra-ui/react'
+import { Menu, MenuButton, MenuList, MenuItem, Button } from '@chakra-ui/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
-import { authApi, useLogoutMutation } from 'store/services/auth'
 import { logout } from 'store/user/user.action'
 import { selectUserType } from 'store/user/user.selector'
 
@@ -31,7 +22,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ profileName }) => {
       <MenuButton as={Button} variant="ghost" rightIcon={<ChevronDownIcon />}>
         {profileName}
       </MenuButton>
-      <MenuList className="min-w-0  w-40 ">
+      <MenuList className="min-w-0  w-40 z-50">
         {userType === 'user' && (
           <>
             <Link to={'/profile'}>

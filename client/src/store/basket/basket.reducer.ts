@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { addOrder } from 'store/order/order.action'
 import { IBasketItem } from 'types/basket.types'
 import { fetchBasket } from './basket.action'
 
@@ -47,6 +48,9 @@ const basketSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchBasket.fulfilled, (state, action) => {
       state.items = action.payload
+    })
+    builder.addCase(addOrder.fulfilled, (state) => {
+      state.items = []
     })
   },
 })

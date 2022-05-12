@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IDetail } from 'types/detail.types'
-import { fetchDetails } from './detail.action'
+import { fetchDetails, searchDetail } from './detail.action'
 
 interface IInitState {
   items: IDetail[]
@@ -41,6 +41,19 @@ export const detailSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchDetails.rejected, (state, action) => {
+      state.loading = false
+      state.error = 'Ошибка'
+    })
+    builder.addCase(searchDetail.pending, (state, action) => {
+      state.loading = true
+    })
+    builder.addCase(searchDetail.fulfilled, (state, action) => {
+      state.items = action.payload.details
+      state.totalCount = action.payload.totalCount
+
+      state.loading = false
+    })
+    builder.addCase(searchDetail.rejected, (state, action) => {
       state.loading = false
       state.error = 'Ошибка'
     })

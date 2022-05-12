@@ -65,6 +65,26 @@ export const deleteDetail = createAsyncThunk('detail/delete', (_, { rejectWithVa
   } catch (error) {}
 })
 
+export interface searchData {
+  searchStr: string
+  page?: number
+  items?: number
+}
+export const searchDetail = createAsyncThunk(
+  'detail/search',
+  async (body: searchData, { rejectWithValue, dispatch }) => {
+    try {
+      const { searchStr, items = 20, page = 1 } = body
+
+      const response = await axiosApi.get(
+        `detail/search?searchStr=${searchStr}&page=${page}&items=${items}`
+      )
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
 // export const fetchDetails = createAsyncThunk('detail/show', (_, { rejectWithValue }) => {
 //   try {
 //   } catch (error) {}

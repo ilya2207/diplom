@@ -17,7 +17,9 @@ const CatalogSortSelect = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(fetchDetails({ categoryId, modelId, page: currentPage }))
+    if (categoryId && modelId) {
+      dispatch(fetchDetails({ categoryId, modelId, page: currentPage }))
+    }
   }, [categoryId, modelId, dispatch, currentPage])
 
   return (

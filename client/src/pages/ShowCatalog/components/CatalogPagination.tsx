@@ -40,6 +40,13 @@ const CatalogPagination = () => {
     dispatch(setDetailValues({ currentPage }))
   }
 
+  useEffect(() => {
+    return () => {
+      setCurrentPage(1)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Box className="flex mt-10 items-center gap-6 p-4 justify-center">
       <Button
@@ -65,11 +72,8 @@ const CatalogPagination = () => {
             onClick={setCurrentPage(item)}
             isActive={currentPage === item}
             colorScheme={'blue'}
-     
-            
-
             variant="ghost"
-    >
+          >
             {item}
           </Button>
         ))}
@@ -87,14 +91,6 @@ const CatalogPagination = () => {
         disabled={currentPage === totalPages || !totalPages}
         colorScheme={'blue'}
         variant="ghost"
-      
-
-
-
-
-
-
-
       >
         Вперед
       </Button>
@@ -103,11 +99,3 @@ const CatalogPagination = () => {
 }
 
 export default CatalogPagination
-
-
-
-
-
-
-
-

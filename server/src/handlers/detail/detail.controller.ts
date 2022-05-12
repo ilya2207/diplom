@@ -104,4 +104,14 @@ export default class DetailController {
       next(error)
     }
   }
+  static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { searchStr, page = 1, items = 20 } = req.query
+      const pagination = { page: +page, items: +items }
+      const details = await DetailService.searchDetail(searchStr.toString(), pagination)
+      return res.json(details)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

@@ -12,8 +12,6 @@ export default class BasketService {
   }
 
   static async getBasketByUserId(userId: number) {
-    console.log(userId)
-
     const basket = await prisma.basket.findUnique({
       where: {
         userId,
@@ -26,24 +24,23 @@ export default class BasketService {
   }
 
   static async addBasketItem(item: IBasketItem, basketId: number) {
-    const isItemExists = await prisma.basket.findMany({
+    const isItemExists = await prisma.basket.findUnique({
       where: {
         id: basketId,
+      },
+      select: {
         basketItems: {
-          some: {
+          where: {
             detailId: item.detailId,
           },
         },
       },
-      include: {
-        basketItems: true,
-      },
     })
 
-    if (isItemExists.length !== 0) {
+    if (isItemExists.basketItems.length !== 0) {
       const newItem = await prisma.basketItem.update({
         where: {
-          id: isItemExists[0].basketItems[0].id,
+          id: isItemExists.basketItems[0].id,
         },
         data: {
           amount: {
@@ -110,5 +107,25 @@ export default class BasketService {
       },
     })
     return newItem
+  }
+
+  static async getAllItemsByUserId(userId: number) {
+    const basketId = await this.getBasketByUserId(userId)
+    const basketItems = await prisma.basketItem.findMany({
+      where: {
+        basketId,
+      },
+    })
+
+    return {basketItems, basketId}
+  }
+
+  static async deleteBasketItemsByBasketId(basketId: number) {
+    const items = await prisma.basketItem.deleteMany({
+      where: {
+        basketId,
+      },
+    })
+    return items
   }
 }

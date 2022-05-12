@@ -14,6 +14,9 @@ const createAdmin = async () => {
       phone: 'admin',
       type: 'admin',
       password,
+      basket: {
+        create: {},
+      },
     },
   })
 }
