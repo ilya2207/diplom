@@ -115,9 +115,18 @@ export default class BasketService {
       where: {
         basketId,
       },
+      select: {
+        amount: true,
+        detailId: true,
+        detail: {
+          select: {
+            price: true,
+          },
+        },
+      },
     })
 
-    return {basketItems, basketId}
+    return { basketItems, basketId }
   }
 
   static async deleteBasketItemsByBasketId(basketId: number) {

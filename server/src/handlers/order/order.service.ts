@@ -1,5 +1,6 @@
 import { BasketItem } from '@prisma/client'
 import prisma from '../../prisma'
+import { IBasketItemsToOrder } from './order.types'
 
 export default class OrderService {
   static async show(userId: number) {
@@ -8,14 +9,18 @@ export default class OrderService {
         userId,
       },
       include: {
-        orderItems: true,
+        orderItems: {
+          include: {
+            detail: true,
+          },
+        },
       },
     })
     return orders
   }
   static async createOrder(
     basketData: {
-      basketItems: BasketItem[]
+      basketItems: IBasketItemsToOrder[]
       basketId: number
     },
     userId: number
@@ -23,20 +28,27 @@ export default class OrderService {
     const orderItems = {
       createMany: { data: [] },
     }
-    const totalPrice = 0
+    let totalPrice = 0
     for (let index = 0; index < basketData.basketItems.length; index++) {
-      const { amount, detailId } = basketData.basketItems[index]
+      const {
+        amount,
+        detailId,
+        detail: { price },
+      } = basketData.basketItems[index]
+      totalPrice += amount * price
       orderItems.createMany.data.push({
         amount,
         detailId,
       })
     }
+    const orderNumber = `${Math.random().toString().slice(-8)}`
 
     const order = await prisma.order.create({
       data: {
-        totalPrice: 0,
+        totalPrice,
         userId,
         orderItems,
+        orderNumber,
       },
     })
     return order

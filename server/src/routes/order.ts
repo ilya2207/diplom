@@ -12,6 +12,6 @@ orderRouter.use(
 )
 orderRouter.get('/', OrderController.show)
 orderRouter.post('/', OrderController.add)
-orderRouter.post('/:detailId', OrderController.show)
+// orderRouter.post('/:detailId', OrderController.show)
 
 export default orderRouter

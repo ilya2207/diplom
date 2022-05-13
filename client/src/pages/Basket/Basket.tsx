@@ -1,6 +1,4 @@
-import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 import { Box, Button, Container, Text } from '@chakra-ui/react'
-import { DEFAULT_DETAIL_IMG } from 'constants/'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { deleteBasketItem, editBasketItem, fetchBasket } from 'store/basket/basket.action'
@@ -13,7 +11,6 @@ const Basket = () => {
   const dispatch = useDispatch()
   const { items } = useAppSelector((state) => state.basket)
   const totalAmount = useAppSelector(getBasketTotalAmount)
-  console.log(totalAmount)
 
   useEffect(() => {
     // @ts-expect-error

@@ -64,14 +64,22 @@ model Detail {
 //   createdAt DateTime @default(now())
 //   details   Detail[]
 // }
+enum OrderStatus {
+  created
+  confirmed
+  rejected
+}
 
 model Order {
-  id         Int         @id @default(autoincrement())
-  totalPrice Int
-  createdAt  DateTime    @default(now())
-  userId     Int
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orderItems OrderItem[]
+  id          Int         @id @default(autoincrement())
+  totalPrice  Int
+  orderNumber String
+  status      OrderStatus @default(created)
+  rejectedReason String?
+  createdAt   DateTime    @default(now())
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
 }
 
 model OrderItem {

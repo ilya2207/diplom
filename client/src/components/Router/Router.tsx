@@ -3,6 +3,7 @@ import CarModelCatalog from 'components/CarModelCatalog/CarModelCatalog'
 import Loader from 'components/Loader/Loader'
 import Basket from 'pages/Basket/Basket'
 import CarModel from 'pages/CarModel/CarModel'
+import Orders from 'pages/Orders/Orders'
 import Profile from 'pages/Profile/Profile'
 import SearchResult from 'pages/SearchResult/SearchResult'
 import SelectCategory from 'pages/SelectCategory/SelectCategory'
@@ -26,7 +27,7 @@ const authRoutes: IRoutes[] = [
   },
   {
     routes: ['orders'],
-    element: <div>Orders</div>,
+    element: <Orders />,
   },
   {
     routes: ['/basket'],

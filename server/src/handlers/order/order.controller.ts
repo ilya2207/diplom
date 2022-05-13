@@ -8,6 +8,10 @@ import OrderService from './order.service'
 export default class OrderController {
   static async show(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
+      const { id: userId } = req.auth.payload
+      
+      const orders = await OrderService.show(userId)
+      return res.json(orders)
     } catch (error) {
       next(error)
     }
@@ -26,6 +30,7 @@ export default class OrderController {
   }
   static async edit(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
+
     } catch (error) {
       next(error)
     }
