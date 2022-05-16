@@ -1,7 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosResponse } from 'axios'
+import { RootState } from 'store/store'
 import { IDetail } from 'types/detail.types'
 import axiosApi from 'utils/api'
+import { setDetailValues } from './detail.reducer'
 
 interface IFetchDetailsArgument {
   categoryId?: string
@@ -33,9 +35,29 @@ interface IFetchDetailsResponse {
 
 export const fetchDetails = createAsyncThunk(
   'detail/fetch',
-  async (params: IFetchDetailsArgument, { rejectWithValue }) => {
+  async (params: IFetchDetailsArgument, { dispatch, rejectWithValue, getState }) => {
     try {
-      const { categoryId, modelId, page } = params
+      const { detail } = getState() as RootState
+      const { modelId: modelFromStore, categoryId: categoryFromStore } = detail
+      let { categoryId = 0, modelId = 0, page } = params
+
+      if (modelFromStore !== +modelId || categoryFromStore !== +categoryId) {
+
+        dispatch(
+          setDetailValues({
+            categoryId: +categoryId,
+            modelId: +modelId,
+            currentPage: 1,
+          })
+        )
+      } else {
+        dispatch(
+          setDetailValues({
+            modelId: +modelId,
+            categoryId: +categoryId,
+          })
+        )
+      }
       const categoryIdStr = categoryId && `categoryId=${categoryId}`
       const modelIdStr = modelId && `modelId=${modelId}`
       const pageStr = page && `page=${page}`
@@ -75,7 +97,12 @@ export const searchDetail = createAsyncThunk(
   async (body: searchData, { rejectWithValue, dispatch }) => {
     try {
       const { searchStr, items = 20, page = 1 } = body
-
+      dispatch(
+        setDetailValues({
+          modelId: null,
+          categoryId: null,
+        })
+      )
       const response = await axiosApi.get(
         `detail/search?searchStr=${searchStr}&page=${page}&items=${items}`
       )

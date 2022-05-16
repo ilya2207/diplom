@@ -1,6 +1,5 @@
-import { Box, Button, Container, Text } from '@chakra-ui/react'
+import { Box, Button, Container, Spinner, Text } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import {
   deleteAllBasketItems,
   deleteBasketItem,
@@ -10,13 +9,15 @@ import {
 import { getBasketTotalAmount } from 'store/basket/basket.selector'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { addOrder } from 'store/order/order.action'
+import BasketCreateOrder from './BasketCreateOrder'
 import BasketItem from './BasketItem'
 
 const Basket = () => {
   const dispatch = useAppDispatch()
-  const { items, totalAmount } = useAppSelector((state) => ({
+  const { loading, items, totalAmount } = useAppSelector((state) => ({
     items: state.basket.items,
     totalAmount: getBasketTotalAmount(state),
+    loading: state.basket.loading,
   }))
 
   useEffect(() => {
@@ -27,12 +28,12 @@ const Basket = () => {
     return dispatch(editBasketItem({ id: itemId, amount: value }))
   }
 
-  const deleteBasketItemHandler = (id: number) => () => {
-    return dispatch(deleteBasketItem(id))
+  const deleteBasketItemHandler = async (id: number) => {
+    await dispatch(deleteBasketItem(id))
   }
 
-  const createOrder = () => {
-    dispatch(addOrder())
+  const createOrder = async () => {
+    await dispatch(addOrder())
   }
 
   const deleteAllItemsHandler = () => {
@@ -56,6 +57,11 @@ const Basket = () => {
       </Box>
       <Box className="flex gap-x-6 mt-6 items-start">
         <Box width={'70%'} className="shadow-lg p-4 rounded-lg">
+          {loading && items.length === 0 && (
+            <Box className="text-center flex justify-center w-full">
+              <Spinner width="100px" height="100px" color="blue.500" speed="0.8s" />
+            </Box>
+          )}
           {items &&
             items.map((item, index) => (
               <BasketItem
@@ -83,16 +89,7 @@ const Basket = () => {
               {totalAmount} &#8381;
             </Text>
           </Box>
-          <Box>
-            <Button
-              className="w-full mt-6"
-              disabled={items.length === 0}
-              colorScheme={'blue'}
-              onClick={createOrder}
-            >
-              Оформить заказ
-            </Button>
-          </Box>
+          <BasketCreateOrder disabled={items.length === 0} createOrder={createOrder} />
         </Box>
       </Box>
     </Container>

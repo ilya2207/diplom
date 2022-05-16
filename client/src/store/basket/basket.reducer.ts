@@ -47,7 +47,14 @@ const basketSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBasket.fulfilled, (state, action) => {
+      state.loading = false
       state.items = action.payload
+    })
+    builder.addCase(fetchBasket.pending, (state) => {
+      state.loading = true
+    })
+    builder.addCase(fetchBasket.rejected, (state) => {
+      state.loading = false
     })
     builder.addCase(addOrder.fulfilled, (state) => {
       state.items = []

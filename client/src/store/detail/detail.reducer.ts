@@ -9,11 +9,15 @@ interface IInitState {
   currentPage: number
   totalCount: number
   itemsToDisplay: number
+  modelId: number | null
+  categoryId: number | null
 }
 
 const initState: IInitState = {
   items: [],
   totalCount: -1,
+  categoryId: null,
+  modelId: null,
   error: null,
   loading: false,
   currentPage: 1,

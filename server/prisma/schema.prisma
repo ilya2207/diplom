@@ -22,7 +22,6 @@ model User {
   accessToken  String?
   refreshToken String?
   orders       Order[]
-  reviews      Review[]
   basket       Basket?
 }
 
@@ -51,7 +50,6 @@ model Detail {
   vendorCode       String?
   models           CarModel[]
   categories       Category[]
-  reviews          Review[]
   basketItems      BasketItem[]
   orderItems       OrderItem[]
 }
@@ -71,15 +69,15 @@ enum OrderStatus {
 }
 
 model Order {
-  id          Int         @id @default(autoincrement())
-  totalPrice  Int
-  orderNumber String
-  status      OrderStatus @default(created)
+  id             Int         @id @default(autoincrement())
+  totalPrice     Int
+  orderNumber    String
+  status         OrderStatus @default(created)
   rejectedReason String?
-  createdAt   DateTime    @default(now())
-  userId      Int
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orderItems  OrderItem[]
+  createdAt      DateTime    @default(now())
+  userId         Int
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems     OrderItem[]
 }
 
 model OrderItem {
@@ -117,14 +115,4 @@ model CarModel {
   brand       CarModel?  @relation("Brand", fields: [brandId], references: [id], onDelete: Cascade)
   brandModels CarModel[] @relation("Brand")
   details     Detail[]
-}
-
-model Review {
-  id       Int    @id @default(autoincrement())
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  detailId Int
-  detail   Detail @relation(fields: [detailId], references: [id], onDelete: Cascade)
-  star     Int
-  content  String
 }

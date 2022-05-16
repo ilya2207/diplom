@@ -1,16 +1,23 @@
 import { MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Box, Button, Text } from '@chakra-ui/react'
 import { DEFAULT_DETAIL_IMG } from 'constants/'
-import React from 'react'
+import React, { useState } from 'react'
 import { IBasketItem } from 'types/basket.types'
 
 interface IProps {
   item: IBasketItem
   changeAmountHandler: (id: number, amount: number) => void
-  deleteBasketItemHandler: (id: number) => () => void
+  deleteBasketItemHandler: (id: number) => Promise<void>
 }
 
 const BasketItem: React.FC<IProps> = ({ changeAmountHandler, deleteBasketItemHandler, item }) => {
+  const [loading, setLoading] = useState(false)
+
+  const clickHandler = async () => {
+    setLoading(true)
+    await deleteBasketItemHandler(item.id ?? 0)
+    setLoading(false)
+  }
   return (
     <Box className="p-2 mt-2">
       <Box className="flex items-start">
@@ -53,7 +60,7 @@ const BasketItem: React.FC<IProps> = ({ changeAmountHandler, deleteBasketItemHan
                 <AddIcon className="cursor-pointer" />
               </Button>
             </Box>
-            <Button onClick={deleteBasketItemHandler(item.id ?? 0)} colorScheme={'red'}>
+            <Button onClick={clickHandler} colorScheme={'red'} isLoading={loading}>
               Удалить
             </Button>
           </Box>

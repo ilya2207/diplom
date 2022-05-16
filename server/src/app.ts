@@ -21,19 +21,6 @@ app.use('/api', router)
 app.listen(5000, async () => {
   try {
     console.log(`Server has been stared at port : ${port}`)
-    const result = await prisma.category.findUnique({
-      where: {
-        id: 53,
-      },
-      include: {
-        childCategories: {
-          include: {
-            details: true,
-          },
-        },
-      },
-    })
-    console.dir(result.childCategories)
   } catch (error) {
     prisma.$disconnect()
     console.log(error)

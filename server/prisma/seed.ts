@@ -22,17 +22,26 @@ const createAdmin = async () => {
 }
 
 const createDetail = async () => {
-  for (let i = 201; i < 210; i++) {
+  for (let i = 1; i <= 100; i++) {
     await prisma.detail.create({
       data: {
         price: i * 1000,
         shortDescription: `Номер ${i * 20}`,
         title: `Поршень ${i}`,
-        models: {
-          connect: [{ id: 2 }, { id: 16 }],
-        },
         categories: {
-          connect: [{ id: 96 }],
+          connect: [{ id: 2 }],
+        },
+      },
+    })
+  }
+  for (let i = 1; i <= 100; i++) {
+    await prisma.detail.create({
+      data: {
+        price: i * 1000,
+        shortDescription: `Номер ${i * 20}`,
+        title: `Браслет ${i}`,
+        categories: {
+          connect: [{ id: 3 }],
         },
       },
     })
@@ -54,7 +63,8 @@ const createCarModels = async () => {
 }
 
 const main = async () => {
-  await createAdmin()
+  // await createAdmin()
+  await createDetail()
 }
 
 main()

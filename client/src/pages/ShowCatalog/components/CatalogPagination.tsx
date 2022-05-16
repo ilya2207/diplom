@@ -42,7 +42,9 @@ const CatalogPagination = () => {
 
   useEffect(() => {
     return () => {
-      setCurrentPage(1)
+      const resetPageHandler = setCurrentPage(1)
+
+      resetPageHandler()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

@@ -6,13 +6,20 @@ import { IDetail } from 'types/detail.types'
 
 interface Props {
   item: IDetail
-  basketHandler: (data: IBasketItem) => void
+  basketHandler: (data: IBasketItem) => Promise<void>
   isAuth: boolean
 }
 
 const CatalogItem: React.FC<Props> = ({ item, basketHandler, isAuth }) => {
   const [amount, setAmount] = useState('1')
-  
+  const [loading, setLoading] = useState(false)
+
+  const clickHandler = async () => {
+    setLoading(true)
+    await basketHandler({ amount: +amount, detailId: item.id })
+    setLoading(false)
+  }
+
   return (
     <Box
       className="flex flex-col justify-between items-center p-6 shadow-md rounded-lg"
@@ -24,13 +31,13 @@ const CatalogItem: React.FC<Props> = ({ item, basketHandler, isAuth }) => {
         alt=""
         style={{ maxWidth: '200px' }}
       />
-      <Text className='text-center' mt={1} fontSize={'lg'} fontWeight="medium">
+      <Text className="text-center" mt={1} fontSize={'lg'} fontWeight="medium">
         {item.title}
       </Text>
       <Text color={'gray.500'} className="self-end">
         {item.shortDescription}
       </Text>
-      <Text className='text-center' fontWeight={'bold'} fontSize="xl" color={'black'}>
+      <Text className="text-center" fontWeight={'bold'} fontSize="xl" color={'black'}>
         {item.price}&#8381;
       </Text>
       <Box className="flex justify-between items-center mt-2 gap-1 w-full">
@@ -53,7 +60,8 @@ const CatalogItem: React.FC<Props> = ({ item, basketHandler, isAuth }) => {
         )}
         {isAuth && (
           <Button
-            onClick={() => basketHandler({ amount: +amount, detailId: item.id })}
+            isLoading={loading}
+            onClick={clickHandler}
             colorScheme={'red'}
             flex={'1 1 auto'}
             maxWidth="108px"
