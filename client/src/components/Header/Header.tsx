@@ -33,7 +33,7 @@ const Header = () => {
         status: 'error',
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // <eslint-disable-next-line></eslint-disable-next-line> react-hooks/exhaustive-deps
   }, [error, loading])
 
   return (
