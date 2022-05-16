@@ -26,7 +26,6 @@ app.use('/api', router)
 app.listen(port, async () => {
   try {
     console.log(`Server has been stared at port : ${port}`)
-    console.log(process.env)
   } catch (error) {
     prisma.$disconnect()
     console.log(error)

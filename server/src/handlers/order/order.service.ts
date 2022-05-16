@@ -15,9 +15,13 @@ export default class OrderService {
           },
         },
       },
+      orderBy: {
+        id: 'desc',
+      },
     })
     return orders
   }
+
   static async createOrder(
     basketData: {
       basketItems: IBasketItemsToOrder[]
