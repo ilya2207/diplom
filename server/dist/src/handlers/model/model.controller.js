@@ -62,13 +62,8 @@ class ModelController {
                             img: true,
                         },
                     });
-                    if (modelFromDb.img === process.env.MODEL_DEFAULT_IMAGE || !modelFromDb.img) {
-                        const imgPath = yield image_service_1.default.upload('model', file);
-                        body.img = imgPath;
-                    }
-                    else {
-                        yield image_service_1.default.update(modelFromDb.img, file);
-                    }
+                    const imgPath = yield image_service_1.default.update('model', file, modelFromDb.img);
+                    body.img = imgPath;
                 }
                 const newModel = yield model_service_1.default.edit(+modelId, body);
                 return res.json(newModel);

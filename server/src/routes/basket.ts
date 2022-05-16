@@ -16,5 +16,6 @@ basketRouter.get('/', BasketController.getBasket)
 basketRouter.post('/', BasketController.addBasketItem)
 basketRouter.put('/', BasketController.editBasketItem)
 basketRouter.delete('/:itemId', BasketController.deleteBasketItem)
+basketRouter.delete('/', BasketController.deleteBasketItemsAll)
 
 export default basketRouter

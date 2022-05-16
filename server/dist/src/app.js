@@ -20,14 +20,28 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const routes_1 = __importDefault(require("./routes"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5000;
+app.use(express_1.default.static(`${process.cwd()}/build`));
 app.use('/images', express_1.default.static(`${process.cwd()}/images`));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ origin: 'http://localhost:3000', credentials: true }));
 app.use('/api', routes_1.default);
 app.listen(5000, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`Server has been stared at port : ${port}`);
+        const result = yield prisma_1.default.category.findUnique({
+            where: {
+                id: 53,
+            },
+            include: {
+                childCategories: {
+                    include: {
+                        details: true,
+                    },
+                },
+            },
+        });
+        console.dir(result.childCategories);
     }
     catch (error) {
         prisma_1.default.$disconnect();

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { addOrder } from 'store/order/order.action'
 import { IBasketItem } from 'types/basket.types'
-import { fetchBasket } from './basket.action'
+import { deleteAllBasketItems, fetchBasket } from './basket.action'
 
 interface IBasketState {
   loading: boolean
@@ -50,6 +50,9 @@ const basketSlice = createSlice({
       state.items = action.payload
     })
     builder.addCase(addOrder.fulfilled, (state) => {
+      state.items = []
+    })
+    builder.addCase(deleteAllBasketItems.fulfilled, (state) => {
       state.items = []
     })
   },

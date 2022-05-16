@@ -4,12 +4,13 @@ import { ICategoryItem } from 'types/category.types'
 
 interface ICatalogMenuItemProps {
   item: ICategoryItem
+  clickHandler: (categoryId: number) => () => void
 }
 
-const CatalogMenuItem: React.FC<ICatalogMenuItemProps> = ({ item }) => {
+const CatalogMenuItem: React.FC<ICatalogMenuItemProps> = ({ item, clickHandler }) => {
   return (
     <>
-      <MenuItem className="group ">
+      <MenuItem className="group">
         <Text>{item.title}</Text>
         <Box
           as={MenuList}
@@ -18,7 +19,11 @@ const CatalogMenuItem: React.FC<ICatalogMenuItemProps> = ({ item }) => {
         >
           {item.childCategories &&
             item.childCategories.map((item, index) => (
-              <Box key={`${item.id}_${index}`} className="w-1/4  max-w-xs">
+              <Box
+                onClick={clickHandler(item.id)}
+                key={`${item.id}_${index}`}
+                className="w-1/4  max-w-xs"
+              >
                 <Text className="hover:text-chakra-red-500 cursor-pointer">{item.title}</Text>
               </Box>
             ))}

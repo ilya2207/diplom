@@ -43,4 +43,14 @@ export default class BasketController {
       next(error)
     }
   }
+  static async deleteBasketItemsAll(req: ExpressJwtRequest, res: Response, next: NextFunction) {
+    try {
+      const { id: userId } = req.auth.payload
+      const basketId = await BasketService.getBasketByUserId(userId)
+      await BasketService.deleteBasketItemsByBasketId(basketId)
+      return res.json('Успешно')
+    } catch (error) {
+      next(error)
+    }
+  }
 }

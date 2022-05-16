@@ -28,7 +28,13 @@ class CategoryService {
                             id: true,
                             title: true,
                         },
+                        orderBy: {
+                            id: 'asc',
+                        },
                     },
+                },
+                orderBy: {
+                    id: 'asc',
                 },
             });
             return categories;

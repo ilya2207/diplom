@@ -3,7 +3,7 @@ import React from 'react'
 import ShowItems from 'components/ShowItems/ShowItems'
 import { BreadCrumbsTitles } from 'constants/'
 import { useNavigate } from 'react-router-dom'
-import { Container } from '@chakra-ui/react'
+import { Container, Text } from '@chakra-ui/react'
 
 const ShowCatalog = () => {
   const navigate = useNavigate()
@@ -29,6 +29,9 @@ const ShowCatalog = () => {
           },
         ]}
       />
+      <Text className='mt-2' fontSize={'xl'} fontWeight="medium">
+        Список запчтастей
+      </Text>
       <ShowItems />
     </Container>
   )

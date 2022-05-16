@@ -12,8 +12,7 @@ export const fetchBasket = createAsyncThunk('basket/fetch', async (_, { rejectWi
 export const addBasketItem = createAsyncThunk(
   'basket/add',
   async (data: IBasketItem, { rejectWithValue }) => {
-    const response = await axiosApi.post('basket', data)
-    console.log(response)
+    await axiosApi.post('basket', data)
   }
 )
 
@@ -22,15 +21,18 @@ export const editBasketItem = createAsyncThunk(
   async (data: Partial<IBasketItem>, { dispatch }) => {
     const { amount, id } = data
     dispatch(setBasketItemValue({ itemId: id ?? 0, values: { amount } }))
-    const response = await axiosApi.put('basket', data)
-    console.log(response)
+    await axiosApi.put('basket', data)
   }
 )
+
 export const deleteBasketItem = createAsyncThunk(
   'basket/delete',
   async (id: number, { dispatch }) => {
+    await axiosApi.delete(`basket/${id}`)
     dispatch(deleteBasketItemInStore(id))
-    const response = await axiosApi.delete(`basket/${id}`)
-    console.log(response)
   }
 )
+
+export const deleteAllBasketItems = createAsyncThunk('basket/deleteAll', async () => {
+  await axiosApi.delete(`basket`)
+})

@@ -12,26 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const api_error_1 = __importDefault(require("../../exceptions/api-error"));
 const prisma_1 = __importDefault(require("../../prisma"));
 class DetailService {
-    static show(type, query, pagination) {
+    static show(filterCondition, pagination) {
         return __awaiter(this, void 0, void 0, function* () {
             const skip = pagination.page === 1 ? 0 : (pagination.page - 1) * pagination.items;
-            const isTypeKey = type === 'categoryId' || type === 'modelId' ? { [type]: query } : false;
-            const whereCondition = isTypeKey
-                ? isTypeKey
-                : type === 'both' && typeof query === 'object'
-                    ? query
-                    : null;
-            if (!whereCondition)
-                throw api_error_1.default.badRequest('Запрос некорректный');
             const details = yield prisma_1.default.detail.findMany({
                 skip,
                 take: pagination.items,
-                where: whereCondition,
+                where: filterCondition,
             });
-            return details;
+            const totalCount = yield prisma_1.default.detail.count({
+                where: filterCondition,
+            });
+            return { details, totalCount };
         });
     }
     static add(data) {
@@ -86,6 +80,37 @@ class DetailService {
                     star: newStar,
                 },
             });
+        });
+    }
+    static searchDetail(searchStr, { page, items }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const skip = page === 1 ? 0 : (page - 1) * items;
+            console.log(searchStr);
+            console.log(page, items);
+            const where = {
+                OR: [
+                    {
+                        title: {
+                            contains: searchStr,
+                        },
+                    },
+                    {
+                        vendorCode: {
+                            contains: searchStr,
+                        },
+                    },
+                ],
+            };
+            const details = yield prisma_1.default.detail.findMany({
+                skip,
+                take: items,
+                where,
+            });
+            const totalCount = yield prisma_1.default.detail.count({
+                where: where,
+            });
+            console.log(details);
+            return { details, totalCount };
         });
     }
 }

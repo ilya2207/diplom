@@ -15,42 +15,56 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const prisma = new client_1.PrismaClient();
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield createAdmin();
-    });
-}
-function createAdmin() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const password = yield bcrypt_1.default.hash('admin', 3);
-        yield prisma.user.create({
-            data: {
-                firstname: 'Admin',
-                secondname: '',
-                lastname: '',
-                email: 'admin@mail.ru',
-                phone: 'admin',
-                type: 'admin',
-                password,
+const createAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
+    const password = yield bcrypt_1.default.hash('admin', 3);
+    yield prisma.user.create({
+        data: {
+            firstname: 'Admin',
+            secondname: '',
+            lastname: '',
+            email: 'admin@mail.ru',
+            phone: 'admin',
+            type: 'admin',
+            password,
+            basket: {
+                create: {},
             },
-        });
+        },
     });
-}
-function createCarModels() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield prisma.carModel.create({
+});
+const createDetail = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 201; i < 210; i++) {
+        yield prisma.detail.create({
             data: {
-                title: 'Mercedes',
-                brandModels: {
-                    create: [
-                        { title: 'Кабан', model: 'W13' },
-                        { title: 'GLE', model: 'S14' },
-                    ],
+                price: i * 1000,
+                shortDescription: `Номер ${i * 20}`,
+                title: `Поршень ${i}`,
+                models: {
+                    connect: [{ id: 2 }, { id: 16 }],
+                },
+                categories: {
+                    connect: [{ id: 96 }],
                 },
             },
         });
+    }
+});
+const createCarModels = () => __awaiter(void 0, void 0, void 0, function* () {
+    yield prisma.carModel.create({
+        data: {
+            title: 'Mercedes',
+            brandModels: {
+                create: [
+                    { title: 'Кабан', model: 'W13' },
+                    { title: 'GLE', model: 'S14' },
+                ],
+            },
+        },
     });
-}
+});
+const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    yield createAdmin();
+});
 main()
     .then(() => console.log('Seed Success'))
     .catch((e) => {

@@ -118,7 +118,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const body = req.body;
-                const userData = yield user_service_1.default.editUser(req.auth.payload, body);
+                const userData = yield user_service_1.default.editUser(req.auth.payload.id, body);
                 const userDto = new user_dto_1.default(userData);
                 return res.json(userDto);
             }

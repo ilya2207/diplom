@@ -54,7 +54,7 @@ const publicRoutes: IRoutes[] = [
     element: <SearchResult />,
   },
   {
-    routes: ['/car/:carId/model/:modelId/category/:categoryId'],
+    routes: ['/car/:carId/model/:modelId/category/:categoryId', '/category/:categoryId'],
     element: <ShowCatalog />,
   },
   {

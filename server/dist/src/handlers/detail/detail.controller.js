@@ -20,23 +20,44 @@ class DetailController {
     static show(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let responseItems = [];
+                let filterCondition;
                 const { modelId, categoryId, page = 1, items = 20 } = req.query;
                 const pagination = { page: +page, items: +items };
+                if (!modelId && !categoryId)
+                    throw api_error_1.default.badRequest('Укажите тип поиска');
                 if (modelId && categoryId) {
-                    responseItems = yield detail_service_1.default.show('both', {
-                        modelId: +modelId,
-                        categoryId: +categoryId,
-                    }, pagination);
+                    filterCondition = {
+                        categories: {
+                            some: {
+                                id: +categoryId,
+                            },
+                        },
+                        models: {
+                            some: {
+                                id: +modelId,
+                            },
+                        },
+                    };
                 }
                 else if (modelId) {
-                    responseItems = yield detail_service_1.default.show('modelId', +modelId, pagination);
+                    filterCondition = {
+                        models: {
+                            some: {
+                                id: +modelId,
+                            },
+                        },
+                    };
                 }
                 else if (categoryId) {
-                    responseItems = yield detail_service_1.default.show('categoryId', +categoryId, pagination);
+                    filterCondition = {
+                        categories: {
+                            some: {
+                                id: +categoryId,
+                            },
+                        },
+                    };
                 }
-                else
-                    throw api_error_1.default.badRequest('Укажите тип поиска');
+                const responseItems = yield detail_service_1.default.show(filterCondition, pagination);
                 return res.json(responseItems);
             }
             catch (error) {
@@ -74,7 +95,7 @@ class DetailController {
                 const body = req.body;
                 const file = (_a = req.files) === null || _a === void 0 ? void 0 : _a.img;
                 if (file) {
-                    const detailFromDb = yield prisma_1.default.carModel.findUnique({
+                    const detailFromDb = yield prisma_1.default.detail.findUnique({
                         where: {
                             id: +detailId,
                         },
@@ -82,13 +103,8 @@ class DetailController {
                             img: true,
                         },
                     });
-                    if (detailFromDb.img === process.env.DETAIL_DEFAULT_IMAGE || !detailFromDb.img) {
-                        const imgPath = yield image_service_1.default.upload('model', file);
-                        body.img = imgPath;
-                    }
-                    else {
-                        yield image_service_1.default.update(detailFromDb.img, file);
-                    }
+                    const imgPath = yield image_service_1.default.update('detail', file, detailFromDb.img);
+                    body.img = imgPath;
                 }
                 const newModel = yield detail_service_1.default.edit(detailId, body);
                 return res.json(newModel);
@@ -104,6 +120,19 @@ class DetailController {
                 const detailId = req.params.detailId;
                 yield detail_service_1.default.delete(+detailId);
                 return res.json({ message: 'Успешно удалено' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    static search(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { searchStr, page = 1, items = 20 } = req.query;
+                const pagination = { page: +page, items: +items };
+                const details = yield detail_service_1.default.searchDetail(searchStr.toString(), pagination);
+                return res.json(details);
             }
             catch (error) {
                 next(error);

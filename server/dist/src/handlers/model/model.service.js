@@ -49,6 +49,9 @@ class ModelService {
                             select: {
                                 id: true,
                                 title: true,
+                                model: true,
+                                brandId: true,
+                                img: true,
                             },
                         },
                     },

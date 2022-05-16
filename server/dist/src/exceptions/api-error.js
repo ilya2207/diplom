@@ -15,6 +15,9 @@ class ApiError extends Error {
     static forbiddenError() {
         return new ApiError(403, 'Ошибка доступа');
     }
+    static someError() {
+        return new ApiError(500, 'Ошибка');
+    }
 }
 exports.default = ApiError;
 //# sourceMappingURL=api-error.js.map

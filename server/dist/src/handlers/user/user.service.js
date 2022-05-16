@@ -55,6 +55,7 @@ class UserService {
                     phone,
                     email,
                     password: hashPassword,
+                    basket: { create: {} },
                 },
             });
             const tokens = yield this.generateTokens({ id: user.id, type: user.type });
@@ -65,7 +66,7 @@ class UserService {
     static generateTokens(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             const accessToken = jsonwebtoken_1.default.sign({ payload }, process.env.JWT_ACCESS_SECRET, {
-                expiresIn: '10m',
+                expiresIn: '10s',
             });
             const refreshToken = jsonwebtoken_1.default.sign({ payload }, process.env.JWT_ACCESS_REFRESH, { expiresIn: '30d' });
             yield prisma_1.default.user.update({
