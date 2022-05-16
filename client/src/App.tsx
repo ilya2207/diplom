@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { fetchModel } from 'store/model/model.action'
 import { fetchUserData } from 'store/user/user.action'
 import { selectUserToken } from 'store/user/user.selector'
+import 'assets/styles/index.scss'
 
 function App() {
   const token = useAppSelector(selectUserToken)

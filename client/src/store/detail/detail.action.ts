@@ -42,7 +42,6 @@ export const fetchDetails = createAsyncThunk(
       let { categoryId = 0, modelId = 0, page } = params
 
       if (modelFromStore !== +modelId || categoryFromStore !== +categoryId) {
-
         dispatch(
           setDetailValues({
             categoryId: +categoryId,
@@ -62,7 +61,7 @@ export const fetchDetails = createAsyncThunk(
       const modelIdStr = modelId && `modelId=${modelId}`
       const pageStr = page && `page=${page}`
       const response: AxiosResponse<IFetchDetailsResponse> = await axiosApi.get(
-        `http://localhost:5000/api/detail?${categoryIdStr}&${modelIdStr}&${pageStr}`
+        `detail?${categoryIdStr}&${modelIdStr}&${pageStr}`
       )
       return response.data
     } catch (error) {

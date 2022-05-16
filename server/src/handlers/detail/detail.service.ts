@@ -43,30 +43,6 @@ export default class DetailService {
     })
   }
 
-  static async updateStar(id: number, star: number) {
-    const detail = await prisma.detail.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        _count: {
-          select: {
-            reviews: true,
-          },
-        },
-      },
-    })
-    const starCount = detail._count.reviews
-    const newStar = ((starCount - 1) * detail.star + star) / starCount
-    await prisma.detail.update({
-      where: {
-        id,
-      },
-      data: {
-        star: newStar,
-      },
-    })
-  }
   static async searchDetail(searchStr: string, { page, items }: { page: number; items: number }) {
     const skip = page === 1 ? 0 : (page - 1) * items
     console.log(searchStr)

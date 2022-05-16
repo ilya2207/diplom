@@ -53,6 +53,7 @@ import axios from 'axios'
 const nameToken = 'token'
 
 const SERVER_HOST = 'http://localhost:5000/api'
+//  || 'https://ilya2207-diplom.herokuapp.com/'
 
 const axiosApi = axios.create({
   withCredentials: true,
@@ -79,7 +80,7 @@ axiosApi.interceptors.response.use(
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const response = await axiosApi.post(`${SERVER_HOST}/user/refresh`)
+        const response = await axiosApi.post('user/refresh')
 
         localStorage.setItem('token', response.data.accessToken)
         return axiosApi.request(originalRequest)

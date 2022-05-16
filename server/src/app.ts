@@ -15,12 +15,18 @@ app.use('/images', express.static(`${process.cwd()}/images`))
 app.use(compression())
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
+app.use(
+  cors({
+    origin: process.env.API_URL || 'http://localhost:3000',
+    credentials: true,
+  })
+)
 app.use('/api', router)
 
-app.listen(5000, async () => {
+app.listen(port, async () => {
   try {
     console.log(`Server has been stared at port : ${port}`)
+    console.log(process.env)
   } catch (error) {
     prisma.$disconnect()
     console.log(error)
