@@ -9,31 +9,20 @@ import {
 } from '@chakra-ui/react'
 import { DEFAULT_DETAIL_IMG } from 'constants/'
 import React from 'react'
-import { IOrder, orderStatusDisplayed } from 'types/order.types'
-import styles from './OrderItem.module.scss'
+import { IOrder} from 'types/order.types'
+import OrderItemStatus from './OrderItemStatus'
 
 interface IProps {
   item: IOrder
+  isAdmin?: boolean
 }
 
-const statusCircleColors = {
-  confirmed: 'green',
-  rejected: 'red',
-  created: 'blue',
-}
-
-const OrderItem: React.FC<IProps> = ({ item }) => {
+const OrderItem: React.FC<IProps> = ({ item, isAdmin = false }) => {
   return (
     <Box className="mt-2 p-4 w-full" maxW={'700px'} borderWidth={'1px'} borderRadius="lg">
       <Box className="flex justify-between items-center">
         <Text fontSize={'lg'}>Заказ №{item.orderNumber}</Text>
-        <Box className="relative pl-3">
-          <Box
-            className={`${styles.status__circle}`}
-            style={{ backgroundColor: statusCircleColors[item.status] }}
-          ></Box>
-          <Text>{orderStatusDisplayed[item.status]}</Text>
-        </Box>
+        <OrderItemStatus status={item.status} isAdmin={isAdmin}  />
       </Box>
       <Box className="flex justify-between mt-1">
         <Text>Дата заказа: {item.createdAt.slice(0, 10)}</Text>

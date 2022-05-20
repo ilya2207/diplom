@@ -3,9 +3,9 @@ import { IDetail } from './detail.types'
 export type OrderStatusType = 'confirmed' | 'created' | 'rejected'
 
 export const orderStatusDisplayed = {
-    confirmed : "Подтвержден",
-    created: "Создан",
-    rejected : "Отменен",
+  confirmed: 'Оформлен',
+  created: 'Создан',
+  rejected: 'Отменен',
 }
 
 export interface IOrder {
@@ -14,16 +14,15 @@ export interface IOrder {
   orderNumber: string
   createdAt: string
   status: OrderStatusType
-  rejectedReason : number
+  rejectedReason: number
   orderItems: IOrderItem[]
   userId: number
 }
 
-
 export interface IOrderItem {
-  id : number
+  id: number
   amount: number
-  orderId : number
-  detailId : number
-  detail : IDetail
+  orderId: number
+  detailId: number
+  detail: IDetail
 }

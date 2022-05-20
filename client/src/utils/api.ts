@@ -80,7 +80,9 @@ axiosApi.interceptors.response.use(
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const response = await axiosApi.post('user/refresh')
+        const response = await axios.post(`${SERVER_HOST}/user/refresh`, undefined, {
+          withCredentials: true,
+        })
 
         localStorage.setItem('token', response.data.accessToken)
         return axiosApi.request(originalRequest)
