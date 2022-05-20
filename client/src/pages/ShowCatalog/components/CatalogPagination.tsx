@@ -1,5 +1,5 @@
 import { Box, Button } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { setDetailValues } from 'store/detail/detail.reducer'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 
@@ -8,7 +8,8 @@ const CatalogPagination = () => {
   const { currentPage, totalCount, itemsToDisplay } = useAppSelector((state) => state.detail)
   const totalPages = Math.ceil(totalCount / itemsToDisplay)
 
-  const paginationItems = (() => {
+  const paginationItems = useMemo(() => {
+    if (window.screen.availWidth < 600) return [currentPage]
     if (!totalPages) return [1]
     const res: number[] = []
     // If pages < 5
@@ -34,7 +35,34 @@ const CatalogPagination = () => {
       res.push(currentPage + index)
     }
     return res
-  })()
+  }, [totalPages, currentPage])
+  // const paginationItems = (() => {
+  //   if (!totalPages) return [1]
+  //   const res: number[] = []
+  //   // If pages < 5
+  //   if (totalPages < 5) {
+  //     for (let index = 1; index <= totalPages; index++) {
+  //       res.push(index)
+  //     }
+  //     return res
+  //   }
+  //   // Expression because if currPage = 1 || 2 first page will be -2
+  //   if (currentPage === 1 || currentPage === 2) return [1, 2, 3, 4, 5]
+  //   const diffPage = totalPages - currentPage
+  //   // If currentPage last or pre-last
+  //   if (diffPage <= 1) {
+  //     const startPage = currentPage - (5 - diffPage) + 1
+  //     for (let index = startPage; index <= startPage + 4; index++) {
+  //       res.push(index)
+  //     }
+  //     return res
+  //   }
+  //   // Default behaviour
+  //   for (let index = -2; index <= 2; index++) {
+  //     res.push(currentPage + index)
+  //   }
+  //   return res
+  // })()
 
   const setCurrentPage = (currentPage: number) => () => {
     dispatch(setDetailValues({ currentPage }))

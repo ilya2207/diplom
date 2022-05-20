@@ -4,9 +4,7 @@ import { categorySlice } from './catalog/category.slice'
 import { detailSlice } from './detail/detail.reducer'
 import { modelSlice } from './model/model.slice'
 import orderSlice from './order/order.reducer'
-import { authApi } from './services/auth'
 import { userSlice } from './user/user.slice'
-// import { userSlice } from './slices/userSlice'
 
 const rootReducer = combineReducers({
   user: userSlice.reducer,
@@ -14,8 +12,7 @@ const rootReducer = combineReducers({
   model: modelSlice.reducer,
   detail: detailSlice.reducer,
   basket: basketSlice.reducer,
-  order: orderSlice.reducer
-  // [authApi.reducerPath]: authApi.reducer,
+  order: orderSlice.reducer,
 })
 const stateFromLocalStorage = localStorage.getItem('store')
 const serializedstateFromLocalStorage = stateFromLocalStorage

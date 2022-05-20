@@ -5,3 +5,5 @@ export interface IBasketItemsToOrder extends Pick<BasketItem, 'amount' | 'detail
     price: number
   }
 }
+
+export type OrderStatusType = 'created' | 'confirmed' | 'rejected'

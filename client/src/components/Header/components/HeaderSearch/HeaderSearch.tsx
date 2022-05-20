@@ -30,7 +30,7 @@ const HeaderSearch = () => {
     return navigate(`/search/${searchStr}`)
   }
   return (
-    <InputGroup className="relative ">
+    <InputGroup className="relative lowTablet:order-3 lowTablet:mt-3">
       <Input
         {...register('searchStr', { required: true })}
         type="tel"

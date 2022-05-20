@@ -71,7 +71,7 @@ const Basket = () => {
                 deleteBasketItemHandler={deleteBasketItemHandler}
               />
             ))}
-          {items && items.length === 0 && (
+          {items && items.length === 0 && !loading && (
             <Box className="mt-9 text-center">
               <Text fontSize={'xl'} fontWeight="bold">
                 Корзина пуста

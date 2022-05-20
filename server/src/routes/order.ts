@@ -11,7 +11,9 @@ orderRouter.use(
   })
 )
 orderRouter.get('/', OrderController.show)
+orderRouter.get('/search', OrderController.searchByOrderNumber)
 orderRouter.post('/', OrderController.add)
-// orderRouter.post('/:detailId', OrderController.show)
+orderRouter.put('/:orderId', OrderController.show)
+orderRouter.delete('/:orderId', OrderController.show)
 
 export default orderRouter

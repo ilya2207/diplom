@@ -52,7 +52,7 @@ import axios from 'axios'
 
 const nameToken = 'token'
 
-const SERVER_HOST = 'http://localhost:5000/api'
+const SERVER_HOST = '/api'
 //  || 'https://ilya2207-diplom.herokuapp.com/'
 
 const axiosApi = axios.create({

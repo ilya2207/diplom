@@ -1,4 +1,4 @@
-import { Box, Menu, MenuButton, MenuList, MenuItem, Text, Input } from '@chakra-ui/react'
+import { Box, Menu, MenuButton, MenuList, MenuItem, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchDetails } from 'store/detail/detail.action'
@@ -9,18 +9,20 @@ const sortValues = {
   asc: 'Увеличению цены',
   desc: 'Уменьшению цены',
 }
+type SortValues = 'default' | 'asc' | 'desc'
 
 const CatalogSortSelect = () => {
-  const [itemsSort, setItemsSort] = useState('default')
+  const [itemsSort, setItemsSort] = useState<SortValues>('default')
   const { categoryId, modelId } = useParams()
   const currentPage = useAppSelector((state) => state.detail.currentPage)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (categoryId || modelId) {
-      dispatch(fetchDetails({ categoryId, modelId, page: currentPage }))
+      const orderBy = itemsSort === 'default' ? undefined : itemsSort
+      dispatch(fetchDetails({ categoryId, modelId, page: currentPage, orderBy }))
     }
-  }, [categoryId, modelId, dispatch, currentPage])
+  }, [categoryId, modelId, dispatch, currentPage, itemsSort])
 
   return (
     <Box className="flex gap-2">
@@ -32,7 +34,7 @@ const CatalogSortSelect = () => {
         <MenuList>
           <MenuItem onClick={() => setItemsSort('default')}>{sortValues['default']}</MenuItem>
           <MenuItem onClick={() => setItemsSort('asc')}>{sortValues['asc']}</MenuItem>
-          <MenuItem onClick={() => setItemsSort('desc')}>{sortValues['default']}</MenuItem>
+          <MenuItem onClick={() => setItemsSort('desc')}>{sortValues['desc']}</MenuItem>
         </MenuList>
       </Menu>
     </Box>

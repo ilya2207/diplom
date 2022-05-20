@@ -9,13 +9,13 @@ const modelRouter = Router()
 modelRouter.get('/', ModelController.show)
 modelRouter.get('/:modelId', ModelController.show)
 modelRouter.get('/search')
-// modelRouter.use(
-//   expressjwt({
-//     secret: process.env.JWT_ACCESS_SECRET,
-//     algorithms: ['HS256'],
-//   })
-// )
-// modelRouter.use(adminMiddleware)
+modelRouter.use(
+  expressjwt({
+    secret: process.env.JWT_ACCESS_SECRET,
+    algorithms: ['HS256'],
+  })
+)
+modelRouter.use(adminMiddleware)
 modelRouter.delete('/:modelId', ModelController.delete)
 modelRouter.use(fileUpload())
 modelRouter.post('/', ModelController.add)

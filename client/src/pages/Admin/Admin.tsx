@@ -24,9 +24,9 @@ const Admin = () => {
       </Text>
 
       <Tabs>
-        <Flex className="mt-4 w-full" justifyContent="space-between">
+        <Flex className="mt-4 w-full lowTablet:flex-col" justifyContent="space-between">
           <Box
-            className="w-full max-w-xs sticky top-44 left-4"
+            className="w-full max-w-xs sticky top-44 left-4 lowTablet:static lowTablet:mx-auto lowTablet:text-center"
             borderWidth="1px"
             borderRadius="lg"
             flexGrow={0}
@@ -48,7 +48,7 @@ const Admin = () => {
               </Tab>
             </TabList>
           </Box>
-          <Box className="flex-auto ml-7">
+          <Box className="flex-auto ml-7 lowTablet:ml-0 lowTablet:mt-2">
             <TabPanels>
               <TabPanel className="p-0">
                 <ManageOrder />

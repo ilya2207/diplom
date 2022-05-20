@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IOrder } from 'types/order.types'
-import { fetchOrders } from './order.action'
+import { fetchOrders, searchOrders } from './order.action'
 
 interface IOrderState {
   orders: IOrder[]
@@ -16,6 +16,9 @@ const orderSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchOrders.fulfilled, (state, action: PayloadAction<IOrder[]>) => {
+      state.orders = action.payload
+    })
+    builder.addCase(searchOrders.fulfilled, (state, action: PayloadAction<IOrder[]>) => {
       state.orders = action.payload
     })
   },

@@ -1,19 +1,20 @@
-import { Box } from '@chakra-ui/react'
-import CarModelCatalog from 'components/CarModelCatalog/CarModelCatalog'
-import Loader from 'components/Loader/Loader'
-import Basket from 'pages/Basket/Basket'
-import CarModel from 'pages/CarModel/CarModel'
-import Orders from 'pages/Orders/Orders'
-import Profile from 'pages/Profile/Profile'
-import SearchResult from 'pages/SearchResult/SearchResult'
-import SelectCategory from 'pages/SelectCategory/SelectCategory'
-import ShowCatalog from 'pages/ShowCatalog/ShowCatalog'
+import { Box, Spinner } from '@chakra-ui/react'
+
 import React, { lazy, ReactElement, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAppSelector } from 'store/hooks'
 import { selectUserAuth, selectUserType } from 'store/user/user.selector'
 
-const Admin = lazy(() => import('../../pages/Admin/Admin'))
+const Admin = lazy(() => import('pages/Admin/Admin'))
+const CarModelCatalog = lazy(() => import('components/CarModelCatalog/CarModelCatalog'))
+const Basket = lazy(() => import('pages/Basket/Basket'))
+const CarModel = lazy(() => import('pages/CarModel/CarModel'))
+const Orders = lazy(() => import('pages/Orders/Orders'))
+const Profile = lazy(() => import('pages/Profile/Profile'))
+const SearchResult = lazy(() => import('pages/SearchResult/SearchResult'))
+const SelectCategory = lazy(() => import('pages/SelectCategory/SelectCategory'))
+const ShowCatalog = lazy(() => import('pages/ShowCatalog/ShowCatalog'))
+const ShowCatalogCategory = lazy(() => import('pages/ShowCatalogCategory/ShowCatalogCategory'))
 
 interface IRoutes {
   routes: string[]
@@ -54,8 +55,12 @@ const publicRoutes: IRoutes[] = [
     element: <SearchResult />,
   },
   {
-    routes: ['/car/:carId/model/:modelId/category/:categoryId', '/category/:categoryId'],
+    routes: ['/car/:carId/model/:modelId/category/:categoryId'],
     element: <ShowCatalog />,
+  },
+  {
+    routes: ['/category/:categoryId'],
+    element: <ShowCatalogCategory />,
   },
   {
     routes: ['*'],
@@ -70,25 +75,24 @@ const Router = () => {
   }))
   return (
     <Box className="mt-5">
-      <Routes>
-        {type === 'admin' && (
-          <Route
-            path="/admin"
-            element={
-              <Suspense fallback={<Loader />}>
-                <Admin />
-              </Suspense>
-            }
-          />
-        )}
-        {isAuth &&
-          authRoutes.map((parentItem) =>
+      <Suspense
+        fallback={
+          <Box className="text-center mt-10">
+            <Spinner color="blue.500" width={'150px'} height="150px" speed="0.8s" />
+          </Box>
+        }
+      >
+        <Routes>
+          {type === 'admin' && <Route path="/admin" element={<Admin />} />}
+          {isAuth &&
+            authRoutes.map((parentItem) =>
+              parentItem.routes.map((item) => <Route path={item} element={parentItem.element} />)
+            )}
+          {publicRoutes.map((parentItem) =>
             parentItem.routes.map((item) => <Route path={item} element={parentItem.element} />)
           )}
-        {publicRoutes.map((parentItem) =>
-          parentItem.routes.map((item) => <Route path={item} element={parentItem.element} />)
-        )}
-      </Routes>
+        </Routes>
+      </Suspense>
     </Box>
   )
 }

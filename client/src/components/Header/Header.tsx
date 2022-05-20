@@ -56,7 +56,11 @@ const Header = () => {
             {isAuth && <ProfileMenu profileName={profileName} />}
           </div>
         </Flex>
-        <Flex align={'center'} justify="space-between" className="mt-3 gap-10">
+        <Flex
+          align={'center'}
+          justify="space-between"
+          className="mt-3 gap-10 lowTablet:flex-wrap lowTablet:gap-0"
+        >
           <CatalogMenu />
           <HeaderSearch />
           {isAuth && (

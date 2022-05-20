@@ -56,7 +56,7 @@ export default class UserService {
     payload: TokenData
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: '10s',
+      expiresIn: '30m',
     })
     const refreshToken = jwt.sign({ payload }, process.env.JWT_ACCESS_REFRESH, { expiresIn: '30d' })
     await prisma.user.update({

@@ -1,5 +1,14 @@
 import { HamburgerIcon, ChevronDownIcon } from '@chakra-ui/icons'
-import { Menu, MenuButton, Button, MenuList, Text, MenuItem, Box } from '@chakra-ui/react'
+import {
+  Menu,
+  MenuButton,
+  Button,
+  MenuList,
+  Text,
+  MenuItem,
+  Box,
+  MenuOptionGroup,
+} from '@chakra-ui/react'
 import { useCustomToast } from 'hooks/useCustomToast'
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -22,7 +31,7 @@ const CatalogMenu = () => {
   }
 
   return (
-    <Menu autoSelect={false}>
+    <Menu autoSelect={false} closeOnSelect={false}>
       <MenuButton as={Button} colorScheme="red" className="shrink-0">
         <div className="flex items-center gap-1">
           <HamburgerIcon />

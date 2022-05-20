@@ -29,3 +29,11 @@ export interface IShowDetails {
   details: IDetail[]
   totalCount: number
 }
+
+export interface IDetailSortParams {
+  modelId?: string
+  categoryId: string
+  page?: string | number
+  items?: string | number
+  orderBy?: 'asc' | 'desc'
+}

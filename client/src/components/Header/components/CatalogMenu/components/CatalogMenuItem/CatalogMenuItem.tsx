@@ -10,7 +10,7 @@ interface ICatalogMenuItemProps {
 const CatalogMenuItem: React.FC<ICatalogMenuItemProps> = ({ item, clickHandler }) => {
   return (
     <>
-      <MenuItem className="group">
+      <MenuItem className="group" closeOnSelect={false}>
         <Text>{item.title}</Text>
         <Box
           as={MenuList}

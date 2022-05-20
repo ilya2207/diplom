@@ -19,6 +19,7 @@ const toast = createStandaloneToast({
     duration: 2000,
   },
 })
+
 export const addOrder = createAsyncThunk('order/add', async (_, { rejectWithValue }) => {
   try {
     const response = await axiosApi.post('order')
@@ -31,3 +32,17 @@ export const addOrder = createAsyncThunk('order/add', async (_, { rejectWithValu
     return rejectWithValue('Error')
   }
 })
+
+export const searchOrders = createAsyncThunk(
+  'order/search',
+  async (searchStr: string, { rejectWithValue }) => {
+    try {
+      const response: AxiosResponse<IOrder[]> = await axiosApi.get(
+        `order/search?orderNumber=${searchStr}`
+      )
+      return response.data
+    } catch (error) {
+      return rejectWithValue('Что-то пошло не так')
+    }
+  }
+)

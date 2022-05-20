@@ -1,50 +1,20 @@
 import { Detail } from '@prisma/client'
 import { NextFunction, Request, Response } from 'express'
 import { UploadedFile } from 'express-fileupload'
-import ApiError from '../../exceptions/api-error'
 import prisma from '../../prisma'
 import ImageService from '../image/image.service'
 import DetailService from './detail.service'
-import { IDetail, IFilterCondition } from './detail.types'
+import { IDetail, IDetailSortParams } from './detail.types'
 
 export default class DetailController {
-  static async show(req: Request, res: Response, next: NextFunction) {
+  static async show(
+    req: Request<any, any, any, IDetailSortParams>,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      let filterCondition: IFilterCondition
-      const { modelId, categoryId, page = 1, items = 20 } = req.query
-      const pagination = { page: +page, items: +items }
-      if (!modelId && !categoryId) throw ApiError.badRequest('Укажите тип поиска')
-      if (modelId && categoryId) {
-        filterCondition = {
-          categories: {
-            some: {
-              id: +categoryId,
-            },
-          },
-          models: {
-            some: {
-              id: +modelId,
-            },
-          },
-        }
-      } else if (modelId) {
-        filterCondition = {
-          models: {
-            some: {
-              id: +modelId,
-            },
-          },
-        }
-      } else if (categoryId) {
-        filterCondition = {
-          categories: {
-            some: {
-              id: +categoryId,
-            },
-          },
-        }
-      }
-      const responseItems = await DetailService.show(filterCondition, pagination)
+      const [filterCondition, pagination, orderBy] = DetailService.generateSortObject(req.query)
+      const responseItems = await DetailService.show(filterCondition, pagination, orderBy)
       return res.json(responseItems)
     } catch (error) {
       next(error)

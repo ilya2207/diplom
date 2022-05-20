@@ -10,6 +10,7 @@ interface IFetchDetailsArgument {
   modelId?: string
   page?: number | string
   items?: string
+  orderBy?: 'asc' | 'desc'
 }
 
 // await new Promise((resolve, reject) => {
@@ -39,7 +40,7 @@ export const fetchDetails = createAsyncThunk(
     try {
       const { detail } = getState() as RootState
       const { modelId: modelFromStore, categoryId: categoryFromStore } = detail
-      let { categoryId = 0, modelId = 0, page } = params
+      let { categoryId = 0, modelId = 0, page, orderBy } = params
 
       if (modelFromStore !== +modelId || categoryFromStore !== +categoryId) {
         dispatch(
@@ -60,8 +61,9 @@ export const fetchDetails = createAsyncThunk(
       const categoryIdStr = categoryId && `categoryId=${categoryId}`
       const modelIdStr = modelId && `modelId=${modelId}`
       const pageStr = page && `page=${page}`
+      const orderByStr = orderBy && `orderBy=${orderBy}`
       const response: AxiosResponse<IFetchDetailsResponse> = await axiosApi.get(
-        `detail?${categoryIdStr}&${modelIdStr}&${pageStr}`
+        `detail?${categoryIdStr}&${modelIdStr}&${pageStr}&${orderByStr}`
       )
       return response.data
     } catch (error) {

@@ -1,6 +1,6 @@
 import { BasketItem } from '@prisma/client'
 import prisma from '../../prisma'
-import { IBasketItemsToOrder } from './order.types'
+import { IBasketItemsToOrder, OrderStatusType } from './order.types'
 
 export default class OrderService {
   static async show(userId: number) {
@@ -58,6 +58,55 @@ export default class OrderService {
     return order
   }
 
-  static async edit() {}
-  static async delete() {}
+  static async edit(
+    orderId: number,
+    { status, rejectedReason }: { status: OrderStatusType; rejectedReason: string }
+  ) {
+    const updatedItem = await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status,
+        rejectedReason,
+      },
+    })
+    return updatedItem
+  }
+  static async delete(orderId: number) {
+    await prisma.order.delete({
+      where: {
+        id: orderId,
+      },
+    })
+  }
+
+  static async searchByOrderNumber(searchStr: string) {
+    const result = await prisma.order.findMany({
+      where: {
+        OR: [
+          {
+            user: {
+              phone: {
+                contains: searchStr,
+              },
+            },
+          },
+          {
+            orderNumber: {
+              contains: searchStr,
+            },
+          },
+        ],
+      },
+      include: {
+        orderItems: {
+          include: {
+            detail: true,
+          },
+        },
+      },
+    })
+    return result
+  }
 }

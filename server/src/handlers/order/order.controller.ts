@@ -9,7 +9,7 @@ export default class OrderController {
   static async show(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
       const { id: userId } = req.auth.payload
-      
+
       const orders = await OrderService.show(userId)
       return res.json(orders)
     } catch (error) {
@@ -30,13 +30,29 @@ export default class OrderController {
   }
   static async edit(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
-
+      const orderId = req.params.orderId
+      const body = req.body
+      const updatedOrder = await OrderService.edit(+orderId, body)
+      return res.json(updatedOrder)
     } catch (error) {
       next(error)
     }
   }
   static async delete(req: ExpressJwtRequest, res: Response, next: NextFunction) {
     try {
+      const orderId = req.params.orderId
+      await OrderService.delete(+orderId)
+      return res.json('Успешно')
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async searchByOrderNumber(req: ExpressJwtRequest, res: Response, next: NextFunction) {
+    try {
+      const { orderNumber } = req.query
+      const searchedItems = await OrderService.searchByOrderNumber(orderNumber.toString())
+      return res.json(searchedItems)
     } catch (error) {
       next(error)
     }

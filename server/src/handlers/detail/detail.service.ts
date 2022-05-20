@@ -1,16 +1,17 @@
-import { Detail } from '@prisma/client'
 import ApiError from '../../exceptions/api-error'
 import prisma from '../../prisma'
-import { IFilterCondition, IShowDetails } from './detail.types'
+import { IDetailSortParams, IFilterCondition } from './detail.types'
 
 export default class DetailService {
   static async show(
     filterCondition: IFilterCondition,
-    pagination: { page: number; items: number }
+    pagination: { page: number; items: number },
+    orderBy?: { price: 'asc' | 'desc' }
   ) {
     const skip = pagination.page === 1 ? 0 : (pagination.page - 1) * pagination.items
     const details = await prisma.detail.findMany({
       skip,
+      orderBy,
       take: pagination.items,
       where: filterCondition,
     })
@@ -72,5 +73,50 @@ export default class DetailService {
     console.log(details)
 
     return { details, totalCount }
+  }
+
+  static generateSortObject(
+    queryParams: IDetailSortParams
+  ): [IFilterCondition, { page: number; items: number }, { price: 'asc' | 'desc' } | undefined] {
+    let filterCondition: IFilterCondition
+    const { modelId, categoryId, page = 1, items = 20, orderBy: sortBy } = queryParams
+    if (!modelId && !categoryId) throw ApiError.badRequest('Укажите тип поиска')
+    if (modelId && categoryId) {
+      filterCondition = {
+        categories: {
+          some: {
+            id: +categoryId,
+          },
+        },
+        models: {
+          some: {
+            id: +modelId,
+          },
+        },
+      }
+    } else if (modelId) {
+      filterCondition = {
+        models: {
+          some: {
+            id: +modelId,
+          },
+        },
+      }
+    } else if (categoryId) {
+      filterCondition = {
+        categories: {
+          some: {
+            id: +categoryId,
+          },
+        },
+      }
+    }
+    const pagination = { page: +page, items: +items }
+    const orderBy = sortBy
+      ? {
+          price: sortBy,
+        }
+      : undefined
+    return [filterCondition, pagination, orderBy]
   }
 }
