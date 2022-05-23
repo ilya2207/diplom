@@ -1,11 +1,12 @@
 import { IDetail } from './detail.types'
+import { IUser } from './user.types'
 
 export type OrderStatusType = 'confirmed' | 'created' | 'rejected'
 
 export const orderStatusDisplayed = {
   confirmed: 'Оформлен',
   created: 'Создан',
-  rejected: 'Отменен',
+  rejected: 'Отклонен',
 }
 
 export interface IOrder {
@@ -17,6 +18,7 @@ export interface IOrder {
   rejectedReason: number
   orderItems: IOrderItem[]
   userId: number
+  user?: Pick<IUser, 'firstname' | 'lastname' | 'phone' | 'secondname'>
 }
 
 export interface IOrderItem {

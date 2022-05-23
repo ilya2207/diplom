@@ -46,8 +46,6 @@ export default class DetailService {
 
   static async searchDetail(searchStr: string, { page, items }: { page: number; items: number }) {
     const skip = page === 1 ? 0 : (page - 1) * items
-    console.log(searchStr)
-    console.log(page, items)
     const where = {
       OR: [
         {
@@ -70,7 +68,6 @@ export default class DetailService {
     const totalCount = await prisma.detail.count({
       where: where,
     })
-    console.log(details)
 
     return { details, totalCount }
   }

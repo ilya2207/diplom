@@ -20,7 +20,6 @@ import {
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { addModel, deleteModel, editModel, fetchModel } from 'store/model/model.action'
 import ListItemRow from 'components/ListItemRow/ListItemRow'
-import { IModel } from 'types/model.types'
 import { IAddModelModal } from './types'
 import { addBrand } from 'store/model/model.slice'
 

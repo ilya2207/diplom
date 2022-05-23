@@ -13,7 +13,7 @@ orderRouter.use(
 orderRouter.get('/', OrderController.show)
 orderRouter.get('/search', OrderController.searchByOrderNumber)
 orderRouter.post('/', OrderController.add)
-orderRouter.put('/:orderId', OrderController.show)
-orderRouter.delete('/:orderId', OrderController.show)
+orderRouter.put('/:orderId', OrderController.edit)
+orderRouter.delete('/:orderId', OrderController.delete)
 
 export default orderRouter

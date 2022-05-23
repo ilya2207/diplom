@@ -42,7 +42,7 @@ const Basket = () => {
 
   return (
     <Container maxW={'container.xl'}>
-      <Box className="flex justify-between items-center">
+      <Box className="flex justify-between items-center ">
         <Text fontSize={'xl'} fontWeight="medium" className="mt-2">
           Корзина
         </Text>
@@ -55,8 +55,8 @@ const Basket = () => {
           Удалить все
         </Button>
       </Box>
-      <Box className="flex gap-x-6 mt-6 items-start">
-        <Box width={'70%'} className="shadow-lg p-4 rounded-lg">
+      <Box className="flex gap-x-6 mt-6 items-start lowTablet:flex-col lowTablet:items-center">
+        <Box width={'70%'} className="shadow-lg p-4 rounded-lg lowTablet:w-full">
           {loading && items.length === 0 && (
             <Box className="text-center flex justify-center w-full">
               <Spinner width="100px" height="100px" color="blue.500" speed="0.8s" />
@@ -72,7 +72,7 @@ const Basket = () => {
               />
             ))}
           {items && items.length === 0 && !loading && (
-            <Box className="mt-9 text-center">
+            <Box className="mt-9 text-center lowTablet:mt-2">
               <Text fontSize={'xl'} fontWeight="bold">
                 Корзина пуста
               </Text>
@@ -82,7 +82,10 @@ const Basket = () => {
             </Box>
           )}
         </Box>
-        <Box className="shadow-lg p-4 rounded-lg sticky top-40" width={'30%'}>
+        <Box
+          className="shadow-lg p-4 rounded-lg sticky top-40 lowTablet:w-full lowTablet:static"
+          width={'30%'}
+        >
           <Box className="flex justify-between items-center">
             <Text fontSize={'xl'}>Итого:</Text>
             <Text fontSize={'2xl'} fontWeight="bold">

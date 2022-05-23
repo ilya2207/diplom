@@ -5,24 +5,32 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Modal,
   Text,
 } from '@chakra-ui/react'
 import { DEFAULT_DETAIL_IMG } from 'constants/'
 import React from 'react'
-import { IOrder} from 'types/order.types'
+import { IOrder, OrderStatusType } from 'types/order.types'
 import OrderItemStatus from './OrderItemStatus'
 
 interface IProps {
   item: IOrder
   isAdmin?: boolean
+  changeStatusHandler?: (orderId: number, status: OrderStatusType, rejectedMessage?: string) => void
 }
 
-const OrderItem: React.FC<IProps> = ({ item, isAdmin = false }) => {
+const OrderItem: React.FC<IProps> = ({ item, isAdmin = false, changeStatusHandler }) => {
+  const clickHandler = (status: OrderStatusType, rejectedMessage?: string) => () => {
+    if (changeStatusHandler) {
+      changeStatusHandler(item.id, status, rejectedMessage)
+    }
+  }
+
   return (
     <Box className="mt-2 p-4 w-full" maxW={'700px'} borderWidth={'1px'} borderRadius="lg">
       <Box className="flex justify-between items-center">
         <Text fontSize={'lg'}>Заказ №{item.orderNumber}</Text>
-        <OrderItemStatus status={item.status} isAdmin={isAdmin}  />
+        <OrderItemStatus status={item.status} isAdmin={isAdmin} changeHandler={clickHandler} />
       </Box>
       <Box className="flex justify-between mt-1">
         <Text>Дата заказа: {item.createdAt.slice(0, 10)}</Text>
@@ -30,6 +38,20 @@ const OrderItem: React.FC<IProps> = ({ item, isAdmin = false }) => {
           Общая сумма: <Text fontWeight={'medium'}>{item.totalPrice}&#8381;</Text>
         </Box>
       </Box>
+      {isAdmin && item.user && (
+        <Box className="flex justify-between items-center">
+          <Box>
+            ФИО заказчика: {`${item.user.secondname} ${item.user.firstname} ${item.user.lastname}`}
+          </Box>
+          <Box>Телефон заказчика: {item.user.phone}</Box>
+        </Box>
+      )}
+      {item.status === 'rejected' && item.rejectedReason && (
+        <Box className="flex justify-between items-center text-chakra-red-500 font-semibold">
+          <Text>Причина отклонения</Text>
+          <Text>{item.rejectedReason}</Text>
+        </Box>
+      )}
       <Box className="mt-2">
         <Accordion allowToggle>
           <AccordionItem>

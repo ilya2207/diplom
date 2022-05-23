@@ -1,12 +1,12 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Box, Button, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import React from 'react'
-import { orderStatusDisplayed } from 'types/order.types'
+import { orderStatusDisplayed, OrderStatusType } from 'types/order.types'
 import styles from './OrderItem.module.scss'
 
 interface IProps {
   isAdmin?: boolean
-  changeHandler?: boolean
+  changeHandler: (status: OrderStatusType, rejectedMessage?: string) => () => void
   status: string
 }
 
@@ -15,15 +15,11 @@ const statusCircleColors = {
   rejected: 'red',
   created: 'blue',
 }
-const OrderItemStatus: React.FC<IProps> = ({
-  isAdmin = false,
-  changeHandler = () => null,
-  status,
-}) => {
+const OrderItemStatus: React.FC<IProps> = ({ isAdmin = false, changeHandler, status }) => {
   if (isAdmin)
     return (
       <>
-        <Menu>
+        <Menu autoSelect={false}>
           <MenuButton
             as={Button}
             className="relative"
@@ -33,16 +29,12 @@ const OrderItemStatus: React.FC<IProps> = ({
             <Box>{orderStatusDisplayed[status]}</Box>
           </MenuButton>
           <MenuList>
-            <MenuItem>Download</MenuItem>
-            <MenuItem>Create a Copy</MenuItem>
-            <MenuItem>Mark as Draft</MenuItem>
-            <MenuItem>Delete</MenuItem>
-            <MenuItem>Attend a Workshop</MenuItem>
+            <MenuItem onClick={changeHandler('confirmed')}>Подтвержден</MenuItem>
+            <MenuItem onClick={changeHandler('rejected')}>Отменен</MenuItem>
           </MenuList>
         </Menu>
       </>
     )
-
   return (
     <>
       <Box className="relative px-3">

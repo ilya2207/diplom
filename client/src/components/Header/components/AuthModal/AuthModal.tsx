@@ -33,7 +33,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, type }) => {
   const { register, handleSubmit, reset } = useForm<IAuthModalLoginForm | ISignupUser>()
   const { loading } = useAppSelector((state) => state.user)
   const dispatch = useAppDispatch()
-  console.log(1)
 
   useEffect(() => {
     setModalType(type)

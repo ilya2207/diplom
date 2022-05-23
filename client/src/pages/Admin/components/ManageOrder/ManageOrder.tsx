@@ -1,15 +1,27 @@
-import { Box, Button, Input, InputGroup, Spinner, Text, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Input,
+  InputGroup,
+  Spinner,
+  Text,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react'
 import useDebounce from 'hooks/useDebounce'
 import OrderItem from 'pages/Orders/OrderItem'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
-import { searchOrders } from 'store/order/order.action'
-import { IOrder } from 'types/order.types'
+import { changeOrderStatus, searchOrders } from 'store/order/order.action'
+import { IOrder, OrderStatusType } from 'types/order.types'
+import RejectOrderModal from './components/RejectOrderModal'
 
 const defaultShowItems = 15
 
 const ManageOrder = () => {
   const [showItems, setShowItems] = useState(defaultShowItems)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [selectedOrderId, setSelectedOrderId] = useState<number>(0)
   const [searchState, setSearchState] = useState('')
   const debouncedSearchState = useDebounce(searchState, 350)
   const [loading, setLoading] = useState(false)
@@ -56,15 +68,24 @@ const ManageOrder = () => {
     setShowItems(showItems + increaseShowItemsValue)
   }
 
-  const changeStatusHandler = () => {
-    
+  const changeStatusHandler = async (
+    orderId: number,
+    status: OrderStatusType,
+    rejectedMessage?: string
+  ) => {
+    if (status === 'rejected' && !isOpen) {
+      setSelectedOrderId(orderId)
+      return onOpen()
+    }
+    await dispatch(changeOrderStatus({ orderId, status, rejectedMessage }))
+    onClose()
   }
 
   return (
     <Box>
       <Box>
         <Text fontSize="xl">Поиск заказа</Text>
-        <InputGroup className="mt-1">
+        <InputGroup className="mt-4">
           <Input
             value={searchState}
             placeholder="Введите номер заказа или телефон пользователя"
@@ -72,7 +93,7 @@ const ManageOrder = () => {
           />
         </InputGroup>
       </Box>
-      <Box className="mt-4">
+      <Box className="mt-4 flex items-center flex-col">
         {loading && (
           <Box className="text-center">
             <Spinner width="75px" height="75px" color="blue.500" speed="0.8s" marginTop="10vh" />
@@ -81,7 +102,12 @@ const ManageOrder = () => {
         {displayedOrders &&
           !loading &&
           displayedOrders.map((item, index) => (
-            <OrderItem key={`${item.id}_${index}`} item={item} isAdmin={true} />
+            <OrderItem
+              key={`${item.id}_${index}`}
+              item={item}
+              isAdmin={true}
+              changeStatusHandler={changeStatusHandler}
+            />
           ))}
       </Box>
       {displayedOrders && displayedOrders.length !== 0 && showItems < orders.length && !loading && (
@@ -89,6 +115,12 @@ const ManageOrder = () => {
           <Button onClick={showMoreHandler}>Показать еще</Button>
         </Box>
       )}
+      <RejectOrderModal
+        isOpen={isOpen}
+        orderId={selectedOrderId}
+        onClose={onClose}
+        submitHandler={changeStatusHandler}
+      />
     </Box>
   )
 }

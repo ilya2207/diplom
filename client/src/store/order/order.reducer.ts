@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IOrder } from 'types/order.types'
-import { fetchOrders, searchOrders } from './order.action'
+import { changeOrderStatus, fetchOrders, searchOrders } from './order.action'
 
 interface IOrderState {
   orders: IOrder[]
@@ -20,6 +20,14 @@ const orderSlice = createSlice({
     })
     builder.addCase(searchOrders.fulfilled, (state, action: PayloadAction<IOrder[]>) => {
       state.orders = action.payload
+    })
+    builder.addCase(changeOrderStatus.fulfilled, (state, action: PayloadAction<IOrder>) => {
+      for (let order of state.orders) {
+        if (order.id === action.payload.id) {
+          order.status = action.payload.status
+          order.rejectedReason = action.payload.rejectedReason
+        }
+      }
     })
   },
 })

@@ -60,7 +60,7 @@ export default class OrderService {
 
   static async edit(
     orderId: number,
-    { status, rejectedReason }: { status: OrderStatusType; rejectedReason: string }
+    { status, rejectedReason = null }: { status: OrderStatusType; rejectedReason?: string }
   ) {
     const updatedItem = await prisma.order.update({
       where: {
@@ -83,6 +83,9 @@ export default class OrderService {
 
   static async searchByOrderNumber(searchStr: string) {
     const result = await prisma.order.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
       where: {
         OR: [
           {
@@ -103,6 +106,15 @@ export default class OrderService {
         orderItems: {
           include: {
             detail: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            firstname: true,
+            secondname: true,
+            lastname: true,
+            phone: true,
           },
         },
       },

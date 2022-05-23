@@ -1,13 +1,12 @@
 import { createStandaloneToast } from '@chakra-ui/react'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosResponse } from 'axios'
-import { IOrder } from 'types/order.types'
+import { IOrder, OrderStatusType } from 'types/order.types'
 import axiosApi from 'utils/api'
 
 export const fetchOrders = createAsyncThunk('order/fetch', async (_, { rejectWithValue }) => {
   try {
     const response: AxiosResponse<IOrder[]> = await axiosApi.get('order')
-    console.log(response)
     return response.data
   } catch (error) {
     return rejectWithValue('Что-то пошло не так')
@@ -22,8 +21,7 @@ const toast = createStandaloneToast({
 
 export const addOrder = createAsyncThunk('order/add', async (_, { rejectWithValue }) => {
   try {
-    const response = await axiosApi.post('order')
-
+    await axiosApi.post('order')
     toast({
       title: 'Заказ успешно создан',
       status: 'success',
@@ -44,5 +42,23 @@ export const searchOrders = createAsyncThunk(
     } catch (error) {
       return rejectWithValue('Что-то пошло не так')
     }
+  }
+)
+
+interface IChangeOrderStatusBody {
+  orderId: number
+  status: OrderStatusType
+  rejectedMessage?: string
+}
+
+export const changeOrderStatus = createAsyncThunk(
+  'order/change',
+  async ({ orderId, status, rejectedMessage }: IChangeOrderStatusBody) => {
+    const response: AxiosResponse<IOrder> = await axiosApi.put(`order/${orderId}`, {
+      status,
+      rejectedReason: rejectedMessage,
+    })
+
+    return response.data
   }
 )
