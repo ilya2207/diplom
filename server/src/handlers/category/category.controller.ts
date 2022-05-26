@@ -41,4 +41,15 @@ export default class CategoryController {
       next(error)
     }
   }
+
+  static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const searchStr = req.query.searchStr as string
+
+      const items = await CategoryService.search(searchStr)
+      return res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

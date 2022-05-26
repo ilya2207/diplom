@@ -55,4 +55,13 @@ export default class CategoryService {
 
     return deletedCategory
   }
+
+  static async search(searchStr: string) {
+    const items = await prisma.category.findMany({
+      where: {
+        AND: [{ NOT: { parentCategory: null } }, { title: { contains: searchStr } }],
+      },
+    })
+    return items
+  }
 }

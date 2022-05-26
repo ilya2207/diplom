@@ -20,7 +20,7 @@ const Admin = () => {
   return (
     <Container maxW={'container.xl'}>
       <Text className="sticky top-36 left-4" fontSize="1xl" fontWeight="bold">
-        Админ-панель
+        Панель администратора
       </Text>
 
       <Tabs>

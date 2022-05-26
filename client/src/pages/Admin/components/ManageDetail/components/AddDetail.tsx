@@ -1,33 +1,38 @@
 import { Box, Button, FormLabel, Input, Text } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { IDetail } from 'types/detail.types'
 import { IManageDetailCondition } from '../ManageDetail'
+import SelectDetailRelations from './SelectDetailRelations'
 
 interface Props {
   changeCondition: (state: IManageDetailCondition) => void
+  selectedItem: IDetail | null
 }
 
-interface IFormState extends Omit<IDetail, 'id' | 'img'> {
-  img: null | File
-}
+type IFormState = Omit<IDetail, 'id' | 'img'>
 
-const AddDetail: React.FC<Props> = ({ changeCondition }) => {
+const AddDetail: React.FC<Props> = ({ changeCondition, selectedItem }) => {
   const [file, setFile] = useState<null | string>(null)
-  const { register, handleSubmit } = useForm<IFormState>({
+  const { register, handleSubmit, reset } = useForm<IFormState>({
     defaultValues: {
       shortDescription: '',
-
       title: '',
       vendorCode: '',
-      img: null,
     },
   })
+
+  useEffect(() => {
+    if (selectedItem) {
+      const { id, img, ...body } = selectedItem
+      reset(body)
+    }
+  }, [])
+
   const uploadFile = (e) => {
     const url = URL.createObjectURL(e.target.files[0])
     setFile(url)
   }
-
   const submitHandler = (values: IFormState) => {
     console.log(values)
   }
@@ -38,9 +43,6 @@ const AddDetail: React.FC<Props> = ({ changeCondition }) => {
 
   return (
     <Box>
-      <Text className="text-chakra-blue-500 cursor-pointer" onClick={backClickHandler}>
-        Назад
-      </Text>
       <Box>
         <Text fontSize={'xl'}>Добавление детали</Text>
       </Box>
@@ -78,7 +80,7 @@ const AddDetail: React.FC<Props> = ({ changeCondition }) => {
         />
       </Box>
       <Box>
-        <Text className="mt-2">Изображение</Text>
+        <FormLabel>Изображение</FormLabel>
         <label
           className="cursor-pointer mt-3 p-4 flex justify-center items-center border-2 border-dashed"
           htmlFor="uploadFile"
@@ -98,8 +100,14 @@ const AddDetail: React.FC<Props> = ({ changeCondition }) => {
           </Box>
         )}
       </Box>
+      <Box className="mt-4">
+        <SelectDetailRelations itemsKey="categories" title="Категории" />
+      </Box>
+      <Box className="mt-4">
+        <SelectDetailRelations itemsKey="models" title="Модели" />
+      </Box>
       <Box className="flex gap-4 mt-8 justify-center">
-        <Button>Отмена</Button>
+        <Button onClick={backClickHandler}>Отмена</Button>
         <Button colorScheme={'blue'}>Сохранить</Button>
       </Box>
     </Box>

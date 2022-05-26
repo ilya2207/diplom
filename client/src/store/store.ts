@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { adminSlice } from './admin/admin.slice'
 import basketSlice from './basket/basket.reducer'
 import { categorySlice } from './catalog/category.slice'
 import { detailSlice } from './detail/detail.reducer'
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   detail: detailSlice.reducer,
   basket: basketSlice.reducer,
   order: orderSlice.reducer,
+  admin: adminSlice.reducer,
 })
 const stateFromLocalStorage = localStorage.getItem('store')
 const serializedstateFromLocalStorage = stateFromLocalStorage

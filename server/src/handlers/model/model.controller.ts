@@ -8,6 +8,8 @@ import { IModel } from './model.types'
 export default class ModelController {
   static async show(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log('HELLO WORLD')
+
       const modelId: string | undefined = req.params.modelId
       const models = await ModelService.show(+modelId)
 
@@ -20,7 +22,7 @@ export default class ModelController {
     try {
       const body: IModel = req.body
       const file: UploadedFile | undefined = req.files?.img as UploadedFile
-      
+
       if (file) {
         const newImgPath = await ImageService.upload('model', file)
         body.img = newImgPath
@@ -66,6 +68,19 @@ export default class ModelController {
       await ImageService.delete(deletedModel.img)
 
       return res.json({ message: 'Успешно удалено' })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const searchStr = req.query.searchStr as string
+
+      console.log(searchStr);
+      
+      const items = await ModelService.search(searchStr)
+      return res.json(items)
     } catch (error) {
       next(error)
     }

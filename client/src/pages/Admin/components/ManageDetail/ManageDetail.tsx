@@ -14,11 +14,11 @@ const ManageDetail = () => {
     isMain: true,
     selectedItem: null,
   })
-  const { isMain } = condition
+  const { isMain, selectedItem } = condition
   return (
     <Box>
       {isMain && <ManageDetailList changeCondtion={setCondition} />}
-      {!isMain && <AddDetail changeCondition={setCondition} />}
+      {!isMain && <AddDetail changeCondition={setCondition} selectedItem={selectedItem} />}
     </Box>
   )
 }

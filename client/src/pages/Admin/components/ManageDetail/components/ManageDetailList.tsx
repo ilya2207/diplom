@@ -1,4 +1,4 @@
-import { Box, Button, InputGroup, Input, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, InputGroup, Input, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { IManageDetailCondition } from '../ManageDetail'
 

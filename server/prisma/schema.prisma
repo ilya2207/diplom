@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   firstname    String
   secondname   String
   lastname     String
   password     String
-  email        String   @unique
-  phone        String   @unique
-  type         Role     @default(user)
+  email        String  @unique
+  phone        String  @unique
+  type         Role    @default(user)
   accessToken  String?
   refreshToken String?
   orders       Order[]
@@ -34,8 +34,8 @@ model Category {
   id               Int        @id @default(autoincrement())
   title            String?
   parentCategoryId Int?
-  parentCategory   Category?  @relation("CategorieType", fields: [parentCategoryId], references: [id], onDelete: Cascade)
-  childCategories  Category[] @relation("CategorieType")
+  parentCategory   Category?  @relation("CategoryType", fields: [parentCategoryId], references: [id], onDelete: Cascade)
+  childCategories  Category[] @relation("CategoryType")
   details          Detail[]
 }
 
@@ -43,9 +43,7 @@ model Detail {
   id               Int          @id @default(autoincrement())
   title            String
   shortDescription String
-  options          String?
   price            Int
-  star             Int          @default(0)
   img              String?
   vendorCode       String?
   models           CarModel[]
@@ -54,14 +52,6 @@ model Detail {
   orderItems       OrderItem[]
 }
 
-// model Order {
-//   id        Int      @id @default(autoincrement())
-//   amount    Json?
-//   userId    Int
-//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   createdAt DateTime @default(now())
-//   details   Detail[]
-// }
 enum OrderStatus {
   created
   confirmed

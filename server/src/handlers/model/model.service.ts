@@ -83,4 +83,29 @@ export default class ModelService {
     })
     return deletedModel
   }
+
+  static async search(searchStr: string) {
+    const items = await prisma.carModel.findMany({
+      where: {
+        NOT: {
+          brandId: null,
+        },
+        OR: [
+          {
+            title: {
+              contains: searchStr,
+              mode: 'insensitive',
+            },
+          },
+          {
+            model: {
+              contains: searchStr,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    })
+    return items
+  }
 }

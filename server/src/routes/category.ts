@@ -16,5 +16,6 @@ categoryRouter.use(adminMiddleware)
 categoryRouter.post('/', CategoryController.add)
 categoryRouter.put('/:categoryId', CategoryController.edit)
 categoryRouter.delete('/:categoryId', CategoryController.delete)
+categoryRouter.get('/admin/search', CategoryController.search)
 
 export default categoryRouter
