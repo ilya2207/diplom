@@ -1,12 +1,11 @@
 import { Box, Spinner } from '@chakra-ui/react'
-
 import React, { lazy, ReactElement, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAppSelector } from 'store/hooks'
 import { selectUserAuth, selectUserType } from 'store/user/user.selector'
 
 const Admin = lazy(() => import('pages/Admin/Admin'))
-const CarModelCatalog = lazy(() => import('components/CarModelCatalog/CarModelCatalog'))
+const Home = lazy(() => import('pages/Home/Home'))
 const Basket = lazy(() => import('pages/Basket/Basket'))
 const CarModel = lazy(() => import('pages/CarModel/CarModel'))
 const Orders = lazy(() => import('pages/Orders/Orders'))
@@ -43,7 +42,7 @@ const publicRoutes: IRoutes[] = [
   },
   {
     routes: ['/'],
-    element: <CarModelCatalog />,
+    element: <Home />,
   },
 
   {

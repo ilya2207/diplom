@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IUser } from 'types/user.types'
-import { fetchUserData, loginUser, logout, signupUser } from './user.action'
+import { editProfile, fetchUserData, loginUser, logout, signupUser } from './user.action'
 
 interface InitState {
   loading: boolean
@@ -92,6 +92,11 @@ export const userSlice = createSlice({
         type: 'user',
         accessToken: '',
       }
+    })
+    builder.addCase(editProfile.fulfilled, (state, action) => {
+      const accessToken = state.user.accessToken
+      state.user = action.payload
+      state.user.accessToken = accessToken
     })
   },
 })

@@ -61,8 +61,12 @@ export const logout = createAsyncThunk('user/logout', async (_, { rejectWithValu
 
 export const editProfile = createAsyncThunk('user/edit', async (data: any, { rejectWithValue }) => {
   try {
-    const response = await axiosApi.post('user/edit', data)
-    return response
+    const response: AxiosResponse<Omit<IUser, 'accessToken'>> = await axiosApi.post(
+      'user/edit',
+      data
+    )
+
+    return response.data
   } catch (error) {
     return rejectWithValue(error.response)
   }

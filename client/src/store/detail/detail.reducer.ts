@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IDetail } from 'types/detail.types'
-import { fetchDetails, searchDetail } from './detail.action'
+import { fetchDetails, fetchNewDetails, fetchPopularDetails, searchDetail } from './detail.action'
 
 interface IInitState {
   items: IDetail[]
+  popularItems: IDetail[]
+  newItems: IDetail[]
   error: string | null
   loading: boolean
   currentPage: number
@@ -14,6 +16,8 @@ interface IInitState {
 }
 
 const initState: IInitState = {
+  popularItems: [],
+  newItems: [],
   items: [],
   totalCount: -1,
   categoryId: null,
@@ -60,6 +64,12 @@ export const detailSlice = createSlice({
     builder.addCase(searchDetail.rejected, (state, action) => {
       state.loading = false
       state.error = 'Ошибка'
+    })
+    builder.addCase(fetchNewDetails.fulfilled, (state, action) => {
+      state.newItems = action.payload
+    })
+    builder.addCase(fetchPopularDetails.fulfilled, (state, action) => {
+      state.popularItems = action.payload
     })
   },
 })

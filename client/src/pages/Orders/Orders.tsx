@@ -1,4 +1,5 @@
 import { Box, Container, Text } from '@chakra-ui/react'
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs'
 import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { fetchOrders } from 'store/order/order.action'
@@ -14,6 +15,13 @@ const Orders = () => {
 
   return (
     <Container maxW={'container.xl'}>
+      <Breadcrumbs
+        items={[
+          {
+            title: 'Заказы',
+          },
+        ]}
+      />
       <Text className="mt-2" fontWeight={'medium'} fontSize={'xl'}>
         Заказы
       </Text>

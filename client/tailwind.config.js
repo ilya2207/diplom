@@ -29,6 +29,9 @@ module.exports = {
         tablet: { max: '600px' },
         mobile: { max: '400px' },
       },
+      fontFamily: {
+        title: ['Russo One', 'sans-serif'],
+      },
     },
   },
   plugins: [],

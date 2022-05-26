@@ -31,7 +31,7 @@ const CatalogMenu = () => {
   }
 
   return (
-    <Menu autoSelect={false} closeOnSelect={false}>
+    <Menu autoSelect={false}>
       <MenuButton as={Button} colorScheme="red" className="shrink-0">
         <div className="flex items-center gap-1">
           <HamburgerIcon />

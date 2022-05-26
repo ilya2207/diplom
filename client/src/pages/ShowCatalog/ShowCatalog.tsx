@@ -30,7 +30,7 @@ const ShowCatalog = () => {
         ]}
       />
       <Text className="mt-2" fontSize={'xl'} fontWeight="medium">
-        Список запчтастей
+        Список запчастей
       </Text>
       <ShowItems />
     </Container>

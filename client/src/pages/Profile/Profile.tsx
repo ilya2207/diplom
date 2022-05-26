@@ -1,5 +1,6 @@
 import { Box, Button, Container, FormLabel, Input, Text, useToast } from '@chakra-ui/react'
 import { AxiosResponse } from 'axios'
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
@@ -47,7 +48,7 @@ const Profile = () => {
 
     try {
       const response = await dispatch(editProfile({ ...userData, password, oldPassword })).unwrap()
-      if (response.status === 200) {
+      if (response) {
         return toast({
           status: 'success',
           title: 'Успешно обновлено',
@@ -61,6 +62,13 @@ const Profile = () => {
   }
   return (
     <Container maxWidth={'container.xl'}>
+      <Breadcrumbs
+        items={[
+          {
+            title: 'Профиль',
+          },
+        ]}
+      />
       <Text className="mt-2" fontWeight={'medium'} fontSize={'xl'}>
         Профиль
       </Text>
@@ -108,8 +116,12 @@ const Profile = () => {
           <FormLabel>Подтверждение пароля</FormLabel>
           <Input type={'password'} {...register('confirmPassword')} />
         </Box>
-        <Box className="text-right mt-6">
-          <Button colorScheme={'blue'} onClick={handleSubmit(sumbitHandler)}>
+        <Box className="text-center mt-6">
+          <Button
+            className="max-w-[300px] w-full"
+            colorScheme={'blue'}
+            onClick={handleSubmit(sumbitHandler)}
+          >
             Сохранить
           </Button>
         </Box>

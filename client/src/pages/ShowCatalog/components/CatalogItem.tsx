@@ -23,7 +23,7 @@ const CatalogItem: React.FC<Props> = ({ item, basketHandler, isAuth }) => {
 
   return (
     <Box
-      className="flex flex-col justify-between items-center p-6 shadow-md rounded-lg mobile:max-w-[200px] mobile:mx-auto"
+      className="select-none flex flex-col justify-between items-center p-6 shadow-md rounded-lg mobile:max-w-[200px] mobile:mx-auto"
       border="1px solid #ededed"
     >
       <img

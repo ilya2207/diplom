@@ -27,14 +27,6 @@ const CarModel = () => {
           car.brandModels.map((item) => (
             <CarModelItem linkPath={pathname} key={item.id} item={item} />
           ))}
-        {!!car?.brandModels?.length &&
-          car.brandModels.map((item) => (
-            <CarModelItem linkPath={pathname} key={item.id} item={item} />
-          ))}
-        {!!car?.brandModels?.length &&
-          car.brandModels.map((item) => (
-            <CarModelItem linkPath={pathname} key={item.id} item={item} />
-          ))}
       </Box>
     </Container>
   )

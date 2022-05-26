@@ -3,6 +3,7 @@ export interface IModel {
   title: string
   model?: string
   brandId?: number | null
+  releaseDate?: string
   img?: string
   brandModels?: IModel[]
 }

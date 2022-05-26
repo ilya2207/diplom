@@ -116,4 +116,50 @@ export default class DetailService {
       : undefined
     return [filterCondition, pagination, orderBy]
   }
+
+  static async getPopular() {
+    const items = await prisma.detail.findMany({
+      take: 10,
+      orderBy: {
+        orderItems: {
+          _count: 'desc',
+        },
+      },
+    })
+    return items
+  }
+
+  static async getNew() {
+    const items = await prisma.detail.findMany({
+      take: 10,
+      orderBy: {
+        id: 'desc',
+      },
+    })
+    return items
+  }
+
+  static async adminSearch(searchStr) {
+    const items = await prisma.detail.findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: searchStr,
+            },
+          },
+          {
+            vendorCode: {
+              contains: searchStr,
+            },
+          },
+        ],
+      },
+      include: {
+        categories: true,
+        models: true,
+      },
+    })
+    return items
+  }
 }

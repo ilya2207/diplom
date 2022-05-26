@@ -7,6 +7,8 @@ import { fetchModel } from 'store/model/model.action'
 import { fetchUserData } from 'store/user/user.action'
 import { selectUserToken } from 'store/user/user.selector'
 import 'assets/styles/index.scss'
+import Footer from 'components/Footer/Footer'
+import { Box } from '@chakra-ui/react'
 
 function App() {
   const token = useAppSelector(selectUserToken)
@@ -21,10 +23,13 @@ function App() {
   }, [])
 
   return (
-    <div className="app">
-      <Header />
-      <Router />
-    </div>
+    <Box className="app flex min-h-screen flex-col justify-between">
+      <Box>
+        <Header />
+        <Router />
+      </Box>
+      <Footer />
+    </Box>
   )
 }
 

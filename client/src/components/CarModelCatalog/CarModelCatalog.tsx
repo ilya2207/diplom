@@ -1,10 +1,9 @@
-import { Container, Grid, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react'
-import axios from 'axios'
-import React, { useState, useEffect, useMemo } from 'react'
+import { Container, Grid, Text } from '@chakra-ui/react'
+import React, { useEffect, useMemo } from 'react'
 import CarModelCatalogItem from './components/CarModelCatalogItem'
 import styles from './CarModelCatalog.module.scss'
-import axiosApi from 'utils/api'
 import { Link } from 'react-router-dom'
+import { useAppSelector } from 'store/hooks'
 
 interface IOnlyModelBrand {
   id: number
@@ -15,7 +14,7 @@ const columnsCount = 5
 let firstLetterModelTitle = ''
 
 const CarModelCatalog = () => {
-  const [models, setModels] = useState<IOnlyModelBrand[]>([])
+  const { items: models } = useAppSelector((state) => state.model)
 
   const displayedModels = useMemo(() => {
     const itemsInRow = Math.ceil(models.length / columnsCount)
@@ -29,35 +28,14 @@ const CarModelCatalog = () => {
     return result
   }, [models])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axiosApi.get<IOnlyModelBrand[]>('/model')
-
-      setModels(response.data)
-    }
-
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    firstLetterModelTitle = models[0]?.title[0]
-  }, [models])
-
   return (
     <Container className="mt-5" maxW={'container.xl'}>
-      {/* <InputGroup className="max-w-sm">
-        <Input placeholder="Введите марку авто" />
-        <InputRightElement
-          pointerEvents="none"
-          children={<i className="fa-solid fa-car text-chakra-blue-500"></i>}
-        />
-      </InputGroup> */}
       <Text fontSize="1xl" fontWeight="bold">
-        Выберите марку авто
+        Поиск запчастей по марке
       </Text>
       <Grid
         className="shadow-lg pl-8 mt-2 py-3"
-        templateColumns={'repeat(5, 1fr)'}
+        templateColumns={'repeat(4, 1fr)'}
         borderWidth="1px"
         borderRadius="lg"
       >

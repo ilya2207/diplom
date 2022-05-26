@@ -84,4 +84,32 @@ export default class DetailController {
       next(error)
     }
   }
+
+  static async getPopular(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const items = await DetailService.getPopular()
+      return res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getNew(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const items = await DetailService.getNew()
+      return res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async adminSearch(req: Request, res: Response, next: NextFunction) {
+    try {
+      const searchStr = req.query.searchStr as string
+      const items = await DetailService.adminSearch(searchStr)
+      return res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

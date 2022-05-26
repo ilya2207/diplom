@@ -95,7 +95,7 @@ export interface searchData {
 }
 export const searchDetail = createAsyncThunk(
   'detail/search',
-  async (body: searchData, { rejectWithValue, dispatch }) => {
+  async (body: searchData, { dispatch }) => {
     try {
       const { searchStr, items = 20, page = 1 } = body
       dispatch(
@@ -113,12 +113,18 @@ export const searchDetail = createAsyncThunk(
     }
   }
 )
-// export const fetchDetails = createAsyncThunk('detail/show', (_, { rejectWithValue }) => {
-//   try {
-//   } catch (error) {}
-// })
 
-// export const aaa = createAsyncThunk('detail/show', (_, { rejectWithValue }) => {
-//   try {
-//   } catch (error) {}
-// })
+export const fetchPopularDetails = createAsyncThunk('detail/popular', async () => {
+  const response: AxiosResponse<IDetail[]> = await axiosApi.get('detail/popular')
+  return response.data
+})
+
+export const fetchNewDetails = createAsyncThunk('detail/new', async () => {
+  const response: AxiosResponse<IDetail[]> = await axiosApi.get('detail/new')
+  return response.data
+})
+
+export const detailAdminSearch = createAsyncThunk('detail/serach', async (searchStr: string) => {
+  const response = await axiosApi.get(`detail/search/adminSearch?searchStr=${searchStr}`)
+  return response.data
+})

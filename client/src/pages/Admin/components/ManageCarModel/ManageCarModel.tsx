@@ -27,6 +27,7 @@ const editableInitState = {
   title: '',
   model: '',
   newImg: null,
+  releaseDate: '',
 }
 
 const ManageCarModel = () => {
@@ -81,6 +82,7 @@ const ManageCarModel = () => {
     formData.append('title', editableElement?.title)
     formData.append('model', editableElement?.model)
     formData.append('brandId', editableElement?.brandId)
+    formData.append('releaseDate', editableElement.releaseDate)
     if (editableElement?.id) {
       dispatch(editModel({ id: editableElement.id, body: formData }))
     } else {
@@ -157,10 +159,18 @@ const ManageCarModel = () => {
 
             <Input
               className="mt-2"
-              placeholder="Модель"
               value={editableElement.model}
               onChange={(e) => changeModalState('model', e.target.value)}
             />
+
+            <Text>Дата производства</Text>
+
+            <Input
+              className="mt-2"
+              value={editableElement.releaseDate}
+              onChange={(e) => changeModalState('releaseDate', e.target.value)}
+            />
+
             <Box>
               <Text className="mt-2">Изображение</Text>
               <label

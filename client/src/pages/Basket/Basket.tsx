@@ -1,4 +1,5 @@
 import { Box, Button, Container, Spinner, Text } from '@chakra-ui/react'
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs'
 import React, { useEffect } from 'react'
 import {
   deleteAllBasketItems,
@@ -42,6 +43,13 @@ const Basket = () => {
 
   return (
     <Container maxW={'container.xl'}>
+      <Breadcrumbs
+        items={[
+          {
+            title: 'Корзина',
+          },
+        ]}
+      />
       <Box className="flex justify-between items-center ">
         <Text fontSize={'xl'} fontWeight="medium" className="mt-2">
           Корзина

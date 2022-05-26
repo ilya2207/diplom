@@ -8,6 +8,8 @@ const detailRouter = Router()
 
 detailRouter.get('/', DetailController.show)
 detailRouter.get('/search', DetailController.search)
+detailRouter.get('/popular', DetailController.getPopular)
+detailRouter.get('/new', DetailController.getNew)
 detailRouter.use(
   expressjwt({
     secret: process.env.JWT_ACCESS_SECRET,
@@ -19,4 +21,5 @@ detailRouter.use(adminMiddleware)
 detailRouter.post('/', DetailController.add)
 detailRouter.put('/:detailId', DetailController.edit)
 detailRouter.delete('/:detailId', DetailController.delete)
+detailRouter.get('/search/adminSearch', DetailController.adminSearch)
 export default detailRouter
