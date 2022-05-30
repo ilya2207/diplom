@@ -1,7 +1,6 @@
 export interface IDetail {
   categoryId?: number
   title: string
-  shortDescription: string
   modelId?: never
   options?: string
   price: number

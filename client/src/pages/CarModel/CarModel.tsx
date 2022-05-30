@@ -27,6 +27,7 @@ const CarModel = () => {
           car.brandModels.map((item) => (
             <CarModelItem linkPath={pathname} key={item.id} item={item} />
           ))}
+        {car?.brandModels?.length === 0 && <Box>Модели это марки авто отсутствуют</Box>}
       </Box>
     </Container>
   )

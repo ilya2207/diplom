@@ -15,7 +15,7 @@ const NewItems = () => {
 
   return (
     <Container className='mt-10' maxW={'container.xl'}>
-      <Text fontSize="1xl" fontWeight="bold">
+      <Text fontSize="2xl" fontWeight="bold">
         Новинки
       </Text>
       <SliderItems items={items} />

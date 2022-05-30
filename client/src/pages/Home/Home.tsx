@@ -7,9 +7,9 @@ import React from 'react'
 const Home = () => {
   return (
     <Container maxW={'container.xl'}>
-      <CarModelCatalog />
       <PopularItems />
       <NewItems />
+      <CarModelCatalog />
     </Container>
   )
 }

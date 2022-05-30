@@ -18,6 +18,7 @@ detailRouter.use(
 )
 detailRouter.use(fileUpload())
 detailRouter.use(adminMiddleware)
+// detailRouter.delete('/disconnect/:type/:typeId/:detailId')
 detailRouter.post('/', DetailController.add)
 detailRouter.put('/:detailId', DetailController.edit)
 detailRouter.delete('/:detailId', DetailController.delete)

@@ -76,7 +76,6 @@ const OrderItem: React.FC<IProps> = ({ item, isAdmin = false, changeStatusHandle
                         <Box className="flex justify-between items-center w-full">
                           <Box>
                             <Text fontSize={'md'}>{item.detail?.title}</Text>
-                            <Text fontSize={'md'}>{item.detail?.shortDescription}</Text>
                           </Box>
                           <Box>
                             <Text fontWeight={'medium'}>

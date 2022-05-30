@@ -50,7 +50,7 @@ const ShowItems = () => {
           <Spinner width="150px" height="150px" color="blue.500" speed="0.8s" marginTop="10vh" />
         </Box>
       )}
-      <Box className="grid mt-4 grid-cols-5 laptop:grid-cols-4 lowTablet:grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-10 ">
+      <Box className="grid mt-4 grid-cols-5 laptop:grid-cols-4 lowTablet:grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-10">
         {details &&
           !loading &&
           details.map((item, index) => (
@@ -62,6 +62,9 @@ const ShowItems = () => {
             />
           ))}
       </Box>
+      {details && !loading && details.length === 0 && (
+        <Box>По данному запросу товары не найдены</Box>
+      )}
       <CatalogPagination />
     </>
   )

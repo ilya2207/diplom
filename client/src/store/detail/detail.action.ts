@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosResponse } from 'axios'
 import { RootState } from 'store/store'
-import { IDetail } from 'types/detail.types'
+import { IDetail, IDetailWithDetailsAndCategories } from 'types/detail.types'
 import axiosApi from 'utils/api'
 import { setDetailValues } from './detail.reducer'
 
@@ -73,19 +73,34 @@ export const fetchDetails = createAsyncThunk(
   }
 )
 
-export const addDetail = createAsyncThunk('detail/add', (_, { rejectWithValue }) => {
-  try {
-  } catch (error) {}
-})
+export const addDetail = createAsyncThunk(
+  'detail/add',
+  async (data: FormData, { rejectWithValue }) => {
+    const response = await axiosApi.post('detail', data)
+    console.log(response)
+    return response
+  }
+)
 
-export const editDetail = createAsyncThunk('detail/edit', (_, { rejectWithValue }) => {
-  try {
-  } catch (error) {}
-})
+interface IEdit {
+  id: number
+  data: FormData
+}
+export const editDetail = createAsyncThunk(
+  'detail/edit',
+  async ({ id, data }: IEdit, { rejectWithValue }) => {
+    const response = await axiosApi.put(`detail/${id}`, data)
+    console.log(response)
+    return response
+  }
+)
 
-export const deleteDetail = createAsyncThunk('detail/delete', (_, { rejectWithValue }) => {
-  try {
-  } catch (error) {}
+// export const connectDetail = createAsyncThunk('detail/connect', async (body) => {})
+
+export const deleteDetail = createAsyncThunk('detail/delete', async (itemId: number) => {
+  const response = await axiosApi.delete(`detail/${itemId}`)
+  console.log(response)
+  return itemId
 })
 
 export interface searchData {
@@ -128,3 +143,17 @@ export const detailAdminSearch = createAsyncThunk('detail/serach', async (search
   const response = await axiosApi.get(`detail/search/adminSearch?searchStr=${searchStr}`)
   return response.data
 })
+
+interface IDisconnectDetailArg {
+  type: 'model' | 'category'
+  detailId: number
+  typeId: number
+}
+
+export const disconnectDetail = createAsyncThunk(
+  'detail/relations',
+  async ({ type, detailId, typeId }: IDisconnectDetailArg) => {
+    const response = await axiosApi.delete(`/detail/disconnect/${type}/${typeId}/${detailId}`)
+    return response
+  }
+)

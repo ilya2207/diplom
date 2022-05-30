@@ -24,10 +24,6 @@ export default class DetailController {
   static async add(req: Request, res: Response, next: NextFunction) {
     try {
       const body: IDetail = req.body
-      body.price = +body.price
-      body.star = +body.star
-      body.categoryId = +body.categoryId
-      body.options = body.options ?? ''
       const file = req.files?.img as UploadedFile
 
       if (file) {
@@ -40,6 +36,21 @@ export default class DetailController {
       next(error)
     }
   }
+
+  // static async disconnectDetail(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const { detailId, typeId, type } = req.params as {
+  //       detailId: string
+  //       type: 'model' | 'category'
+  //       typeId: string
+  //     }
+  //     const result = await DetailService.disconnectDetail(+detailId, type, +typeId)
+  //     return res.json(result)
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
+
   static async edit(req: Request, res: Response, next: NextFunction) {
     try {
       const detailId: string = req.params.detailId

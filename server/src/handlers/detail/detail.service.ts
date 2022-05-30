@@ -20,22 +20,55 @@ export default class DetailService {
     })
     return { details, totalCount }
   }
-  static async add(data) {
+
+  static async add(body) {
+    let { models, categories, price, ...otherBody } = body
+
+    const data = {
+      ...otherBody,
+      price: +price,
+      models: {
+        connect: JSON.parse(models).map((item) => ({ id: item.id })),
+      },
+      categories: {
+        connect: JSON.parse(categories).map((item) => ({ id: item.id })),
+      },
+    }
     const newDetail = await prisma.detail.create({
       data,
     })
 
     return newDetail
   }
-  static async edit(id: string, data) {
+
+  static async edit(id: string, body) {
+    let { models, categories, price, ...otherBody } = body
+
+    const data = {
+      ...otherBody,
+      price: +price,
+      models: {
+        set: JSON.parse(models).map((item) => ({ id: item.id })),
+      },
+      categories: {
+        set: JSON.parse(categories).map((item) => ({ id: item.id })),
+      },
+    }
+
     const newDetail = await prisma.detail.update({
       where: {
         id: +id,
       },
       data,
+      include: {
+        categories: true,
+        models: true,
+      },
     })
+
     return newDetail
   }
+
   static async delete(id: number) {
     await prisma.detail.delete({
       where: {
@@ -139,21 +172,26 @@ export default class DetailService {
     return items
   }
 
-  static async adminSearch(searchStr) {
+  static async adminSearch(searchStr: string) {
     const items = await prisma.detail.findMany({
       where: {
         OR: [
           {
             title: {
               contains: searchStr,
+              mode: 'insensitive',
             },
           },
           {
             vendorCode: {
               contains: searchStr,
+              mode: 'insensitive',
             },
           },
         ],
+      },
+      orderBy: {
+        id: 'asc',
       },
       include: {
         categories: true,

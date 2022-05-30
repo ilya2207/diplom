@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { IDetail } from 'types/detail.types'
+import { IDetail, IDetailWithDetailsAndCategories } from 'types/detail.types'
 import ManageDetailList from './components/ManageDetailList'
 import AddDetail from './components/AddDetail'
 
 export interface IManageDetailCondition {
   isMain: boolean
-  selectedItem: IDetail | null
+  selectedItem: IDetailWithDetailsAndCategories | null
 }
 
 const ManageDetail = () => {

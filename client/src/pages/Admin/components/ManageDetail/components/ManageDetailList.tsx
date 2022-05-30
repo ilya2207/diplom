@@ -1,7 +1,7 @@
 import { Box, Button, InputGroup, Input, Text, useToast, Spinner } from '@chakra-ui/react'
 import useDebounce from 'hooks/useDebounce'
 import React, { useEffect, useMemo, useState } from 'react'
-import { detailAdminSearch } from 'store/detail/detail.action'
+import { deleteDetail, detailAdminSearch } from 'store/detail/detail.action'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { IOrder } from 'types/order.types'
 import { IManageDetailCondition } from '../ManageDetail'
@@ -70,6 +70,18 @@ const ManageDetailList: React.FC<Props> = ({ changeCondtion }) => {
       selectedItem: null,
     })
   }
+
+  const deleteHandler = (id: number) => {
+    dispatch(deleteDetail(id))
+  }
+
+  const editHandler = (item) => {
+    changeCondtion({
+      isMain: false,
+      selectedItem: item,
+    })
+  }
+
   return (
     <Box>
       <Box className="flex justify-between items-center">
@@ -91,7 +103,12 @@ const ManageDetailList: React.FC<Props> = ({ changeCondtion }) => {
         )}
         {displayedDetails &&
           displayedDetails.map((item, index) => (
-            <DetailListItem key={`${item.id}_${index}`} item={item} />
+            <DetailListItem
+              key={`${item.id}_${index}`}
+              item={item}
+              deleteHandler={deleteHandler}
+              editHandler={editHandler}
+            />
           ))}
       </Box>
       {displayedDetails && displayedDetails.length !== 0 && showItems < details.length && !loading && (

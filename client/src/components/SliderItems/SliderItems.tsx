@@ -65,13 +65,13 @@ const SliderItems: React.FC<Props> = ({ items }) => {
       </Swiper>
 
       <Box
-        className="cursor-pointer p-2 absolute top-1/2 -translate-y-1/2 z-50 -left-6"
+        className="cursor-pointer p-2 absolute top-1/2 -translate-y-1/2 z-20 -left-6"
         onClick={() => swiperRef.current.slidePrev()}
       >
         <i className="fa-solid fa-chevron-left text-2xl"></i>
       </Box>
       <Box
-        className="cursor-pointer p-2 absolute top-1/2 -translate-y-1/2 -right-6 z-50"
+        className="cursor-pointer p-2 absolute top-1/2 -translate-y-1/2 -right-6 z-20"
         onClick={() => swiperRef.current.slideNext()}
       >
         <i className="fa-solid fa-chevron-right text-2xl"></i>

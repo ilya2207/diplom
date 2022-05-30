@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.swiper-wrapper {
+  align-items: stretch !important;
+}

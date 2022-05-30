@@ -71,6 +71,7 @@ export const detailSlice = createSlice({
     builder.addCase(fetchPopularDetails.fulfilled, (state, action) => {
       state.popularItems = action.payload
     })
+
   },
 })
 

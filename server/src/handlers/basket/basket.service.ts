@@ -79,7 +79,6 @@ export default class BasketService {
                 img: true,
                 price: true,
                 title: true,
-                shortDescription: true,
               },
             },
           },

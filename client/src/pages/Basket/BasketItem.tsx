@@ -33,7 +33,6 @@ const BasketItem: React.FC<IProps> = ({ changeAmountHandler, deleteBasketItemHan
           <Box className="flex justify-between items-center w-full">
             <Box>
               <Text fontSize={'md'}>{item.detail?.title}</Text>
-              <Text fontSize={'md'}>{item.detail?.shortDescription}</Text>
             </Box>
             <Box>
               <Text fontSize={'lg'} fontWeight={'medium'}>
