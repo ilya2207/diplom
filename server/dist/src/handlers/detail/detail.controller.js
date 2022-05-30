@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const api_error_1 = __importDefault(require("../../exceptions/api-error"));
 const prisma_1 = __importDefault(require("../../prisma"));
 const image_service_1 = __importDefault(require("../image/image.service"));
 const detail_service_1 = __importDefault(require("./detail.service"));
@@ -20,44 +19,8 @@ class DetailController {
     static show(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let filterCondition;
-                const { modelId, categoryId, page = 1, items = 20 } = req.query;
-                const pagination = { page: +page, items: +items };
-                if (!modelId && !categoryId)
-                    throw api_error_1.default.badRequest('Укажите тип поиска');
-                if (modelId && categoryId) {
-                    filterCondition = {
-                        categories: {
-                            some: {
-                                id: +categoryId,
-                            },
-                        },
-                        models: {
-                            some: {
-                                id: +modelId,
-                            },
-                        },
-                    };
-                }
-                else if (modelId) {
-                    filterCondition = {
-                        models: {
-                            some: {
-                                id: +modelId,
-                            },
-                        },
-                    };
-                }
-                else if (categoryId) {
-                    filterCondition = {
-                        categories: {
-                            some: {
-                                id: +categoryId,
-                            },
-                        },
-                    };
-                }
-                const responseItems = yield detail_service_1.default.show(filterCondition, pagination);
+                const [filterCondition, pagination, orderBy] = detail_service_1.default.generateSortObject(req.query);
+                const responseItems = yield detail_service_1.default.show(filterCondition, pagination, orderBy);
                 return res.json(responseItems);
             }
             catch (error) {
@@ -66,15 +29,11 @@ class DetailController {
         });
     }
     static add(req, res, next) {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const body = req.body;
-                body.price = +body.price;
-                body.star = +body.star;
-                body.categoryId = +body.categoryId;
-                body.options = (_a = body.options) !== null && _a !== void 0 ? _a : '';
-                const file = (_b = req.files) === null || _b === void 0 ? void 0 : _b.img;
+                const file = (_a = req.files) === null || _a === void 0 ? void 0 : _a.img;
                 if (file) {
                     const newImgPath = yield image_service_1.default.upload('detail', file);
                     body.img = newImgPath;
@@ -87,6 +46,19 @@ class DetailController {
             }
         });
     }
+    // static async disconnectDetail(req: Request, res: Response, next: NextFunction) {
+    //   try {
+    //     const { detailId, typeId, type } = req.params as {
+    //       detailId: string
+    //       type: 'model' | 'category'
+    //       typeId: string
+    //     }
+    //     const result = await DetailService.disconnectDetail(+detailId, type, +typeId)
+    //     return res.json(result)
+    //   } catch (error) {
+    //     next(error)
+    //   }
+    // }
     static edit(req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -133,6 +105,40 @@ class DetailController {
                 const pagination = { page: +page, items: +items };
                 const details = yield detail_service_1.default.searchDetail(searchStr.toString(), pagination);
                 return res.json(details);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    static getPopular(_req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const items = yield detail_service_1.default.getPopular();
+                return res.json(items);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    static getNew(_req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const items = yield detail_service_1.default.getNew();
+                return res.json(items);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    static adminSearch(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const searchStr = req.query.searchStr;
+                const items = yield detail_service_1.default.adminSearch(searchStr);
+                return res.json(items);
             }
             catch (error) {
                 next(error);

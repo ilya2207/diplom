@@ -47,6 +47,10 @@ class OrderController {
     static edit(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const orderId = req.params.orderId;
+                const body = req.body;
+                const updatedOrder = yield order_service_1.default.edit(+orderId, body);
+                return res.json(updatedOrder);
             }
             catch (error) {
                 next(error);
@@ -56,6 +60,21 @@ class OrderController {
     static delete(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const orderId = req.params.orderId;
+                yield order_service_1.default.delete(+orderId);
+                return res.json('Успешно');
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    static searchByOrderNumber(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { orderNumber } = req.query;
+                const searchedItems = yield order_service_1.default.searchByOrderNumber(orderNumber.toString());
+                return res.json(searchedItems);
             }
             catch (error) {
                 next(error);

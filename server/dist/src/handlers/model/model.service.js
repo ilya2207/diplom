@@ -32,6 +32,7 @@ class ModelService {
                                 model: true,
                                 brandId: true,
                                 img: true,
+                                releaseDate: true,
                             },
                         },
                     },
@@ -52,6 +53,7 @@ class ModelService {
                                 model: true,
                                 brandId: true,
                                 img: true,
+                                releaseDate: true,
                             },
                         },
                     },
@@ -95,6 +97,32 @@ class ModelService {
                 },
             });
             return deletedModel;
+        });
+    }
+    static search(searchStr) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const items = yield prisma_1.default.carModel.findMany({
+                where: {
+                    NOT: {
+                        brandId: null,
+                    },
+                    OR: [
+                        {
+                            title: {
+                                contains: searchStr,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            model: {
+                                contains: searchStr,
+                                mode: 'insensitive',
+                            },
+                        },
+                    ],
+                },
+            });
+            return items;
         });
     }
 }

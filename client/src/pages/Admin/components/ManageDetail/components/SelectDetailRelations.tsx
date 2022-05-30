@@ -62,7 +62,6 @@ const SelectDetailRelations: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  console.log(focus)
 
   return (
     <Box ref={wrapperRef}>

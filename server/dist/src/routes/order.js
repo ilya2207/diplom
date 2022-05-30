@@ -12,7 +12,9 @@ orderRouter.use((0, express_jwt_1.expressjwt)({
     algorithms: ['HS256'],
 }));
 orderRouter.get('/', order_controller_1.default.show);
+orderRouter.get('/search', order_controller_1.default.searchByOrderNumber);
 orderRouter.post('/', order_controller_1.default.add);
-// orderRouter.post('/:detailId', OrderController.show)
+orderRouter.put('/:orderId', order_controller_1.default.edit);
+orderRouter.delete('/:orderId', order_controller_1.default.delete);
 exports.default = orderRouter;
 //# sourceMappingURL=order.js.map

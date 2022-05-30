@@ -69,6 +69,16 @@ class CategoryService {
             return deletedCategory;
         });
     }
+    static search(searchStr) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const items = yield prisma_1.default.category.findMany({
+                where: {
+                    AND: [{ NOT: { parentCategory: null } }, { title: { contains: searchStr } }],
+                },
+            });
+            return items;
+        });
+    }
 }
 exports.default = CategoryService;
 //# sourceMappingURL=category.service.js.map

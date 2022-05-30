@@ -104,7 +104,6 @@ const AddDetail: React.FC<Props> = ({ changeCondition, selectedItem }) => {
     })
   }
   const deleteRelation = (type: keyof IRelations, itemId: number) => {
-    console.log(type, itemId)
 
     setRelations((prevValue) => {
       const newValues = [...prevValue[type]].filter((item) => itemId !== item.id)

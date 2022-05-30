@@ -14,7 +14,6 @@ export const searchAdminValues = createAsyncThunk(
     const { searchStr, type } = data
     const searchType = type === 'categories' ? 'category' : 'model'
     const response = await axiosApi.get(`${searchType}/admin/search?searchStr=${searchStr}`)
-    console.log(response)
     return [response.data, type]
   }
 )

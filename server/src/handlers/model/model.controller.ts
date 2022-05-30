@@ -8,7 +8,6 @@ import { IModel } from './model.types'
 export default class ModelController {
   static async show(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('HELLO WORLD')
 
       const modelId: string | undefined = req.params.modelId
       const models = await ModelService.show(+modelId)
@@ -77,7 +76,6 @@ export default class ModelController {
     try {
       const searchStr = req.query.searchStr as string
 
-      console.log(searchStr);
       
       const items = await ModelService.search(searchStr)
       return res.json(items)

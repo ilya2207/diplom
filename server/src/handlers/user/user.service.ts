@@ -27,9 +27,11 @@ export default class UserService {
   static async signup(data: IUser) {
     const { phone, email, password, firstname, lastname, secondname } = data
 
+    const replacedPhone = phone.replace(/[^0-9]/g, '')
+
     const isUserExists = await prisma.user.findFirst({
       where: {
-        phone,
+        phone: replacedPhone,
       },
     })
 
@@ -41,7 +43,7 @@ export default class UserService {
         firstname,
         secondname,
         lastname,
-        phone,
+        phone: replacedPhone,
         email,
         password: hashPassword,
         basket: { create: {} },

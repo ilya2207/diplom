@@ -79,16 +79,33 @@ export default class DetailService {
 
   static async searchDetail(searchStr: string, { page, items }: { page: number; items: number }) {
     const skip = page === 1 ? 0 : (page - 1) * items
-    const where = {
+    const where: {
+      OR: [
+        {
+          title: {
+            contains: string
+            mode: 'insensitive'
+          }
+        },
+        {
+          vendorCode: {
+            contains: string
+            mode: 'insensitive'
+          }
+        }
+      ]
+    } = {
       OR: [
         {
           title: {
             contains: searchStr,
+            mode: 'insensitive',
           },
         },
         {
           vendorCode: {
             contains: searchStr,
+            mode: 'insensitive',
           },
         },
       ],
@@ -99,7 +116,7 @@ export default class DetailService {
       where,
     })
     const totalCount = await prisma.detail.count({
-      where: where,
+      where,
     })
 
     return { details, totalCount }

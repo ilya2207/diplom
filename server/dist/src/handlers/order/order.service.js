@@ -27,6 +27,9 @@ class OrderService {
                         },
                     },
                 },
+                orderBy: {
+                    id: 'desc',
+                },
             });
             return orders;
         });
@@ -57,11 +60,70 @@ class OrderService {
             return order;
         });
     }
-    static edit() {
-        return __awaiter(this, void 0, void 0, function* () { });
+    static edit(orderId, { status, rejectedReason = null }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const updatedItem = yield prisma_1.default.order.update({
+                where: {
+                    id: orderId,
+                },
+                data: {
+                    status,
+                    rejectedReason,
+                },
+            });
+            return updatedItem;
+        });
     }
-    static delete() {
-        return __awaiter(this, void 0, void 0, function* () { });
+    static delete(orderId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield prisma_1.default.order.delete({
+                where: {
+                    id: orderId,
+                },
+            });
+        });
+    }
+    static searchByOrderNumber(searchStr) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield prisma_1.default.order.findMany({
+                orderBy: {
+                    createdAt: 'desc',
+                },
+                where: {
+                    OR: [
+                        {
+                            user: {
+                                phone: {
+                                    contains: searchStr,
+                                },
+                            },
+                        },
+                        {
+                            orderNumber: {
+                                contains: searchStr,
+                            },
+                        },
+                    ],
+                },
+                include: {
+                    orderItems: {
+                        include: {
+                            detail: true,
+                        },
+                    },
+                    user: {
+                        select: {
+                            id: true,
+                            firstname: true,
+                            secondname: true,
+                            lastname: true,
+                            phone: true,
+                        },
+                    },
+                },
+            });
+            return result;
+        });
     }
 }
 exports.default = OrderService;

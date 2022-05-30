@@ -26,9 +26,12 @@ app.use('/images', express_1.default.static(`${process.cwd()}/images`));
 app.use((0, compression_1.default)());
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({ origin: 'http://localhost:3000', credentials: true }));
+app.use((0, cors_1.default)({
+    origin: process.env.API_URL || 'http://localhost:3000',
+    credentials: true,
+}));
 app.use('/api', routes_1.default);
-app.listen(5000, () => __awaiter(void 0, void 0, void 0, function* () {
+app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`Server has been stared at port : ${port}`);
     }

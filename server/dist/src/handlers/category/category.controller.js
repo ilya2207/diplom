@@ -44,7 +44,6 @@ class CategoryController {
             try {
                 const id = req.params.categoryId;
                 const category = yield category_service_1.default.delete(+id);
-                console.log(category);
                 return res.json({ message: 'Успешно удалено', id });
             }
             catch (error) {
@@ -57,6 +56,18 @@ class CategoryController {
             try {
                 const categories = yield category_service_1.default.show();
                 return res.json(categories);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    static search(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const searchStr = req.query.searchStr;
+                const items = yield category_service_1.default.search(searchStr);
+                return res.json(items);
             }
             catch (error) {
                 next(error);

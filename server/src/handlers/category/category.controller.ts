@@ -26,7 +26,6 @@ export default class CategoryController {
     try {
       const id = req.params.categoryId
       const category = await CategoryService.delete(+id)
-      console.log(category)
 
       return res.json({ message: 'Успешно удалено', id })
     } catch (error) {

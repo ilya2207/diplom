@@ -86,6 +86,18 @@ class ModelController {
             }
         });
     }
+    static search(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const searchStr = req.query.searchStr;
+                const items = yield model_service_1.default.search(searchStr);
+                return res.json(items);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
 }
 exports.default = ModelController;
 //# sourceMappingURL=model.controller.js.map

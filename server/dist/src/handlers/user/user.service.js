@@ -66,7 +66,7 @@ class UserService {
     static generateTokens(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             const accessToken = jsonwebtoken_1.default.sign({ payload }, process.env.JWT_ACCESS_SECRET, {
-                expiresIn: '10s',
+                expiresIn: '30m',
             });
             const refreshToken = jsonwebtoken_1.default.sign({ payload }, process.env.JWT_ACCESS_REFRESH, { expiresIn: '30d' });
             yield prisma_1.default.user.update({
