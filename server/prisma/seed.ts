@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
+import { seedCategoriesList } from './seeds/categories'
+import { createDetails } from './seeds/details/detail.seed'
 const prisma = new PrismaClient()
 
 const createAdmin = async () => {
@@ -26,7 +28,6 @@ const createDetail = async () => {
     await prisma.detail.create({
       data: {
         price: i * 1000,
-        shortDescription: `Номер ${i * 20}`,
         title: `Поршень ${i}`,
         categories: {
           connect: [{ id: 2 }],
@@ -38,7 +39,6 @@ const createDetail = async () => {
     await prisma.detail.create({
       data: {
         price: i * 1000,
-        shortDescription: `Номер ${i * 20}`,
         title: `Браслет ${i}`,
         categories: {
           connect: [{ id: 3 }],
@@ -62,9 +62,39 @@ const createCarModels = async () => {
   })
 }
 
+const createCategories = async () => {
+  // await prisma.category.create({
+  //   data: {
+  //     title: 'Масла и технические жидкости',
+  //     childCategories: {
+  //       create: [
+  //         { title: 'Моторное масло' },
+  //         { title: 'Гидравлическая жидкость' },
+  //         { title: 'Тормозная жидкость' },
+  //         { title: 'Антифризы' },
+  //         { title: 'Трансмиссионное масло' },
+  //       ],
+  //     },
+  //   },
+  // })
+  for (const item of seedCategoriesList) {
+    await prisma.category.create({
+      data: item,
+    })
+  }
+  // seedCategoriesList.forEach(
+  //   async (item) =>
+  //     await prisma.category.create({
+  //       data: item,
+  //     })
+  // )
+}
+
 const main = async () => {
   // await createAdmin()
-  await createDetail()
+  // await createDetail()
+  // await createCategories()
+  await createDetails()
 }
 
 main()

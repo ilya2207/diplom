@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import axios, { AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
 import { ILoginInput, ISignupUser, IUser } from 'types/user.types'
 import axiosApi from 'utils/api'
 

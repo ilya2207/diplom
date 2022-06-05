@@ -93,11 +93,13 @@ class DetailService {
                     {
                         title: {
                             contains: searchStr,
+                            mode: 'insensitive',
                         },
                     },
                     {
                         vendorCode: {
                             contains: searchStr,
+                            mode: 'insensitive',
                         },
                     },
                 ],
@@ -108,14 +110,14 @@ class DetailService {
                 where,
             });
             const totalCount = yield prisma_1.default.detail.count({
-                where: where,
+                where,
             });
             return { details, totalCount };
         });
     }
     static generateSortObject(queryParams) {
         let filterCondition;
-        const { modelId, categoryId, page = 1, items = 20, orderBy: sortBy } = queryParams;
+        const { modelId, categoryId, page = 1, items = 15, orderBy: sortBy } = queryParams;
         if (!modelId && !categoryId)
             throw api_error_1.default.badRequest('Укажите тип поиска');
         if (modelId && categoryId) {

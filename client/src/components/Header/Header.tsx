@@ -30,7 +30,7 @@ const Header = () => {
       toast({
         title: error,
         duration: 3000,
-        status: 'error',  
+        status: 'error',
       })
     }
     // eslint-disable-next-lineeslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,7 +44,7 @@ const Header = () => {
             <Text className="font-title" fontSize="3xl">
               {/* АвтоЗапчасти */}
               <span className="text-blue-500">Авто</span>
-              <span className='text-red-500'>Запчасти</span>
+              <span className="text-red-500">Запчасти</span>
             </Text>
           </Link>
           <div className="flex gap-2">

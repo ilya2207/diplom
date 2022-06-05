@@ -10,12 +10,12 @@ interface ICatalogMenuItemProps {
 const CatalogMenuItem: React.FC<ICatalogMenuItemProps> = ({ item, clickHandler }) => {
   return (
     <>
-      <MenuItem className="group" closeOnSelect={false}>
-        <Text>{item.title}</Text>
+      <MenuItem className="group">
+        <Text className="p-1">{item.title}</Text>
         <Box
           as={MenuList}
-          className={` p-4 absolute hidden  group-hover:flex  gap-5 flex-wrap cursor-default gap-x-12 shadow-lg`}
-          style={{ display: 'none', left: '13.9rem', top: '-1px', width: '65vw' }}
+          className={`p-4 absolute hidden  group-hover:flex gap-5 flex-wrap cursor-default gap-x-12 shadow-lg`}
+          style={{ display: 'none', left: '16rem', minHeight: '466px', top: '-1px', width: '65vw' }}
         >
           {item.childCategories &&
             item.childCategories.map((item, index) => (

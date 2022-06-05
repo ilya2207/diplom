@@ -23,20 +23,26 @@ const CatalogItem: React.FC<Props> = ({ item, basketHandler, isAuth }) => {
 
   return (
     <Box
-      className="min-h-[400px] select-none flex flex-col justify-between p-6 shadow-md rounded-lg mobile:max-w-[200px] mobile:mx-auto"
+      className="min-h-[400px]  select-none flex flex-col justify-between p-6 shadow-md rounded-lg mobile:max-w-[200px] mobile:mx-auto"
       border="1px solid #ededed"
     >
-      <img className="w-full max-w-[200px] h-[140px]" src={item.img ?? DEFAULT_DETAIL_IMG} alt="" />
-      <Text className="text-left max-w-full" mt={1} fontSize={'lg'} fontWeight="medium">
+      <img
+        className="w-full max-w-[200px] h-[140px] object-contain self-center"
+        src={item.img ?? DEFAULT_DETAIL_IMG}
+        alt=""
+      />
+      <Text className="text-left max-w-full" mt={1} fontSize={'sm'} fontWeight="medium">
         {item.title}
       </Text>
       <Box className="justify-between items-center flex w-full flex-wrap max-w-full">
-        <Text color={'gray.500'}>Артикул:</Text>
-        <Text className="max-w-full" color={'gray.500'}>
+        <Text fontSize={'sm'} color={'gray.500'}>
+          Артикул:
+        </Text>
+        <Text fontSize={'sm'} className="max-w-full" color={'gray.500'}>
           {item.vendorCode ?? '-'}
         </Text>
       </Box>
-      <Text className="text-center" fontWeight={'bold'} fontSize="xl" color={'black'}>
+      <Text className="text-center" fontWeight={'bold'} fontSize="md" color={'black'}>
         {item.price}&#8381;
       </Text>
       <Box className="flex justify-center flex-col items-center mt-2 gap-1 w-full">

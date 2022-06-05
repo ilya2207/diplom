@@ -25,7 +25,7 @@ const initState: IInitState = {
   error: null,
   loading: false,
   currentPage: 1,
-  itemsToDisplay: 20,
+  itemsToDisplay: 15,
 }
 
 export const detailSlice = createSlice({
@@ -71,7 +71,6 @@ export const detailSlice = createSlice({
     builder.addCase(fetchPopularDetails.fulfilled, (state, action) => {
       state.popularItems = action.payload
     })
-
   },
 })
 

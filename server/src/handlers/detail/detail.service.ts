@@ -126,7 +126,7 @@ export default class DetailService {
     queryParams: IDetailSortParams
   ): [IFilterCondition, { page: number; items: number }, { price: 'asc' | 'desc' } | undefined] {
     let filterCondition: IFilterCondition
-    const { modelId, categoryId, page = 1, items = 20, orderBy: sortBy } = queryParams
+    const { modelId, categoryId, page = 1, items = 15, orderBy: sortBy } = queryParams
     if (!modelId && !categoryId) throw ApiError.badRequest('Укажите тип поиска')
     if (modelId && categoryId) {
       filterCondition = {

@@ -1,5 +1,5 @@
 import { EmailIcon, PhoneIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { InputGroup, InputLeftElement, Input, InputRightElement } from '@chakra-ui/react'
+import { InputGroup, Input, InputRightElement } from '@chakra-ui/react'
 import { IModalBodyContent } from 'components/Header/HeaderTypes'
 import React from 'react'
 

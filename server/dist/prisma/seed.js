@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const categories_1 = require("./seeds/categories");
+const detail_seed_1 = require("./seeds/details/detail.seed");
 const prisma = new client_1.PrismaClient();
 const createAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
     const password = yield bcrypt_1.default.hash('admin', 3);
@@ -37,7 +39,6 @@ const createDetail = () => __awaiter(void 0, void 0, void 0, function* () {
         yield prisma.detail.create({
             data: {
                 price: i * 1000,
-                shortDescription: `Номер ${i * 20}`,
                 title: `Поршень ${i}`,
                 categories: {
                     connect: [{ id: 2 }],
@@ -49,7 +50,6 @@ const createDetail = () => __awaiter(void 0, void 0, void 0, function* () {
         yield prisma.detail.create({
             data: {
                 price: i * 1000,
-                shortDescription: `Номер ${i * 20}`,
                 title: `Браслет ${i}`,
                 categories: {
                     connect: [{ id: 3 }],
@@ -71,9 +71,38 @@ const createCarModels = () => __awaiter(void 0, void 0, void 0, function* () {
         },
     });
 });
+const createCategories = () => __awaiter(void 0, void 0, void 0, function* () {
+    // await prisma.category.create({
+    //   data: {
+    //     title: 'Масла и технические жидкости',
+    //     childCategories: {
+    //       create: [
+    //         { title: 'Моторное масло' },
+    //         { title: 'Гидравлическая жидкость' },
+    //         { title: 'Тормозная жидкость' },
+    //         { title: 'Антифризы' },
+    //         { title: 'Трансмиссионное масло' },
+    //       ],
+    //     },
+    //   },
+    // })
+    for (const item of categories_1.seedCategoriesList) {
+        yield prisma.category.create({
+            data: item,
+        });
+    }
+    // seedCategoriesList.forEach(
+    //   async (item) =>
+    //     await prisma.category.create({
+    //       data: item,
+    //     })
+    // )
+});
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     // await createAdmin()
-    yield createDetail();
+    // await createDetail()
+    // await createCategories()
+    yield (0, detail_seed_1.createDetails)();
 });
 main()
     .then(() => console.log('Seed Success'))

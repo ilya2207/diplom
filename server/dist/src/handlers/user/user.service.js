@@ -39,9 +39,10 @@ class UserService {
     static signup(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const { phone, email, password, firstname, lastname, secondname } = data;
+            const replacedPhone = phone.replace(/[^0-9]/g, '');
             const isUserExists = yield prisma_1.default.user.findFirst({
                 where: {
-                    phone,
+                    phone: replacedPhone,
                 },
             });
             if (isUserExists)
@@ -52,7 +53,7 @@ class UserService {
                     firstname,
                     secondname,
                     lastname,
-                    phone,
+                    phone: replacedPhone,
                     email,
                     password: hashPassword,
                     basket: { create: {} },
