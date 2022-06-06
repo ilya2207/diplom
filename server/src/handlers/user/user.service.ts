@@ -24,6 +24,7 @@ export default class UserService {
     })
     return user
   }
+  
   static async signup(data: IUser) {
     const { phone, email, password, firstname, lastname, secondname } = data
 
